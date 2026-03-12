@@ -1,0 +1,423 @@
+USE [database_name]
+GO
+/****** Object:  Table [dbo].[Amenity]    Script Date: 3/12/2026 7:48:34 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Amenity](
+	[amenity_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[name] [nvarchar](100) NOT NULL,
+	[icon_url] [nvarchar](255) NULL,
+	[is_deleted] [bit] NOT NULL,
+ CONSTRAINT [PK_Amenity] PRIMARY KEY CLUSTERED 
+(
+	[amenity_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [UQ_Amenity_Name] UNIQUE NONCLUSTERED 
+(
+	[name] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Booking]    Script Date: 3/12/2026 7:48:34 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Booking](
+	[booking_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[customer_id] [bigint] NOT NULL,
+	[room_id] [bigint] NOT NULL,
+	[check_in_time] [datetime2](7) NOT NULL,
+	[check_out_time] [datetime2](7) NOT NULL,
+	[id_card_front_url] [nvarchar](500) NOT NULL,
+	[id_card_back_url] [nvarchar](500) NOT NULL,
+	[booking_status] [nvarchar](20) NOT NULL,
+	[total_amount] [decimal](12, 2) NOT NULL,
+	[booking_code] [nvarchar](500) NULL,
+	[created_at] [datetime2](7) NOT NULL,
+	[note] [nvarchar](255) NULL,
+	[update_at] [datetime2](7) NULL,
+ CONSTRAINT [PK_Booking] PRIMARY KEY CLUSTERED 
+(
+	[booking_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Customer]    Script Date: 3/12/2026 7:48:34 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Customer](
+	[customer_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[email] [nvarchar](255) NOT NULL,
+	[password_hash] [nvarchar](255) NULL,
+	[full_name] [nvarchar](50) NULL,
+	[avatar_url] [nvarchar](255) NULL,
+	[phone] [nvarchar](20) NULL,
+	[status] [varchar](50) NOT NULL,
+	[created_at] [datetime2](7) NOT NULL,
+	[updated_at] [datetime2](7) NULL,
+	[is_deleted] [bit] NOT NULL,
+	[avatar_public_id] [nvarchar](255) NULL,
+ CONSTRAINT [PK_Customer] PRIMARY KEY CLUSTERED 
+(
+	[customer_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [UQ_Customer_Email] UNIQUE NONCLUSTERED 
+(
+	[email] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Feedback]    Script Date: 3/12/2026 7:48:34 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Feedback](
+	[feedback_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[booking_id] [bigint] NOT NULL,
+	[admin_id] [bigint] NOT NULL,
+	[rating] [int] NOT NULL,
+	[content] [nvarchar](1000) NOT NULL,
+	[content_reply] [nvarchar](1000) NULL,
+	[is_hidden] [bit] NOT NULL,
+	[created_at] [datetime2](7) NOT NULL,
+	[reply_at] [datetime2](7) NULL,
+ CONSTRAINT [PK_Feedback] PRIMARY KEY CLUSTERED 
+(
+	[feedback_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Image]    Script Date: 3/12/2026 7:48:34 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Image](
+	[image_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[room_id] [bigint] NOT NULL,
+	[image_url] [nvarchar](500) NOT NULL,
+	[is_cover] [bit] NOT NULL,
+	[public_id] [nvarchar](255) NULL,
+ CONSTRAINT [PK_Image] PRIMARY KEY CLUSTERED 
+(
+	[image_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Invoice]    Script Date: 3/12/2026 7:48:34 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Invoice](
+	[invoice_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[booking_id] [bigint] NOT NULL,
+	[invoice_number] [nvarchar](50) NULL,
+	[issued_at] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_Invoice] PRIMARY KEY CLUSTERED 
+(
+	[invoice_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [UQ_Invoice_Number] UNIQUE NONCLUSTERED 
+(
+	[invoice_number] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Payment]    Script Date: 3/12/2026 7:48:34 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Payment](
+	[payment_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[booking_id] [bigint] NOT NULL,
+	[amount] [decimal](12, 2) NOT NULL,
+	[method] [nvarchar](50) NOT NULL,
+	[payment_status] [varchar](20) NOT NULL,
+	[paid_at] [datetime2](7) NOT NULL,
+ CONSTRAINT [PK_Payment] PRIMARY KEY CLUSTERED 
+(
+	[payment_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[RefreshTokens]    Script Date: 3/12/2026 7:48:34 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[RefreshTokens](
+	[id] [bigint] IDENTITY(1,1) NOT NULL,
+	[token_hash] [varchar](255) NOT NULL,
+	[expires_at] [datetime2](7) NOT NULL,
+	[is_revoked] [bit] NOT NULL,
+	[revoked_at] [datetime2](7) NULL,
+	[created_at] [datetime2](7) NOT NULL,
+	[account_type] [varchar](20) NOT NULL,
+	[customer_id] [bigint] NULL,
+	[staff_account_id] [bigint] NULL,
+PRIMARY KEY CLUSTERED 
+(
+	[id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Room]    Script Date: 3/12/2026 7:48:34 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Room](
+	[room_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[room_type_id] [bigint] NOT NULL,
+	[room_number] [nvarchar](50) NOT NULL,
+	[status] [varchar](50) NOT NULL,
+	[is_deleted] [bit] NOT NULL,
+	[area_m2] [decimal](10, 2) NULL,
+	[base_price] [decimal](12, 2) NULL,
+	[over_price] [decimal](12, 2) NULL,
+	[description] [nvarchar](500) NULL,
+ CONSTRAINT [PK_Room] PRIMARY KEY CLUSTERED 
+(
+	[room_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [UQ_Room_RoomNumber] UNIQUE NONCLUSTERED 
+(
+	[room_number] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[RoomAmenity]    Script Date: 3/12/2026 7:48:34 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[RoomAmenity](
+	[room_amenity_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[room_id] [bigint] NOT NULL,
+	[amenity_id] [bigint] NOT NULL,
+ CONSTRAINT [PK_RoomAmenity] PRIMARY KEY CLUSTERED 
+(
+	[room_amenity_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[RoomType]    Script Date: 3/12/2026 7:48:34 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[RoomType](
+	[room_type_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[name] [nvarchar](100) NOT NULL,
+	[image_url] [nvarchar](500) NULL,
+	[max_guests] [int] NOT NULL,
+	[is_deleted] [bit] NOT NULL,
+ CONSTRAINT [PK_RoomType] PRIMARY KEY CLUSTERED 
+(
+	[room_type_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [UQ_RoomType_Name] UNIQUE NONCLUSTERED 
+(
+	[name] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Scheduler]    Script Date: 3/12/2026 7:48:34 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Scheduler](
+	[scheduler_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[booking_id] [bigint] NOT NULL,
+	[timetable_id] [bigint] NOT NULL,
+	[date] [date] NOT NULL,
+ CONSTRAINT [PK_Scheduler] PRIMARY KEY CLUSTERED 
+(
+	[scheduler_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[StaffAccounts]    Script Date: 3/12/2026 7:48:34 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[StaffAccounts](
+	[staff_account_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[email] [nvarchar](255) NOT NULL,
+	[phone] [nvarchar](20) NULL,
+	[password_hash] [nvarchar](255) NOT NULL,
+	[full_name] [nvarchar](50) NULL,
+	[avatar_url] [nvarchar](255) NULL,
+	[role] [nvarchar](20) NOT NULL,
+	[status] [varchar](50) NOT NULL,
+	[created_at] [datetime2](7) NOT NULL,
+	[is_deleted] [bit] NOT NULL,
+	[avatar_public_id] [nvarchar](255) NULL,
+ CONSTRAINT [PK_Admin] PRIMARY KEY CLUSTERED 
+(
+	[staff_account_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY],
+ CONSTRAINT [UQ_Admin_Email] UNIQUE NONCLUSTERED 
+(
+	[email] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Timetable]    Script Date: 3/12/2026 7:48:34 PM ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Timetable](
+	[timetable_id] [bigint] IDENTITY(1,1) NOT NULL,
+	[slot_name] [nvarchar](50) NOT NULL,
+	[start_time] [time](7) NOT NULL,
+	[end_time] [time](7) NOT NULL,
+ CONSTRAINT [PK_Timetable] PRIMARY KEY CLUSTERED 
+(
+	[timetable_id] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON, OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+ALTER TABLE [dbo].[Amenity] ADD  CONSTRAINT [DF_Amenity_IsDeleted]  DEFAULT ((0)) FOR [is_deleted]
+GO
+ALTER TABLE [dbo].[Booking] ADD  CONSTRAINT [DF_Booking_CreatedAt]  DEFAULT (sysdatetime()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[Customer] ADD  CONSTRAINT [DF_Customer_Status]  DEFAULT ('ACTIVE') FOR [status]
+GO
+ALTER TABLE [dbo].[Customer] ADD  CONSTRAINT [DF_Customer_CreatedAt]  DEFAULT (sysdatetime()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[Customer] ADD  CONSTRAINT [DF_Customer_IsDeleted]  DEFAULT ((0)) FOR [is_deleted]
+GO
+ALTER TABLE [dbo].[Feedback] ADD  CONSTRAINT [DF_Feedback_IsHidden]  DEFAULT ((0)) FOR [is_hidden]
+GO
+ALTER TABLE [dbo].[Feedback] ADD  CONSTRAINT [DF_Feedback_CreatedAt]  DEFAULT (sysdatetime()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[Image] ADD  CONSTRAINT [DF_Image_IsCover]  DEFAULT ((0)) FOR [is_cover]
+GO
+ALTER TABLE [dbo].[Invoice] ADD  CONSTRAINT [DF_Invoice_IssuedAt]  DEFAULT (sysdatetime()) FOR [issued_at]
+GO
+ALTER TABLE [dbo].[Payment] ADD  CONSTRAINT [DF_Payment_PaidAt]  DEFAULT (sysdatetime()) FOR [paid_at]
+GO
+ALTER TABLE [dbo].[RefreshTokens] ADD  DEFAULT ((0)) FOR [is_revoked]
+GO
+ALTER TABLE [dbo].[RefreshTokens] ADD  DEFAULT (sysdatetime()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[Room] ADD  CONSTRAINT [DF_Room_Status]  DEFAULT ('AVAILABLE') FOR [status]
+GO
+ALTER TABLE [dbo].[Room] ADD  CONSTRAINT [DF_Room_IsDeleted]  DEFAULT ((0)) FOR [is_deleted]
+GO
+ALTER TABLE [dbo].[RoomType] ADD  CONSTRAINT [DF_RoomType_IsDeleted]  DEFAULT ((0)) FOR [is_deleted]
+GO
+ALTER TABLE [dbo].[StaffAccounts] ADD  CONSTRAINT [DF_Admin_Status]  DEFAULT ('ACTIVE') FOR [status]
+GO
+ALTER TABLE [dbo].[StaffAccounts] ADD  CONSTRAINT [DF_Admin_CreatedAt]  DEFAULT (sysdatetime()) FOR [created_at]
+GO
+ALTER TABLE [dbo].[StaffAccounts] ADD  CONSTRAINT [DF_Admin_IsDeleted]  DEFAULT ((0)) FOR [is_deleted]
+GO
+ALTER TABLE [dbo].[Booking]  WITH CHECK ADD  CONSTRAINT [FK_Booking_Customer] FOREIGN KEY([customer_id])
+REFERENCES [dbo].[Customer] ([customer_id])
+GO
+ALTER TABLE [dbo].[Booking] CHECK CONSTRAINT [FK_Booking_Customer]
+GO
+ALTER TABLE [dbo].[Booking]  WITH CHECK ADD  CONSTRAINT [FK_Booking_Room] FOREIGN KEY([room_id])
+REFERENCES [dbo].[Room] ([room_id])
+GO
+ALTER TABLE [dbo].[Booking] CHECK CONSTRAINT [FK_Booking_Room]
+GO
+ALTER TABLE [dbo].[Feedback]  WITH CHECK ADD  CONSTRAINT [FK_Feedback_Booking] FOREIGN KEY([booking_id])
+REFERENCES [dbo].[Booking] ([booking_id])
+GO
+ALTER TABLE [dbo].[Feedback] CHECK CONSTRAINT [FK_Feedback_Booking]
+GO
+ALTER TABLE [dbo].[Feedback]  WITH CHECK ADD  CONSTRAINT [FK_Feedback_StaffAccounts] FOREIGN KEY([admin_id])
+REFERENCES [dbo].[StaffAccounts] ([staff_account_id])
+GO
+ALTER TABLE [dbo].[Feedback] CHECK CONSTRAINT [FK_Feedback_StaffAccounts]
+GO
+ALTER TABLE [dbo].[Image]  WITH CHECK ADD  CONSTRAINT [FK_Image_Room] FOREIGN KEY([room_id])
+REFERENCES [dbo].[Room] ([room_id])
+GO
+ALTER TABLE [dbo].[Image] CHECK CONSTRAINT [FK_Image_Room]
+GO
+ALTER TABLE [dbo].[Invoice]  WITH CHECK ADD  CONSTRAINT [FK_Invoice_Booking] FOREIGN KEY([booking_id])
+REFERENCES [dbo].[Booking] ([booking_id])
+GO
+ALTER TABLE [dbo].[Invoice] CHECK CONSTRAINT [FK_Invoice_Booking]
+GO
+ALTER TABLE [dbo].[Payment]  WITH CHECK ADD  CONSTRAINT [FK_Payment_Booking] FOREIGN KEY([booking_id])
+REFERENCES [dbo].[Booking] ([booking_id])
+GO
+ALTER TABLE [dbo].[Payment] CHECK CONSTRAINT [FK_Payment_Booking]
+GO
+ALTER TABLE [dbo].[RefreshTokens]  WITH CHECK ADD  CONSTRAINT [FK_RefreshTokens_Customers] FOREIGN KEY([customer_id])
+REFERENCES [dbo].[Customer] ([customer_id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[RefreshTokens] CHECK CONSTRAINT [FK_RefreshTokens_Customers]
+GO
+ALTER TABLE [dbo].[RefreshTokens]  WITH CHECK ADD  CONSTRAINT [FK_RefreshTokens_StaffAccounts] FOREIGN KEY([staff_account_id])
+REFERENCES [dbo].[StaffAccounts] ([staff_account_id])
+ON DELETE CASCADE
+GO
+ALTER TABLE [dbo].[RefreshTokens] CHECK CONSTRAINT [FK_RefreshTokens_StaffAccounts]
+GO
+ALTER TABLE [dbo].[Room]  WITH CHECK ADD  CONSTRAINT [FK_Room_RoomType] FOREIGN KEY([room_type_id])
+REFERENCES [dbo].[RoomType] ([room_type_id])
+GO
+ALTER TABLE [dbo].[Room] CHECK CONSTRAINT [FK_Room_RoomType]
+GO
+ALTER TABLE [dbo].[RoomAmenity]  WITH CHECK ADD  CONSTRAINT [FK_RoomAmenity_Amenity] FOREIGN KEY([amenity_id])
+REFERENCES [dbo].[Amenity] ([amenity_id])
+GO
+ALTER TABLE [dbo].[RoomAmenity] CHECK CONSTRAINT [FK_RoomAmenity_Amenity]
+GO
+ALTER TABLE [dbo].[RoomAmenity]  WITH CHECK ADD  CONSTRAINT [FK_RoomAmenity_Room] FOREIGN KEY([room_id])
+REFERENCES [dbo].[Room] ([room_id])
+GO
+ALTER TABLE [dbo].[RoomAmenity] CHECK CONSTRAINT [FK_RoomAmenity_Room]
+GO
+ALTER TABLE [dbo].[Scheduler]  WITH CHECK ADD  CONSTRAINT [FK_Scheduler_Booking] FOREIGN KEY([booking_id])
+REFERENCES [dbo].[Booking] ([booking_id])
+GO
+ALTER TABLE [dbo].[Scheduler] CHECK CONSTRAINT [FK_Scheduler_Booking]
+GO
+ALTER TABLE [dbo].[Scheduler]  WITH CHECK ADD  CONSTRAINT [FK_Scheduler_Timetable] FOREIGN KEY([timetable_id])
+REFERENCES [dbo].[Timetable] ([timetable_id])
+GO
+ALTER TABLE [dbo].[Scheduler] CHECK CONSTRAINT [FK_Scheduler_Timetable]
+GO
+ALTER TABLE [dbo].[Customer]  WITH CHECK ADD  CONSTRAINT [CK_Customer_Status] CHECK  (([status]='INACTIVE' OR [status]='ACTIVE'))
+GO
+ALTER TABLE [dbo].[Customer] CHECK CONSTRAINT [CK_Customer_Status]
+GO
+ALTER TABLE [dbo].[Feedback]  WITH CHECK ADD  CONSTRAINT [CK_Feedback_Rating] CHECK  (([rating]>=(1) AND [rating]<=(5)))
+GO
+ALTER TABLE [dbo].[Feedback] CHECK CONSTRAINT [CK_Feedback_Rating]
+GO
+ALTER TABLE [dbo].[RefreshTokens]  WITH CHECK ADD  CONSTRAINT [CK_RefreshTokens_AccountType] CHECK  (([account_type]='CUSTOMER' AND [customer_id] IS NOT NULL AND [staff_account_id] IS NULL OR [account_type]='STAFF' AND [staff_account_id] IS NOT NULL AND [customer_id] IS NULL))
+GO
+ALTER TABLE [dbo].[RefreshTokens] CHECK CONSTRAINT [CK_RefreshTokens_AccountType]
+GO
+ALTER TABLE [dbo].[Room]  WITH CHECK ADD  CONSTRAINT [CK_Room_Status] CHECK  (([status]='MAINTENANCE' OR [status]='BOOKED' OR [status]='AVAILABLE'))
+GO
+ALTER TABLE [dbo].[Room] CHECK CONSTRAINT [CK_Room_Status]
+GO
+ALTER TABLE [dbo].[StaffAccounts]  WITH CHECK ADD  CONSTRAINT [CK_Admin_Role] CHECK  (([role]='STAFF' OR [role]='ADMIN'))
+GO
+ALTER TABLE [dbo].[StaffAccounts] CHECK CONSTRAINT [CK_Admin_Role]
+GO
+ALTER TABLE [dbo].[StaffAccounts]  WITH CHECK ADD  CONSTRAINT [CK_Admin_Status] CHECK  (([status]='INACTIVE' OR [status]='ACTIVE'))
+GO
+ALTER TABLE [dbo].[StaffAccounts] CHECK CONSTRAINT [CK_Admin_Status]
+GO
