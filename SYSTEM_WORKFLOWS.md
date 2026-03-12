@@ -99,7 +99,7 @@
 **Actors**: Customer  
 **Trigger**: Customer clicks "Book" on room detail page.
 
-1. Customer selects check-in and check-out dates.
+1. Customer selects slot on timetable at home page or room detail page.
 2. Customer uploads ID card front and back images.
 3. Customer optionally adds a note.
 4. System validates room availability for the selected dates.
@@ -227,3 +227,4 @@
 2. Admin selects a user to view full details (read-only).
 3. **Activate/Deactivate**: Admin toggles user status between `ACTIVE` and `INACTIVE`.
 4. System updates the status field in the corresponding table (Customer or StaffAccount).
+
