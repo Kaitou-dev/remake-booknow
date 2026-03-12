@@ -1033,13 +1033,14 @@ Below is the **complete** final schema, including all existing tables (with modi
 -- BookNow — Final Optimized Database Schema
 -- Version: 2.0 (with Housekeeping Module)
 -- Database: Microsoft SQL Server
+-- Generated from: DATABASE_REDESIGN_REPORT.md
 -- ============================================================
 
-USE [database_name]
+USE [BookNow]
 GO
 
 -- ============================================================
--- TABLE: Customer (UNCHANGED)
+-- TABLE: Customer
 -- ============================================================
 CREATE TABLE [dbo].[Customer](
     [customer_id]      [bigint] IDENTITY(1,1) NOT NULL,
@@ -1061,7 +1062,7 @@ CREATE TABLE [dbo].[Customer](
 GO
 
 -- ============================================================
--- TABLE: StaffAccounts (MODIFIED: role constraint)
+-- TABLE: StaffAccounts
 -- ============================================================
 CREATE TABLE [dbo].[StaffAccounts](
     [staff_account_id] [bigint] IDENTITY(1,1) NOT NULL,
@@ -1084,44 +1085,17 @@ CREATE TABLE [dbo].[StaffAccounts](
 GO
 
 -- ============================================================
--- TABLE: RefreshTokens (UNCHANGED)
--- ============================================================
-CREATE TABLE [dbo].[RefreshTokens](
-    [id]               [bigint] IDENTITY(1,1) NOT NULL,
-    [token_hash]       [varchar](255) NOT NULL,
-    [expires_at]       [datetime2](7) NOT NULL,
-    [is_revoked]       [bit] NOT NULL DEFAULT (0),
-    [revoked_at]       [datetime2](7) NULL,
-    [created_at]       [datetime2](7) NOT NULL DEFAULT (sysdatetime()),
-    [account_type]     [varchar](20) NOT NULL,
-    [customer_id]      [bigint] NULL,
-    [staff_account_id] [bigint] NULL,
-
-    PRIMARY KEY CLUSTERED ([id]),
-
-    CONSTRAINT [FK_RefreshTokens_Customers] FOREIGN KEY ([customer_id])
-        REFERENCES [dbo].[Customer]([customer_id]) ON DELETE CASCADE,
-    CONSTRAINT [FK_RefreshTokens_StaffAccounts] FOREIGN KEY ([staff_account_id])
-        REFERENCES [dbo].[StaffAccounts]([staff_account_id]) ON DELETE CASCADE,
-    CONSTRAINT [CK_RefreshTokens_AccountType] CHECK (
-        ([account_type] = 'CUSTOMER' AND [customer_id] IS NOT NULL AND [staff_account_id] IS NULL)
-        OR
-        ([account_type] = 'STAFF' AND [staff_account_id] IS NOT NULL AND [customer_id] IS NULL)
-    )
-);
-GO
-
--- ============================================================
--- TABLE: RoomType (EXTENDED: added pricing + description)
+-- TABLE: RoomType
 -- ============================================================
 CREATE TABLE [dbo].[RoomType](
     [room_type_id] [bigint] IDENTITY(1,1) NOT NULL,
     [name]         [nvarchar](100) NOT NULL,
-    [description]  [nvarchar](500) NULL,                  -- NEW
-    [base_price]   [decimal](12, 2) NULL,                  -- NEW
-    [over_price]   [decimal](12, 2) NULL,                  -- NEW
+    [description]  [nvarchar](500) NULL,
+    [base_price]   [decimal](12, 2) NULL,
+    [over_price]   [decimal](12, 2) NULL,
     [image_url]    [nvarchar](500) NULL,
     [max_guests]   [int] NOT NULL,
+    [area_m2]      [decimal](10, 2) NULL,
     [is_deleted]   [bit] NOT NULL DEFAULT (0),
 
     CONSTRAINT [PK_RoomType] PRIMARY KEY CLUSTERED ([room_type_id]),
@@ -1130,9 +1104,7 @@ CREATE TABLE [dbo].[RoomType](
 GO
 
 -- ============================================================
--- TABLE: Room (MODIFIED: expanded status constraint)
--- Note: base_price, over_price, description kept for backward
--- compatibility but should be migrated to RoomType over time.
+-- TABLE: Room
 -- ============================================================
 CREATE TABLE [dbo].[Room](
     [room_id]      [bigint] IDENTITY(1,1) NOT NULL,
@@ -1140,11 +1112,6 @@ CREATE TABLE [dbo].[Room](
     [room_number]  [nvarchar](50) NOT NULL,
     [status]       [varchar](50) NOT NULL DEFAULT ('AVAILABLE'),
     [is_deleted]   [bit] NOT NULL DEFAULT (0),
-    [area_m2]      [decimal](10, 2) NULL,
-    [base_price]   [decimal](12, 2) NULL,                  -- DEPRECATED: use RoomType.base_price
-    [over_price]   [decimal](12, 2) NULL,                  -- DEPRECATED: use RoomType.over_price
-    [description]  [nvarchar](500) NULL,                   -- DEPRECATED: use RoomType.description
-
     CONSTRAINT [PK_Room] PRIMARY KEY CLUSTERED ([room_id]),
     CONSTRAINT [UQ_Room_RoomNumber] UNIQUE ([room_number]),
     CONSTRAINT [FK_Room_RoomType] FOREIGN KEY ([room_type_id])
@@ -1157,7 +1124,7 @@ CREATE TABLE [dbo].[Room](
 GO
 
 -- ============================================================
--- TABLE: Amenity (UNCHANGED)
+-- TABLE: Amenity
 -- ============================================================
 CREATE TABLE [dbo].[Amenity](
     [amenity_id] [bigint] IDENTITY(1,1) NOT NULL,
@@ -1171,7 +1138,7 @@ CREATE TABLE [dbo].[Amenity](
 GO
 
 -- ============================================================
--- TABLE: RoomAmenity (EXTENDED: added unique constraint)
+-- TABLE: RoomAmenity
 -- ============================================================
 CREATE TABLE [dbo].[RoomAmenity](
     [room_amenity_id] [bigint] IDENTITY(1,1) NOT NULL,
@@ -1183,12 +1150,12 @@ CREATE TABLE [dbo].[RoomAmenity](
         REFERENCES [dbo].[Room]([room_id]),
     CONSTRAINT [FK_RoomAmenity_Amenity] FOREIGN KEY ([amenity_id])
         REFERENCES [dbo].[Amenity]([amenity_id]),
-    CONSTRAINT [UQ_RoomAmenity_Room_Amenity] UNIQUE ([room_id], [amenity_id])  -- NEW
+    CONSTRAINT [UQ_RoomAmenity_Room_Amenity] UNIQUE ([room_id], [amenity_id])
 );
 GO
 
 -- ============================================================
--- TABLE: Image (UNCHANGED)
+-- TABLE: Image
 -- ============================================================
 CREATE TABLE [dbo].[Image](
     [image_id]  [bigint] IDENTITY(1,1) NOT NULL,
@@ -1204,7 +1171,7 @@ CREATE TABLE [dbo].[Image](
 GO
 
 -- ============================================================
--- TABLE: Booking (EXTENDED: actual timestamps + CHECK)
+-- TABLE: Booking
 -- ============================================================
 CREATE TABLE [dbo].[Booking](
     [booking_id]            [bigint] IDENTITY(1,1) NOT NULL,
@@ -1212,8 +1179,8 @@ CREATE TABLE [dbo].[Booking](
     [room_id]               [bigint] NOT NULL,
     [check_in_time]         [datetime2](7) NOT NULL,
     [check_out_time]        [datetime2](7) NOT NULL,
-    [actual_check_in_time]  [datetime2](7) NULL,               -- NEW
-    [actual_check_out_time] [datetime2](7) NULL,               -- NEW
+    [actual_check_in_time]  [datetime2](7) NULL,
+    [actual_check_out_time] [datetime2](7) NULL,
     [id_card_front_url]     [nvarchar](500) NOT NULL,
     [id_card_back_url]      [nvarchar](500) NOT NULL,
     [booking_status]        [nvarchar](20) NOT NULL,
@@ -1228,15 +1195,15 @@ CREATE TABLE [dbo].[Booking](
         REFERENCES [dbo].[Customer]([customer_id]),
     CONSTRAINT [FK_Booking_Room] FOREIGN KEY ([room_id])
         REFERENCES [dbo].[Room]([room_id]),
-    CONSTRAINT [CK_Booking_Status] CHECK ([booking_status] IN (           -- NEW
-        'PENDING', 'WAITING_PAYMENT', 'PAID',
-        'CHECKED_IN', 'CHECKED_OUT', 'COMPLETED', 'CANCELLED'
+    CONSTRAINT [CK_Booking_Status] CHECK ([booking_status] IN (
+        'PENDING', 'PENDING_PAYMENT', 'PAID',
+        'CHECKED_IN', 'CHECKED_OUT', 'COMPLETED', 'FAILED', 'REJECTED'
     ))
 );
 GO
 
 -- ============================================================
--- TABLE: Payment (MODIFIED: paid_at nullable)
+-- TABLE: Payment
 -- ============================================================
 CREATE TABLE [dbo].[Payment](
     [payment_id]     [bigint] IDENTITY(1,1) NOT NULL,
@@ -1244,7 +1211,7 @@ CREATE TABLE [dbo].[Payment](
     [amount]         [decimal](12, 2) NOT NULL,
     [method]         [nvarchar](50) NOT NULL,
     [payment_status] [varchar](20) NOT NULL,
-    [paid_at]        [datetime2](7) NULL,                     -- MODIFIED: was NOT NULL with default
+    [paid_at]        [datetime2](7) NULL,
 
     CONSTRAINT [PK_Payment] PRIMARY KEY CLUSTERED ([payment_id]),
     CONSTRAINT [FK_Payment_Booking] FOREIGN KEY ([booking_id])
@@ -1253,7 +1220,7 @@ CREATE TABLE [dbo].[Payment](
 GO
 
 -- ============================================================
--- TABLE: Invoice (UNCHANGED — to be improved in future)
+-- TABLE: Invoice
 -- ============================================================
 CREATE TABLE [dbo].[Invoice](
     [invoice_id]     [bigint] IDENTITY(1,1) NOT NULL,
@@ -1269,12 +1236,12 @@ CREATE TABLE [dbo].[Invoice](
 GO
 
 -- ============================================================
--- TABLE: Feedback (MODIFIED: admin_id nullable)
+-- TABLE: Feedback
 -- ============================================================
 CREATE TABLE [dbo].[Feedback](
     [feedback_id]   [bigint] IDENTITY(1,1) NOT NULL,
     [booking_id]    [bigint] NOT NULL,
-    [admin_id]      [bigint] NULL,                            -- MODIFIED: was NOT NULL
+    [admin_id]      [bigint] NULL,
     [rating]        [int] NOT NULL,
     [content]       [nvarchar](1000) NOT NULL,
     [content_reply] [nvarchar](1000) NULL,
@@ -1292,7 +1259,7 @@ CREATE TABLE [dbo].[Feedback](
 GO
 
 -- ============================================================
--- TABLE: Timetable (UNCHANGED)
+-- TABLE: Timetable
 -- ============================================================
 CREATE TABLE [dbo].[Timetable](
     [timetable_id] [bigint] IDENTITY(1,1) NOT NULL,
@@ -1305,7 +1272,7 @@ CREATE TABLE [dbo].[Timetable](
 GO
 
 -- ============================================================
--- TABLE: Scheduler (UNCHANGED)
+-- TABLE: Scheduler
 -- ============================================================
 CREATE TABLE [dbo].[Scheduler](
     [scheduler_id] [bigint] IDENTITY(1,1) NOT NULL,
@@ -1322,7 +1289,34 @@ CREATE TABLE [dbo].[Scheduler](
 GO
 
 -- ============================================================
--- TABLE: CheckInSession (NEW — was documented but missing)
+-- TABLE: RefreshTokens
+-- ============================================================
+CREATE TABLE [dbo].[RefreshTokens](
+    [id]               [bigint] IDENTITY(1,1) NOT NULL,
+    [token_hash]       [varchar](255) NOT NULL,
+    [expires_at]       [datetime2](7) NOT NULL,
+    [is_revoked]       [bit] NOT NULL DEFAULT (0),
+    [revoked_at]       [datetime2](7) NULL,
+    [created_at]       [datetime2](7) NOT NULL DEFAULT (sysdatetime()),
+    [account_type]     [varchar](20) NOT NULL,
+    [customer_id]      [bigint] NULL,
+    [staff_account_id] [bigint] NULL,
+
+    CONSTRAINT [PK_RefreshTokens] PRIMARY KEY CLUSTERED ([id]),
+    CONSTRAINT [FK_RefreshTokens_Customers] FOREIGN KEY ([customer_id])
+        REFERENCES [dbo].[Customer]([customer_id]) ON DELETE CASCADE,
+    CONSTRAINT [FK_RefreshTokens_StaffAccounts] FOREIGN KEY ([staff_account_id])
+        REFERENCES [dbo].[StaffAccounts]([staff_account_id]) ON DELETE CASCADE,
+    CONSTRAINT [CK_RefreshTokens_AccountType] CHECK (
+        ([account_type] = 'CUSTOMER' AND [customer_id] IS NOT NULL AND [staff_account_id] IS NULL)
+        OR
+        ([account_type] = 'STAFF' AND [staff_account_id] IS NOT NULL AND [customer_id] IS NULL)
+    )
+);
+GO
+
+-- ============================================================
+-- TABLE: CheckInSession (NEW)
 -- ============================================================
 CREATE TABLE [dbo].[CheckInSession](
     [check_in_session_id] [bigint] IDENTITY(1,1) NOT NULL,
@@ -1474,6 +1468,7 @@ CREATE NONCLUSTERED INDEX [IX_TaskChecklist_TaskId]
 ON [dbo].[TaskChecklist] ([task_id])
 INCLUDE ([item_name], [is_completed]);
 GO
+
 ```
 
 ---
@@ -1567,3 +1562,4 @@ NEW: Explicitly SET paid_at = sysdatetime() only when payment_status → SUCCESS
 ---
 
 *End of Report*
+
