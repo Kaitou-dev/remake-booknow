@@ -1,0 +1,209 @@
+ <!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thanh toán Momo - BookNow</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            DEFAULT: '#2563eb', // blue-600
+                        },
+                        momo: {
+                            DEFAULT: '#A50064', // Momo Pink
+                            light: '#D82D8B',
+                            bg: '#FFF0F6'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+
+    <!-- === LOGO (Fixed Top-Left, 25px margin) === -->
+    <div style="position: fixed; top: 25px; left: 25px; z-index: 100;" class="bg-white/90 backdrop-blur px-4 py-2 rounded-xl shadow-sm border border-white/50">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+            <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center border border-blue-100">
+                <i class="fa-solid fa-house-chimney gradient-icon text-xl text-blue-600"></i>
+            </div>
+            <div class="flex flex-col justify-center">
+                <span class="text-2xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-blue-500 to-blue-700 leading-none">BookNow</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="min-h-screen flex items-center justify-center pt-24 pb-12 px-4">
+        
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-4xl overflow-hidden flex flex-col md:flex-row border border-gray-100">
+            
+            <!-- LEFT SIDE: Payment Details & QR -->
+            <div class="w-full md:w-3/5 p-8 bg-white text-center">
+                
+                <!-- Momo Header -->
+                <div class="flex items-center justify-center gap-2 mb-6">
+                    <div class="w-10 h-10 rounded-lg bg-[#A50064] flex items-center justify-center text-white">
+                        <i class="fa-solid fa-wallet text-xl"></i>
+                    </div>
+                    <span class="text-xl font-bold text-[#A50064]">Thanh toán qua Ví MoMo</span>
+                </div>
+
+                <!-- Timer -->
+                <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-yellow-50 text-yellow-700 text-sm font-medium mb-6 border border-yellow-100">
+                    <i class="fa-regular fa-clock"></i>
+                    <span>Đơn hàng hết hạn sau: <span id="countdown" class="font-bold">10:00</span></span>
+                </div>
+
+                <!-- QR Code Box -->
+                <div class="bg-momo-bg p-6 rounded-2xl border border-pink-100 inline-block mb-6 relative group">
+                    <div class="bg-white p-2 rounded-xl shadow-sm">
+                        <!-- Simulated QR Code API -->
+                        <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=BookNow_Payment_Order_123456_Amount_500000" 
+                             alt="Momo QR Code" 
+                             class="w-48 h-48 md:w-56 md:h-56 object-contain">
+                    </div>
+                    <!-- Logo Overlay (Simulated center logo) -->
+                    <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-10 h-10 bg-white rounded-lg p-1 shadow-md flex items-center justify-center">
+                        <i class="fa-solid fa-wallet text-[#A50064] text-xl"></i>
+                    </div>
+                    <p class="mt-4 text-sm text-gray-600 font-medium">Quét mã để thanh toán</p>
+                </div>
+
+                <!-- Total Amount Highlight -->
+                <div class="mb-6">
+                    <p class="text-gray-500 text-sm mb-1">Tổng tiền thanh toán</p>
+                    <h2 class="text-3xl font-bold text-[#A50064]">500.000đ</h2>
+                </div>
+
+            </div>
+
+            <!-- RIGHT SIDE: Instructions & Order Info -->
+            <div class="w-full md:w-2/5 bg-gray-50 p-8 border-l border-gray-100 flex flex-col">
+                
+                <h3 class="text-lg font-bold text-gray-800 mb-6">Hướng dẫn thanh toán</h3>
+
+                <div class="space-y-6 flex-1">
+                    <!-- Step 1 -->
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-[#A50064] text-white flex items-center justify-center font-bold text-sm">1</div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800 text-sm">Mở ứng dụng MoMo</h4>
+                            <p class="text-xs text-gray-500 mt-1">Đảm bảo bạn đã cài đặt và đăng nhập vào ví MoMo trên điện thoại.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 2 -->
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-[#A50064] text-white flex items-center justify-center font-bold text-sm">2</div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800 text-sm">Chọn "Quét Mã"</h4>
+                            <p class="text-xs text-gray-500 mt-1">Chọn biểu tượng quét mã QR ở góc trên bên phải màn hình chính ứng dụng.</p>
+                        </div>
+                    </div>
+
+                    <!-- Step 3 -->
+                    <div class="flex gap-4">
+                        <div class="flex-shrink-0 w-8 h-8 rounded-full bg-[#A50064] text-white flex items-center justify-center font-bold text-sm">3</div>
+                        <div>
+                            <h4 class="font-semibold text-gray-800 text-sm">Quét mã & Xác nhận</h4>
+                            <p class="text-xs text-gray-500 mt-1">Di chuyển camera để quét mã QR bên cạnh. Kiểm tra số tiền và nhấn "Xác nhận".</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Order Detail Summary -->
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <h4 class="text-xs font-bold text-gray-400 uppercase mb-3">Thông tin đơn hàng</h4>
+                    <div class="space-y-2 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Mã đơn hàng:</span>
+                            <span class="font-medium text-gray-900">#BK88921</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Nội dung:</span>
+                            <span class="font-medium text-gray-900">Thanh toan BookNow</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="mt-8 space-y-3">
+                    <button onclick="window.history.back()" class="w-full bg-white border border-gray-300 text-gray-600 hover:bg-gray-50 font-medium py-3 rounded-xl transition-all">
+                        Quay lại / Chọn phương thức khác
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Script for Timer & Logic -->
+    <script>
+        // Countdown Timer Logic
+        function startTimer(duration, display) {
+            var timer = duration, minutes, seconds;
+            var interval = setInterval(function () {
+                minutes = parseInt(timer / 60, 10);
+                seconds = parseInt(timer % 60, 10);
+
+                minutes = minutes < 10 ? "0" + minutes : minutes;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+
+                display.textContent = minutes + ":" + seconds;
+
+                if (--timer < 0) {
+                    clearInterval(interval);
+                    display.textContent = "00:00";
+                    alert("Phiên giao dịch đã hết hạn. Vui lòng tạo lại đơn hàng.");
+                    window.location.href = 'index.html';
+                }
+            }, 1000);
+        }
+
+        window.onload = function () {
+            var tenMinutes = 60 * 10,
+                display = document.querySelector('#countdown');
+            startTimer(tenMinutes, display);
+        };
+
+        function finishPayment() {
+            // Simulate checking payment status
+            const btn = document.querySelector('button[onclick="finishPayment()"]');
+            const originalText = btn.innerHTML;
+            
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Đang kiểm tra...';
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            setTimeout(() => {
+                alert("Thanh toán thành công! Cảm ơn bạn đã đặt phòng.");
+                window.location.href = 'index.html'; // Or redirect to success page
+            }, 2000);
+        }
+    </script>
+
+</body>
+</html>

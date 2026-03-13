@@ -1,0 +1,11 @@
+crawler\models\Room.class
+crawler\HtmlParser.class
+crawler\models\RoomAmenity.class
+crawler\SeleniumDriverFactory.class
+crawler\models\RoomType.class
+crawler\Main.class
+crawler\RoomListCrawler.class
+crawler\SqlGenerator.class
+crawler\models\Amenity.class
+crawler\models\Image.class
+crawler\RoomDetailCrawler.class

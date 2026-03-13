@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cleaning Task List - BookNow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: { light: '#60a5fa', DEFAULT: '#3b82f6', dark: '#2563eb' },
+                        room: {
+                            available:   '#10b981',
+                            booked:      '#3b82f6',
+                            occupied:    '#6b7280',
+                            cleaning:    '#f59e0b',
+                            maintenance: '#ef4444',
+                            deleted:     '#374151',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-icon { color: #3b82f6; }
+
+        .logo-fixed {
+            position: fixed; top: 0; left: 0;
+            margin-top: 25px; margin-left: 25px; z-index: 60;
+        }
+
+        .sidebar { transition: transform 0.3s ease-in-out; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
+        .pulse-slow { animation: blink 2s infinite; }
+
+        .overdue-row { background: #fff7ed; }
+        .overdue-row:hover { background: #ffedd5 !important; }
+
+        .task-row { transition: background .15s; }
+        .task-row:hover { background: #f8fafc; }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-sans text-gray-800">
+
+    <!-- LOGO -->
+    <div class="logo-fixed flex items-center gap-3 select-none bg-white/90 backdrop-blur px-3 py-2 rounded-xl shadow-sm lg:shadow-none lg:bg-transparent lg:p-0">
+        <div class="w-10 h-10 bg-white rounded-lg shadow-md flex items-center justify-center border border-blue-100">
+            <i class="fa-solid fa-house-chimney gradient-icon text-xl"></i>
+        </div>
+        <div class="flex flex-col justify-center">
+            <span class="text-2xl font-extrabold tracking-tight gradient-text leading-none">BookNow</span>
+            <span class="text-[10px] text-gray-500 font-medium uppercase tracking-wider pl-0.5">Homestay System</span>
+        </div>
+    </div>
+
+    <!-- MOBILE HEADER -->
+    <div class="lg:hidden fixed top-0 w-full bg-white h-20 shadow-sm z-40 flex items-center justify-end px-6">
+        <button id="mobileMenuBtn" class="text-gray-500 hover:text-blue-600 focus:outline-none">
+            <i class="fa-solid fa-bars text-2xl"></i>
+        </button>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 z-50 transform -translate-x-full lg:translate-x-0 pt-28 overflow-y-auto no-scrollbar">
+        <div class="px-4 mb-4">
+            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-4">Housekeeping</span>
+        </div>
+        <nav class="px-4 space-y-1">
+            <a href="Housekeeping_task_list.html" class="flex items-center gap-3 px-4 py-3 bg-amber-50 text-amber-700 rounded-lg font-semibold transition-colors">
+                <i class="fa-solid fa-list-check w-5"></i>
+                Task List
+            </a>
+            <a href="Housekeeping_dashboard.html" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg font-medium transition-colors">
+                <i class="fa-solid fa-broom w-5"></i>
+                Dashboard
+            </a>
+        </nav>
+        <div class="absolute bottom-0 w-full p-4 border-t border-gray-100 bg-white">
+            <div class="flex items-center gap-3 px-4 py-2 mb-2">
+                <div class="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-bold text-sm border-2 border-white shadow-sm">HK</div>
+                <div>
+                    <p class="text-sm font-bold text-gray-800 leading-none">Trần Thị B</p>
+                    <span class="text-[11px] text-amber-600 font-semibold">Housekeeping</span>
+                </div>
+            </div>
+            <a href="login-admin.html" class="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg font-medium transition-colors">
+                <i class="fa-solid fa-arrow-right-from-bracket w-5"></i>
+                Đăng xuất
+            </a>
+        </div>
+    </aside>
+
+    <!-- OVERLAY (mobile) -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="lg:ml-64 min-h-screen pt-24 lg:pt-8 px-4 sm:px-6 pb-10 transition-all duration-300">
+
+        <!-- HEADER -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+            <div>
+                <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                    <i class="fa-solid fa-list-check text-amber-500"></i>
+                    Cleaning Task List
+                </h1>
+                <p class="text-sm text-gray-500 mt-1">Manage room cleaning &amp; maintenance tasks</p>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="refreshData()" class="flex items-center gap-2 bg-white border border-gray-200 rounded-lg px-4 py-2 text-sm text-gray-600 shadow-sm hover:bg-gray-50 transition-colors font-medium">
+                    <i class="fa-solid fa-arrows-rotate"></i> Refresh
+                </button>
+            </div>
+        </div>
+
+        <!-- FILTERS -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 mb-6">
+            <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+                <!-- Search -->
+                <div class="relative flex-1 max-w-xs">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                    <input type="text" id="searchRoom" oninput="filterTable()" placeholder="Search room number..." class="w-full pl-9 pr-4 py-2.5 text-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400">
+                </div>
+
+                <!-- Status Filter -->
+                <select id="filterStatus" onchange="filterTable()" class="text-sm border border-gray-200 rounded-lg px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-amber-300 bg-white">
+                    <option value="">All Statuses</option>
+                    <option value="CLEANING">Cleaning</option>
+                    <option value="MAINTENANCE">Maintenance</option>
+                </select>
+
+                <!-- Reset -->
+                <button onclick="resetFilters()" class="text-sm text-gray-500 hover:text-amber-600 font-medium flex items-center gap-1 whitespace-nowrap">
+                    <i class="fa-solid fa-filter-circle-xmark"></i> Clear Filters
+                </button>
+            </div>
+        </div>
+
+        <!-- TASK TABLE -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="px-6 py-4 border-b border-gray-100">
+                <h3 class="font-bold text-gray-800 text-base">Rooms Requiring Action</h3>
+                <p class="text-xs text-gray-500 mt-0.5">Showing <span id="rowCount" class="font-semibold text-gray-700">8</span> rooms · Sorted by priority</p>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm" id="taskTable">
+                    <thead>
+                        <tr class="bg-gray-50/80 text-[11px] text-gray-400 uppercase tracking-wider">
+                            <th class="px-6 py-3 text-left font-semibold">Room</th>
+                            <th class="px-4 py-3 text-left font-semibold">Floor</th>
+                            <th class="px-4 py-3 text-left font-semibold">Status</th>
+                            <th class="px-4 py-3 text-left font-semibold">Reason</th>
+                            <th class="px-4 py-3 text-left font-semibold">Last Checkout</th>
+                            <th class="px-4 py-3 text-left font-semibold">Priority</th>
+                            <th class="px-6 py-3 text-right font-semibold">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-50" id="taskBody">
+
+                        <!-- Row 1: Overdue Checkout — CLEANING -->
+                        <tr class="task-row overdue-row" data-room="101" data-status="CLEANING" data-overdue="true">
+                            <td class="px-6 py-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-gray-800 text-base">101</span>
+                                    <i class="fa-solid fa-triangle-exclamation text-orange-500 text-xs" title="Overdue Checkout"></i>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3 text-gray-600">Floor 1</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-yellow-50 text-yellow-700">
+                                    <span class="w-2 h-2 rounded-full bg-yellow-500 pulse-slow"></span>
+                                    CLEANING
+                                </span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-orange-50 text-orange-700">
+                                    <i class="fa-solid fa-clock text-[9px]"></i> Overdue Checkout
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-gray-500 text-xs font-medium">10:00 AM</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-red-50 text-red-600">
+                                    <i class="fa-solid fa-arrow-up text-[8px]"></i> High
+                                </span>
+                            </td>
+                            <td class="px-6 py-3 text-right">
+                                <a href="Housekeeping_task_detail.html?room=101" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-amber-500 text-white hover:bg-amber-600 transition-colors">
+                                    <i class="fa-solid fa-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- Row 2: CLEANING — Checkout -->
+                        <tr class="task-row" data-room="203" data-status="CLEANING" data-overdue="false">
+                            <td class="px-6 py-3"><span class="font-bold text-gray-800 text-base">203</span></td>
+                            <td class="px-4 py-3 text-gray-600">Floor 2</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-yellow-50 text-yellow-700">
+                                    <span class="w-2 h-2 rounded-full bg-yellow-500 pulse-slow"></span>
+                                    CLEANING
+                                </span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="text-xs text-gray-600 font-medium">Checkout</span>
+                            </td>
+                            <td class="px-4 py-3 text-gray-500 text-xs font-medium">10:30 AM</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700">
+                                    <i class="fa-solid fa-minus text-[8px]"></i> Normal
+                                </span>
+                            </td>
+                            <td class="px-6 py-3 text-right">
+                                <a href="Housekeeping_task_detail.html?room=203" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-amber-500 text-white hover:bg-amber-600 transition-colors">
+                                    <i class="fa-solid fa-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- Row 3: CLEANING — Checkout -->
+                        <tr class="task-row" data-room="105" data-status="CLEANING" data-overdue="false">
+                            <td class="px-6 py-3"><span class="font-bold text-gray-800 text-base">105</span></td>
+                            <td class="px-4 py-3 text-gray-600">Floor 1</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-yellow-50 text-yellow-700">
+                                    <span class="w-2 h-2 rounded-full bg-yellow-500 pulse-slow"></span>
+                                    CLEANING
+                                </span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="text-xs text-gray-600 font-medium">Checkout</span>
+                            </td>
+                            <td class="px-4 py-3 text-gray-500 text-xs font-medium">09:15 AM</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700">
+                                    <i class="fa-solid fa-minus text-[8px]"></i> Normal
+                                </span>
+                            </td>
+                            <td class="px-6 py-3 text-right">
+                                <a href="Housekeeping_task_detail.html?room=105" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-amber-500 text-white hover:bg-amber-600 transition-colors">
+                                    <i class="fa-solid fa-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- Row 4: Overdue Checkout — CLEANING -->
+                        <tr class="task-row overdue-row" data-room="302" data-status="CLEANING" data-overdue="true">
+                            <td class="px-6 py-3">
+                                <div class="flex items-center gap-2">
+                                    <span class="font-bold text-gray-800 text-base">302</span>
+                                    <i class="fa-solid fa-triangle-exclamation text-orange-500 text-xs" title="Overdue Checkout"></i>
+                                </div>
+                            </td>
+                            <td class="px-4 py-3 text-gray-600">Floor 3</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-yellow-50 text-yellow-700">
+                                    <span class="w-2 h-2 rounded-full bg-yellow-500 pulse-slow"></span>
+                                    CLEANING
+                                </span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-orange-50 text-orange-700">
+                                    <i class="fa-solid fa-clock text-[9px]"></i> Overdue Checkout
+                                </span>
+                            </td>
+                            <td class="px-4 py-3 text-gray-500 text-xs font-medium">08:00 AM</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-red-50 text-red-600">
+                                    <i class="fa-solid fa-arrow-up text-[8px]"></i> High
+                                </span>
+                            </td>
+                            <td class="px-6 py-3 text-right">
+                                <a href="Housekeeping_task_detail.html?room=302" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-amber-500 text-white hover:bg-amber-600 transition-colors">
+                                    <i class="fa-solid fa-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- Row 5: MAINTENANCE -->
+                        <tr class="task-row" data-room="301" data-status="MAINTENANCE" data-overdue="false">
+                            <td class="px-6 py-3"><span class="font-bold text-gray-800 text-base">301</span></td>
+                            <td class="px-4 py-3 text-gray-600">Floor 3</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-50 text-red-600">
+                                    <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                                    MAINTENANCE
+                                </span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="text-xs text-red-600 font-medium">Maintenance</span>
+                            </td>
+                            <td class="px-4 py-3 text-gray-500 text-xs font-medium">Yesterday 3:00 PM</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-red-50 text-red-600">
+                                    <i class="fa-solid fa-arrow-up text-[8px]"></i> High
+                                </span>
+                            </td>
+                            <td class="px-6 py-3 text-right">
+                                <a href="Housekeeping_task_detail.html?room=301" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-amber-500 text-white hover:bg-amber-600 transition-colors">
+                                    <i class="fa-solid fa-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- Row 6: CLEANING — Checkout -->
+                        <tr class="task-row" data-room="204" data-status="CLEANING" data-overdue="false">
+                            <td class="px-6 py-3"><span class="font-bold text-gray-800 text-base">204</span></td>
+                            <td class="px-4 py-3 text-gray-600">Floor 2</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-yellow-50 text-yellow-700">
+                                    <span class="w-2 h-2 rounded-full bg-yellow-500 pulse-slow"></span>
+                                    CLEANING
+                                </span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="text-xs text-gray-600 font-medium">Checkout</span>
+                            </td>
+                            <td class="px-4 py-3 text-gray-500 text-xs font-medium">11:45 AM</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-gray-100 text-gray-500">
+                                    <i class="fa-solid fa-arrow-down text-[8px]"></i> Low
+                                </span>
+                            </td>
+                            <td class="px-6 py-3 text-right">
+                                <a href="Housekeeping_task_detail.html?room=204" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-amber-500 text-white hover:bg-amber-600 transition-colors">
+                                    <i class="fa-solid fa-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- Row 7: MAINTENANCE -->
+                        <tr class="task-row" data-room="103" data-status="MAINTENANCE" data-overdue="false">
+                            <td class="px-6 py-3"><span class="font-bold text-gray-800 text-base">103</span></td>
+                            <td class="px-4 py-3 text-gray-600">Floor 1</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-50 text-red-600">
+                                    <span class="w-2 h-2 rounded-full bg-red-500"></span>
+                                    MAINTENANCE
+                                </span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="text-xs text-red-600 font-medium">Maintenance</span>
+                            </td>
+                            <td class="px-4 py-3 text-gray-500 text-xs font-medium">Today 07:30 AM</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700">
+                                    <i class="fa-solid fa-minus text-[8px]"></i> Normal
+                                </span>
+                            </td>
+                            <td class="px-6 py-3 text-right">
+                                <a href="Housekeeping_task_detail.html?room=103" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-amber-500 text-white hover:bg-amber-600 transition-colors">
+                                    <i class="fa-solid fa-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+
+                        <!-- Row 8: CLEANING — Checkout -->
+                        <tr class="task-row" data-room="201" data-status="CLEANING" data-overdue="false">
+                            <td class="px-6 py-3"><span class="font-bold text-gray-800 text-base">201</span></td>
+                            <td class="px-4 py-3 text-gray-600">Floor 2</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-yellow-50 text-yellow-700">
+                                    <span class="w-2 h-2 rounded-full bg-yellow-500 pulse-slow"></span>
+                                    CLEANING
+                                </span>
+                            </td>
+                            <td class="px-4 py-3">
+                                <span class="text-xs text-gray-600 font-medium">Checkout</span>
+                            </td>
+                            <td class="px-4 py-3 text-gray-500 text-xs font-medium">12:00 PM</td>
+                            <td class="px-4 py-3">
+                                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-gray-100 text-gray-500">
+                                    <i class="fa-solid fa-arrow-down text-[8px]"></i> Low
+                                </span>
+                            </td>
+                            <td class="px-6 py-3 text-right">
+                                <a href="Housekeeping_task_detail.html?room=201" class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-xs font-semibold bg-amber-500 text-white hover:bg-amber-600 transition-colors">
+                                    <i class="fa-solid fa-eye"></i> View
+                                </a>
+                            </td>
+                        </tr>
+
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden py-16 text-center">
+                <i class="fa-solid fa-circle-check text-4xl text-emerald-300 mb-3"></i>
+                <p class="text-gray-500 font-medium">No tasks match your filters.</p>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- SCRIPTS -->
+    <script>
+        // ── Mobile sidebar ──
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarOverlay.classList.toggle('hidden');
+        }
+        mobileMenuBtn.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // ── Search & Filter ──
+        function filterTable() {
+            const search = document.getElementById('searchRoom').value.trim().toLowerCase();
+            const status = document.getElementById('filterStatus').value;
+            const rows = document.querySelectorAll('#taskBody tr');
+            let visible = 0;
+
+            rows.forEach(row => {
+                const room = row.getAttribute('data-room') || '';
+                const rowStatus = row.getAttribute('data-status') || '';
+                const matchRoom = !search || room.includes(search);
+                const matchStatus = !status || rowStatus === status;
+
+                if (matchRoom && matchStatus) {
+                    row.style.display = '';
+                    visible++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            document.getElementById('rowCount').textContent = visible;
+            document.getElementById('emptyState').classList.toggle('hidden', visible > 0);
+        }
+
+        function resetFilters() {
+            document.getElementById('searchRoom').value = '';
+            document.getElementById('filterStatus').value = '';
+            filterTable();
+        }
+
+        function refreshData() {
+            // Placeholder — would fetch from API in production
+            window.location.reload();
+        }
+    </script>
+
+</body>
+</html>

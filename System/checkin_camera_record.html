@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quay video xác thực - BookNow Kiosk</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            DEFAULT: '#2563eb', // blue-600
+                        }
+                    },
+                    animation: {
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Ẩn thanh cuộn */
+        body {
+            overflow: hidden; 
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 h-screen flex flex-col justify-center items-center relative overflow-hidden">
+
+    <!-- === BACKGROUND DECORATION === -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-blue-200 rounded-full opacity-30 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-80 h-80 bg-blue-300 rounded-full opacity-20 blur-3xl"></div>
+    </div>
+
+    <!-- === LOGO (Fixed Top-Left, 25px margin) === -->
+    <div style="position: fixed; top: 25px; left: 25px; z-index: 100;" class="bg-white/90 backdrop-blur px-6 py-3 rounded-2xl shadow-sm border border-white/50">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center border border-blue-100">
+                <i class="fa-solid fa-house-chimney gradient-icon text-2xl text-blue-600"></i>
+            </div>
+            <div class="flex flex-col justify-center">
+                <span class="text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-blue-500 to-blue-700 leading-none">BookNow</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- === MAIN KIOSK CARD === -->
+    <div class="w-full max-w-4xl px-4 relative z-10">
+        
+        <div class="bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-white/50 flex flex-col md:flex-row h-[600px]">
+            
+            <!-- LEFT: Camera Viewport -->
+            <div class="w-full md:w-2/3 bg-black relative flex flex-col justify-center items-center group">
+                
+                <!-- Camera Feed Simulation -->
+                <div id="camera-feed" class="w-full h-full bg-gray-900 flex items-center justify-center relative overflow-hidden">
+                    <!-- Placeholder User Icon -->
+                    <i class="fa-solid fa-user text-gray-700 text-9xl opacity-50 absolute bottom-0 transform translate-y-1/4"></i>
+                    
+                    <!-- Guide Frame -->
+                    <div class="absolute w-64 h-40 border-2 border-white/30 rounded-xl flex items-center justify-center">
+                        <span class="text-white/50 text-xs font-medium uppercase tracking-widest">Khung thẻ CCCD</span>
+                    </div>
+
+                    <!-- Recording Indicator (Hidden by default) -->
+                    <div id="recording-dot" class="absolute top-6 left-6 flex items-center gap-2 bg-red-600/20 backdrop-blur px-3 py-1.5 rounded-full border border-red-500/30 hidden">
+                        <div class="w-3 h-3 bg-red-600 rounded-full animate-pulse"></div>
+                        <span class="text-white text-xs font-bold uppercase tracking-wider">REC</span>
+                    </div>
+
+                    <!-- Timer Overlay -->
+                    <div class="absolute top-6 right-6 bg-black/40 backdrop-blur px-4 py-2 rounded-lg border border-white/10">
+                        <span id="timer-display" class="text-white font-mono text-xl font-bold tracking-widest">00:00</span>
+                        <span class="text-gray-400 text-xs font-medium ml-1">/ 15s</span>
+                    </div>
+
+                    <!-- Status Icons -->
+                    <div class="absolute bottom-6 left-6 flex gap-3">
+                        <div class="w-10 h-10 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/10">
+                            <i class="fa-solid fa-microphone"></i>
+                        </div>
+                        <div class="w-10 h-10 bg-black/40 backdrop-blur rounded-full flex items-center justify-center text-white border border-white/10">
+                            <i class="fa-solid fa-video"></i>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Overlay Message (Success) -->
+                <div id="success-overlay" class="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center hidden z-20">
+                    <div class="w-20 h-20 bg-green-500 rounded-full flex items-center justify-center text-white text-4xl mb-4 shadow-lg animate-bounce">
+                        <i class="fa-solid fa-check"></i>
+                    </div>
+                    <h3 class="text-white text-2xl font-bold">Đã lưu video!</h3>
+                    <button onclick="resetRecording()" class="mt-6 text-white/80 hover:text-white underline text-sm">Quay lại</button>
+                </div>
+
+            </div>
+
+            <!-- RIGHT: Controls -->
+            <div class="w-full md:w-1/3 p-8 md:p-10 flex flex-col justify-between bg-white relative">
+                
+                <div>
+                    <h2 class="text-2xl font-extrabold text-gray-900 mb-2">Quay video xác thực</h2>
+                    <p class="text-gray-500 text-sm leading-relaxed mb-6">
+                        Vui lòng giữ thẻ ID trước camera và quay rõ hai mặt trong vòng 15 giây.
+                    </p>
+                    
+                    <!-- Steps / Status -->
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3 p-3 rounded-xl bg-blue-50 border border-blue-100">
+                            <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-sm">1</div>
+                            <span class="text-sm font-medium text-blue-900">Chuẩn bị giấy tờ</span>
+                        </div>
+                        <div class="flex items-center gap-3 p-3 rounded-xl bg-gray-50 border border-gray-100">
+                            <div class="w-8 h-8 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 font-bold text-sm">2</div>
+                            <span class="text-sm font-medium text-gray-600">Quay video 15s</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Control Buttons -->
+                <div class="flex flex-col gap-4">
+                    
+                    <!-- Record / Stop Toggle -->
+                    <div id="record-controls">
+                        <button id="btn-start" onclick="startRecording()" class="w-full bg-red-500 hover:bg-red-600 text-white py-4 rounded-2xl shadow-lg shadow-red-500/30 transition-all transform active:scale-95 flex items-center justify-center gap-3 group">
+                            <div class="w-4 h-4 rounded-full bg-white group-hover:animate-pulse"></div>
+                            <span class="text-lg font-bold">Bắt đầu quay</span>
+                        </button>
+
+                        <button id="btn-stop" onclick="stopRecording()" class="w-full bg-gray-800 hover:bg-gray-900 text-white py-4 rounded-2xl shadow-lg transition-all transform active:scale-95 flex items-center justify-center gap-3 hidden">
+                            <div class="w-4 h-4 rounded-sm bg-white"></div>
+                            <span class="text-lg font-bold">Dừng quay</span>
+                        </button>
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button id="btn-submit" onclick="submitVideo()" class="w-full bg-gray-100 text-gray-400 py-4 rounded-2xl font-bold cursor-not-allowed transition-all flex items-center justify-center gap-2" disabled>
+                        <span>Gửi video xác thực</span>
+                        <i class="fa-solid fa-paper-plane"></i>
+                    </button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- === SCRIPT LOGIC === -->
+    <script>
+        let timerInterval;
+        let seconds = 0;
+        const maxDuration = 15;
+        
+        const timerDisplay = document.getElementById('timer-display');
+        const recordingDot = document.getElementById('recording-dot');
+        const btnStart = document.getElementById('btn-start');
+        const btnStop = document.getElementById('btn-stop');
+        const btnSubmit = document.getElementById('btn-submit');
+        const successOverlay = document.getElementById('success-overlay');
+
+        function formatTime(sec) {
+            const m = Math.floor(sec / 60).toString().padStart(2, '0');
+            const s = (sec % 60).toString().padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        function startRecording() {
+            // Reset state
+            seconds = 0;
+            timerDisplay.textContent = "00:00";
+            successOverlay.classList.add('hidden');
+            
+            // UI Update
+            btnStart.classList.add('hidden');
+            btnStop.classList.remove('hidden');
+            recordingDot.classList.remove('hidden');
+            
+            // Disable submit while recording
+            disableSubmitBtn();
+
+            // Start Timer
+            timerInterval = setInterval(() => {
+                seconds++;
+                timerDisplay.textContent = formatTime(seconds);
+
+                // Auto stop at max duration
+                if (seconds >= maxDuration) {
+                    stopRecording();
+                }
+            }, 1000);
+        }
+
+        function stopRecording() {
+            clearInterval(timerInterval);
+            
+            // UI Update
+            btnStop.classList.add('hidden');
+            // Show "Start" again but maybe change text to "Record Again" if needed, 
+            // for now we keep the flow simple and show overlay.
+            
+            recordingDot.classList.add('hidden');
+            
+            // Show Success Overlay on Camera
+            successOverlay.classList.remove('hidden');
+
+            // Enable Submit Button
+            enableSubmitBtn();
+        }
+
+        function resetRecording() {
+            successOverlay.classList.add('hidden');
+            btnStart.classList.remove('hidden');
+            btnStop.classList.add('hidden');
+            timerDisplay.textContent = "00:00";
+            disableSubmitBtn();
+        }
+
+        function enableSubmitBtn() {
+            btnSubmit.disabled = false;
+            btnSubmit.classList.remove('bg-gray-100', 'text-gray-400', 'cursor-not-allowed');
+            btnSubmit.classList.add('bg-blue-600', 'hover:bg-blue-700', 'text-white', 'shadow-xl', 'shadow-blue-500/30');
+        }
+
+        function disableSubmitBtn() {
+            btnSubmit.disabled = true;
+            btnSubmit.classList.add('bg-gray-100', 'text-gray-400', 'cursor-not-allowed');
+            btnSubmit.classList.remove('bg-blue-600', 'hover:bg-blue-700', 'text-white', 'shadow-xl', 'shadow-blue-500/30');
+        }
+
+        function submitVideo() {
+            // Loading state
+            const originalContent = btnSubmit.innerHTML;
+            btnSubmit.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang tải lên...';
+            btnSubmit.classList.add('opacity-80', 'cursor-wait');
+
+            setTimeout(() => {
+                alert("Gửi video thành công! Hệ thống đang xử lý định danh...");
+                // Redirect logic would go here
+                window.location.href = 'index.html'; // Demo redirect
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

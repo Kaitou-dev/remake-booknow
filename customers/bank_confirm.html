@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chuyển khoản Ngân hàng - BookNow</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            DEFAULT: '#2563eb', // blue-600
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+
+    <!-- === LOGO (Fixed Top-Left, 25px margin) === -->
+    <div style="position: fixed; top: 25px; left: 25px; z-index: 100;" class="bg-white/90 backdrop-blur px-4 py-2 rounded-xl shadow-sm border border-white/50">
+        <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
+            <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center border border-blue-100">
+                <i class="fa-solid fa-house-chimney gradient-icon text-xl text-blue-600"></i>
+            </div>
+            <div class="flex flex-col justify-center">
+                <span class="text-2xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-blue-500 to-blue-700 leading-none">BookNow</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="min-h-screen flex items-center justify-center pt-24 pb-12 px-4">
+        
+        <div class="bg-white rounded-2xl shadow-xl w-full max-w-4xl overflow-hidden flex flex-col md:flex-row border border-gray-100">
+            
+            <!-- LEFT SIDE: Bank Details -->
+            <div class="w-full md:w-3/5 p-8 bg-white">
+                
+                <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center md:text-left">Thông tin chuyển khoản</h2>
+
+                <!-- Bank Card Info -->
+                <div class="bg-blue-50 rounded-2xl p-6 border border-blue-100 mb-6 relative overflow-hidden">
+                    <!-- Background decoration -->
+                    <div class="absolute top-0 right-0 -mt-4 -mr-4 w-24 h-24 bg-blue-100 rounded-full opacity-50 blur-xl"></div>
+
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 bg-white rounded-lg flex items-center justify-center shadow-sm text-green-600 text-2xl">
+                            <i class="fa-solid fa-building-columns"></i>
+                        </div>
+                        <div>
+                            <p class="text-xs text-blue-600 font-bold uppercase tracking-wider">Ngân hàng thụ hưởng</p>
+                            <h3 class="text-lg font-bold text-gray-900">Vietcombank</h3>
+                            <p class="text-sm text-gray-500">Chi nhánh TP.HCM</p>
+                        </div>
+                    </div>
+
+                    <!-- Account Number -->
+                    <div class="mb-4">
+                        <p class="text-xs text-gray-500 mb-1">Số tài khoản</p>
+                        <div class="flex items-center justify-between bg-white border border-blue-200 rounded-lg p-3 shadow-sm">
+                            <span class="text-xl font-mono font-bold text-blue-700 tracking-wide" id="accNum">1900 999 888</span>
+                            <button onclick="copyToClipboard('accNum')" class="text-gray-400 hover:text-blue-600 transition-colors p-1" title="Sao chép">
+                                <i class="fa-regular fa-copy"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Account Name -->
+                    <div class="mb-4">
+                        <p class="text-xs text-gray-500 mb-1">Chủ tài khoản</p>
+                        <div class="bg-white/50 border border-blue-100 rounded-lg p-3">
+                            <span class="font-bold text-gray-800 uppercase">CONG TY TNHH BOOKNOW</span>
+                        </div>
+                    </div>
+
+                    <!-- Amount -->
+                    <div>
+                        <p class="text-xs text-gray-500 mb-1">Số tiền cần chuyển</p>
+                        <div class="bg-white border border-blue-200 rounded-lg p-3 shadow-sm flex justify-between items-center">
+                            <span class="text-2xl font-bold text-red-600">500.000đ</span>
+                            <span class="text-xs font-medium bg-red-50 text-red-600 px-2 py-1 rounded">Chính xác</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transfer Content (Memo) -->
+                <div>
+                    <label class="block text-sm font-semibold text-gray-700 mb-2">Nội dung chuyển khoản <span class="text-red-500">*</span></label>
+                    <div class="flex items-center justify-between bg-yellow-50 border border-yellow-200 rounded-xl p-4 shadow-sm">
+                        <div>
+                            <p class="text-xs text-yellow-800 mb-1">Vui lòng nhập chính xác mã này:</p>
+                            <span class="text-xl font-mono font-bold text-gray-900" id="transferContent">BK88921</span>
+                        </div>
+                        <button onclick="copyToClipboard('transferContent')" class="bg-white hover:bg-yellow-100 text-yellow-700 border border-yellow-300 font-medium py-1.5 px-3 rounded-lg text-sm transition-colors flex items-center gap-2">
+                            <i class="fa-regular fa-copy"></i> Sao chép
+                        </button>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-2 italic"><i class="fa-solid fa-circle-info mr-1"></i> Đơn hàng sẽ được xử lý tự động khi nội dung chính xác.</p>
+                </div>
+
+            </div>
+
+            <!-- RIGHT SIDE: Instructions & Action -->
+            <div class="w-full md:w-2/5 bg-gray-50 p-8 border-l border-gray-100 flex flex-col justify-between">
+                
+                <div>
+                    <h3 class="text-lg font-bold text-gray-800 mb-6">Lưu ý quan trọng</h3>
+                    
+                    <ul class="space-y-4">
+                        <li class="flex gap-3 items-start">
+                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mt-0.5">
+                                <i class="fa-solid fa-bolt text-xs"></i>
+                            </div>
+                            <p class="text-sm text-gray-600">Nên chọn chế độ <strong>Chuyển tiền nhanh 24/7</strong> để giao dịch được xác nhận ngay lập tức.</p>
+                        </li>
+                        <li class="flex gap-3 items-start">
+                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mt-0.5">
+                                <i class="fa-solid fa-pencil text-xs"></i>
+                            </div>
+                            <p class="text-sm text-gray-600">Nhập đúng <strong>Nội dung chuyển khoản</strong> để hệ thống tự động kích hoạt đặt phòng.</p>
+                        </li>
+                        <li class="flex gap-3 items-start">
+                            <div class="flex-shrink-0 w-6 h-6 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center mt-0.5">
+                                <i class="fa-regular fa-clock text-xs"></i>
+                            </div>
+                            <p class="text-sm text-gray-600">Đơn hàng sẽ bị hủy nếu không nhận được thanh toán sau <strong>15 phút</strong>.</p>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="mt-8 pt-6 border-t border-gray-200">
+                    <button onclick="confirmTransfer()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2 mb-3">
+                        <i class="fa-solid fa-check-double"></i> Tôi đã chuyển khoản
+                    </button>
+                    <button onclick="window.history.back()" class="w-full bg-white border border-gray-300 text-gray-600 hover:bg-gray-50 font-medium py-3 rounded-xl transition-all">
+                        Quay lại chọn phương thức khác
+                    </button>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+    <!-- Toast Notification (Hidden by default) -->
+    <div id="toast" class="fixed bottom-5 right-5 bg-gray-800 text-white px-4 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-3 z-50">
+        <i class="fa-solid fa-circle-check text-green-400"></i>
+        <span>Đã sao chép vào bộ nhớ tạm!</span>
+    </div>
+
+    <script>
+        // Copy to Clipboard Function
+        function copyToClipboard(elementId) {
+            const text = document.getElementById(elementId).innerText;
+            
+            // Modern Clipboard API
+            navigator.clipboard.writeText(text).then(() => {
+                showToast();
+            }).catch(err => {
+                console.error('Không thể sao chép: ', err);
+                // Fallback for older browsers if needed
+            });
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        function confirmTransfer() {
+            const btn = document.querySelector('button[onclick="confirmTransfer()"]');
+            const originalText = btn.innerHTML;
+            
+            // Loading State
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang xác minh...';
+            btn.disabled = true;
+            btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+            setTimeout(() => {
+                alert("Hệ thống đã ghi nhận yêu cầu! Chúng tôi sẽ gửi email xác nhận đặt phòng trong giây lát.");
+                window.location.href = 'index.html';
+            }, 2000);
+        }
+    </script>
+
+</body>
+</html>

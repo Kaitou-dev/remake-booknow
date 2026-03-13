@@ -1,0 +1,183 @@
+2026-03-13 04:09:53.436 [INFO ] crawler.Main - === BookNow Room Crawler ===
+2026-03-13 04:09:53.438 [INFO ] crawler.Main - Target: https://v2.localhome.vn/room/
+2026-03-13 04:09:53.438 [INFO ] crawler.Main - Output: D:\Documents\FPT_Education\SP26\SWP391\project\remake-db\crawler-tool\output\insert.sql
+2026-03-13 04:09:53.440 [INFO ] crawler.Main - 
+2026-03-13 04:09:53.440 [INFO ] crawler.Main - STEP 1: Initializing Selenium WebDriver...
+2026-03-13 04:09:53.441 [INFO ] crawler.SeleniumDriverFactory - Setting up ChromeDriver via WebDriverManager...
+2026-03-13 04:09:53.702 [INFO ] i.g.bonigarcia.wdm.WebDriverManager - Using chromedriver 146.0.7680.72 (resolved driver for Chrome 146)
+2026-03-13 04:09:53.719 [INFO ] i.g.bonigarcia.wdm.WebDriverManager - Exporting webdriver.chrome.driver as C:\Users\NgKaitou\.cache\selenium\chromedriver\win64\146.0.7680.72\chromedriver.exe
+2026-03-13 04:09:54.974 [INFO ] crawler.SeleniumDriverFactory - ChromeDriver initialized successfully (headless mode).
+2026-03-13 04:09:54.974 [INFO ] crawler.Main - 
+2026-03-13 04:09:54.975 [INFO ] crawler.Main - STEP 2: Crawling room list pages...
+2026-03-13 04:09:54.975 [INFO ] crawler.RoomListCrawler - Crawling room list page 1/5: https://v2.localhome.vn/room/
+2026-03-13 04:10:11.517 [WARN ] crawler.RoomListCrawler - Attempt 1/3 failed for https://v2.localhome.vn/room/: Expected condition failed: waiting for presence of element located by: By.cssSelector: article (tried for 15 second(s) with 500 milliseconds interval)
+2026-03-13 04:10:30.849 [WARN ] crawler.RoomListCrawler - Attempt 2/3 failed for https://v2.localhome.vn/room/: Expected condition failed: waiting for presence of element located by: By.cssSelector: article (tried for 15 second(s) with 500 milliseconds interval)
+2026-03-13 04:10:50.169 [WARN ] crawler.RoomListCrawler - Attempt 3/3 failed for https://v2.localhome.vn/room/: Expected condition failed: waiting for presence of element located by: By.cssSelector: article (tried for 15 second(s) with 500 milliseconds interval)
+2026-03-13 04:10:50.170 [ERROR] crawler.RoomListCrawler - All 3 attempts failed for page: https://v2.localhome.vn/room/
+2026-03-13 04:10:50.170 [INFO ] crawler.RoomListCrawler -   Found 0 room links on page 1 (total so far: 0)
+2026-03-13 04:10:52.172 [INFO ] crawler.RoomListCrawler - Crawling room list page 2/5: https://v2.localhome.vn/room/page/2/
+2026-03-13 04:11:08.595 [WARN ] crawler.RoomListCrawler - Attempt 1/3 failed for https://v2.localhome.vn/room/page/2/: Expected condition failed: waiting for presence of element located by: By.cssSelector: article (tried for 15 second(s) with 500 milliseconds interval)
+2026-03-13 04:11:27.970 [WARN ] crawler.RoomListCrawler - Attempt 2/3 failed for https://v2.localhome.vn/room/page/2/: Expected condition failed: waiting for presence of element located by: By.cssSelector: article (tried for 15 second(s) with 500 milliseconds interval)
+2026-03-13 04:11:47.290 [WARN ] crawler.RoomListCrawler - Attempt 3/3 failed for https://v2.localhome.vn/room/page/2/: Expected condition failed: waiting for presence of element located by: By.cssSelector: article (tried for 15 second(s) with 500 milliseconds interval)
+2026-03-13 04:11:47.290 [ERROR] crawler.RoomListCrawler - All 3 attempts failed for page: https://v2.localhome.vn/room/page/2/
+2026-03-13 04:11:47.291 [INFO ] crawler.RoomListCrawler -   Found 0 room links on page 2 (total so far: 0)
+2026-03-13 04:11:49.293 [INFO ] crawler.RoomListCrawler - Crawling room list page 3/5: https://v2.localhome.vn/room/page/3/
+2026-03-13 04:12:05.660 [WARN ] crawler.RoomListCrawler - Attempt 1/3 failed for https://v2.localhome.vn/room/page/3/: Expected condition failed: waiting for presence of element located by: By.cssSelector: article (tried for 15 second(s) with 500 milliseconds interval)
+2026-03-13 04:12:25.014 [WARN ] crawler.RoomListCrawler - Attempt 2/3 failed for https://v2.localhome.vn/room/page/3/: Expected condition failed: waiting for presence of element located by: By.cssSelector: article (tried for 15 second(s) with 500 milliseconds interval)
+2026-03-13 04:12:44.400 [WARN ] crawler.RoomListCrawler - Attempt 3/3 failed for https://v2.localhome.vn/room/page/3/: Expected condition failed: waiting for presence of element located by: By.cssSelector: article (tried for 15 second(s) with 500 milliseconds interval)
+2026-03-13 04:12:44.401 [ERROR] crawler.RoomListCrawler - All 3 attempts failed for page: https://v2.localhome.vn/room/page/3/
+2026-03-13 04:12:44.401 [INFO ] crawler.RoomListCrawler -   Found 0 room links on page 3 (total so far: 0)
+2026-03-13 04:12:46.403 [INFO ] crawler.RoomListCrawler - Crawling room list page 4/5: https://v2.localhome.vn/room/page/4/
+2026-03-13 04:13:02.763 [WARN ] crawler.RoomListCrawler - Attempt 1/3 failed for https://v2.localhome.vn/room/page/4/: Expected condition failed: waiting for presence of element located by: By.cssSelector: article (tried for 15 second(s) with 500 milliseconds interval)
+2026-03-13 04:13:22.080 [WARN ] crawler.RoomListCrawler - Attempt 2/3 failed for https://v2.localhome.vn/room/page/4/: Expected condition failed: waiting for presence of element located by: By.cssSelector: article (tried for 15 second(s) with 500 milliseconds interval)
+2026-03-13 04:13:41.426 [WARN ] crawler.RoomListCrawler - Attempt 3/3 failed for https://v2.localhome.vn/room/page/4/: Expected condition failed: waiting for presence of element located by: By.cssSelector: article (tried for 15 second(s) with 500 milliseconds interval)
+2026-03-13 04:13:41.426 [ERROR] crawler.RoomListCrawler - All 3 attempts failed for page: https://v2.localhome.vn/room/page/4/
+2026-03-13 04:13:41.426 [INFO ] crawler.RoomListCrawler -   Found 0 room links on page 4 (total so far: 0)
+2026-03-13 04:13:43.434 [INFO ] crawler.RoomListCrawler - Crawling room list page 5/5: https://v2.localhome.vn/room/page/5/
+2026-03-13 04:23:44.880 [INFO ] crawler.Main - === BookNow Room Crawler ===
+2026-03-13 04:23:44.883 [INFO ] crawler.Main - Target: https://v2.localhome.vn/room/
+2026-03-13 04:23:44.883 [INFO ] crawler.Main - Output: D:\Documents\FPT_Education\SP26\SWP391\project\remake-db\crawler-tool\output\insert.sql
+2026-03-13 04:23:44.884 [INFO ] crawler.Main - 
+2026-03-13 04:23:44.884 [INFO ] crawler.Main - STEP 1: Initializing Selenium WebDriver...
+2026-03-13 04:23:44.885 [INFO ] crawler.SeleniumDriverFactory - Setting up ChromeDriver via WebDriverManager...
+2026-03-13 04:23:45.105 [INFO ] i.g.bonigarcia.wdm.WebDriverManager - Using chromedriver 146.0.7680.72 (resolved driver for Chrome 146)
+2026-03-13 04:23:45.125 [INFO ] i.g.bonigarcia.wdm.WebDriverManager - Exporting webdriver.chrome.driver as C:\Users\NgKaitou\.cache\selenium\chromedriver\win64\146.0.7680.72\chromedriver.exe
+2026-03-13 04:23:46.416 [INFO ] crawler.SeleniumDriverFactory - ChromeDriver initialized successfully (headless mode).
+2026-03-13 04:23:46.416 [INFO ] crawler.Main - 
+2026-03-13 04:23:46.416 [INFO ] crawler.Main - STEP 2: Crawling room list pages...
+2026-03-13 04:23:46.417 [INFO ] crawler.RoomListCrawler - Crawling room list page 1/5: https://v2.localhome.vn/room/
+2026-03-13 04:23:47.441 [INFO ] crawler.RoomListCrawler -   Found 12 room links on page 1 (total so far: 12)
+2026-03-13 04:23:49.442 [INFO ] crawler.RoomListCrawler - Crawling room list page 2/5: https://v2.localhome.vn/room/page/2/
+2026-03-13 04:23:50.228 [INFO ] crawler.RoomListCrawler -   Found 12 room links on page 2 (total so far: 24)
+2026-03-13 04:23:52.230 [INFO ] crawler.RoomListCrawler - Crawling room list page 3/5: https://v2.localhome.vn/room/page/3/
+2026-03-13 04:23:53.018 [INFO ] crawler.RoomListCrawler -   Found 12 room links on page 3 (total so far: 36)
+2026-03-13 04:23:55.020 [INFO ] crawler.RoomListCrawler - Crawling room list page 4/5: https://v2.localhome.vn/room/page/4/
+2026-03-13 04:23:55.792 [INFO ] crawler.RoomListCrawler -   Found 12 room links on page 4 (total so far: 48)
+2026-03-13 04:23:57.793 [INFO ] crawler.RoomListCrawler - Crawling room list page 5/5: https://v2.localhome.vn/room/page/5/
+2026-03-13 04:23:58.548 [INFO ] crawler.RoomListCrawler -   Found 5 room links on page 5 (total so far: 53)
+2026-03-13 04:23:58.549 [INFO ] crawler.RoomListCrawler - Total unique room URLs collected: 53
+2026-03-13 04:23:58.549 [INFO ] crawler.Main - 
+2026-03-13 04:23:58.549 [INFO ] crawler.Main - STEP 3: Crawling 53 room detail pages...
+2026-03-13 04:23:58.551 [INFO ] crawler.RoomDetailCrawler - [1/53] Crawling room detail: https://v2.localhome.vn/room/ocean-city/
+2026-03-13 04:24:01.275 [INFO ] crawler.RoomDetailCrawler -   => Ocean City | amenities=8 | images=3
+2026-03-13 04:24:03.778 [INFO ] crawler.RoomDetailCrawler - [2/53] Crawling room detail: https://v2.localhome.vn/room/cook-and-chill/
+2026-03-13 04:24:06.417 [INFO ] crawler.RoomDetailCrawler -   => Cook & Chill | amenities=9 | images=3
+2026-03-13 04:24:08.918 [INFO ] crawler.RoomDetailCrawler - [3/53] Crawling room detail: https://v2.localhome.vn/room/pink-paradise/
+2026-03-13 04:24:11.481 [INFO ] crawler.RoomDetailCrawler -   => Pink Paradise | amenities=6 | images=3
+2026-03-13 04:24:13.983 [INFO ] crawler.RoomDetailCrawler - [4/53] Crawling room detail: https://v2.localhome.vn/room/tiger-woods/
+2026-03-13 04:24:16.573 [INFO ] crawler.RoomDetailCrawler -   => Tiger Woods | amenities=9 | images=3
+2026-03-13 04:24:19.075 [INFO ] crawler.RoomDetailCrawler - [5/53] Crawling room detail: https://v2.localhome.vn/room/ball-chill/
+2026-03-13 04:24:21.702 [INFO ] crawler.RoomDetailCrawler -   => Ball Chill | amenities=12 | images=4
+2026-03-13 04:24:24.203 [INFO ] crawler.RoomDetailCrawler - [6/53] Crawling room detail: https://v2.localhome.vn/room/gamehub/
+2026-03-13 04:24:26.804 [INFO ] crawler.RoomDetailCrawler -   => GameHub | amenities=9 | images=3
+2026-03-13 04:24:29.306 [INFO ] crawler.RoomDetailCrawler - [7/53] Crawling room detail: https://v2.localhome.vn/room/honey-house/
+2026-03-13 04:24:31.893 [INFO ] crawler.RoomDetailCrawler -   => Honey House | amenities=9 | images=3
+2026-03-13 04:24:34.395 [INFO ] crawler.RoomDetailCrawler - [8/53] Crawling room detail: https://v2.localhome.vn/room/ocean/
+2026-03-13 04:24:41.961 [INFO ] crawler.RoomDetailCrawler -   => Ocean | amenities=5 | images=1
+2026-03-13 04:24:44.461 [INFO ] crawler.RoomDetailCrawler - [9/53] Crawling room detail: https://v2.localhome.vn/room/cine-room/
+2026-03-13 04:24:47.068 [INFO ] crawler.RoomDetailCrawler -   => Cine Room | amenities=6 | images=3
+2026-03-13 04:24:49.569 [INFO ] crawler.RoomDetailCrawler - [10/53] Crawling room detail: https://v2.localhome.vn/room/ivy-graden/
+2026-03-13 04:24:52.101 [INFO ] crawler.RoomDetailCrawler -   => Ivy Graden | amenities=7 | images=4
+2026-03-13 04:24:54.602 [INFO ] crawler.RoomDetailCrawler - [11/53] Crawling room detail: https://v2.localhome.vn/room/bea-bear/
+2026-03-13 04:24:57.134 [INFO ] crawler.RoomDetailCrawler -   => Bae Bear | amenities=7 | images=5
+2026-03-13 04:24:59.635 [INFO ] crawler.RoomDetailCrawler - [12/53] Crawling room detail: https://v2.localhome.vn/room/wood-mood/
+2026-03-13 04:25:02.229 [INFO ] crawler.RoomDetailCrawler -   => Wood Mood | amenities=9 | images=5
+2026-03-13 04:25:04.730 [INFO ] crawler.RoomDetailCrawler - [13/53] Crawling room detail: https://v2.localhome.vn/room/calm-cloud/
+2026-03-13 04:25:07.284 [INFO ] crawler.RoomDetailCrawler -   => Calm Cloud | amenities=9 | images=4
+2026-03-13 04:25:09.785 [INFO ] crawler.RoomDetailCrawler - [14/53] Crawling room detail: https://v2.localhome.vn/room/bass-bar/
+2026-03-13 04:25:12.352 [INFO ] crawler.RoomDetailCrawler -   => Bass Bar | amenities=10 | images=5
+2026-03-13 04:25:14.854 [INFO ] crawler.RoomDetailCrawler - [15/53] Crawling room detail: https://v2.localhome.vn/room/mellow/
+2026-03-13 04:25:22.391 [INFO ] crawler.RoomDetailCrawler -   => Mellow | amenities=6 | images=4
+2026-03-13 04:25:24.892 [INFO ] crawler.RoomDetailCrawler - [16/53] Crawling room detail: https://v2.localhome.vn/room/lion-king/
+2026-03-13 04:25:32.444 [INFO ] crawler.RoomDetailCrawler -   => Lion King | amenities=5 | images=5
+2026-03-13 04:25:34.946 [INFO ] crawler.RoomDetailCrawler - [17/53] Crawling room detail: https://v2.localhome.vn/room/love-blaze/
+2026-03-13 04:25:42.556 [INFO ] crawler.RoomDetailCrawler -   => Love Blaze | amenities=6 | images=3
+2026-03-13 04:25:45.057 [INFO ] crawler.RoomDetailCrawler - [18/53] Crawling room detail: https://v2.localhome.vn/room/squid-game/
+2026-03-13 04:25:52.645 [INFO ] crawler.RoomDetailCrawler -   => Squid Game | amenities=6 | images=4
+2026-03-13 04:25:55.147 [INFO ] crawler.RoomDetailCrawler - [19/53] Crawling room detail: https://v2.localhome.vn/room/lavender/
+2026-03-13 04:26:02.699 [INFO ] crawler.RoomDetailCrawler -   => Lavender | amenities=6 | images=5
+2026-03-13 04:26:05.200 [INFO ] crawler.RoomDetailCrawler - [20/53] Crawling room detail: https://v2.localhome.vn/room/ruby/
+2026-03-13 04:26:12.728 [INFO ] crawler.RoomDetailCrawler -   => Ruby (Bida) | amenities=7 | images=5
+2026-03-13 04:26:15.231 [INFO ] crawler.RoomDetailCrawler - [21/53] Crawling room detail: https://v2.localhome.vn/room/cinema-zone/
+2026-03-13 04:26:22.786 [INFO ] crawler.RoomDetailCrawler -   => Cinema Zone | amenities=7 | images=4
+2026-03-13 04:26:25.288 [INFO ] crawler.RoomDetailCrawler - [22/53] Crawling room detail: https://v2.localhome.vn/room/solo-gaming/
+2026-03-13 04:26:32.866 [INFO ] crawler.RoomDetailCrawler -   => Solo Gaming | amenities=8 | images=5
+2026-03-13 04:26:35.368 [INFO ] crawler.RoomDetailCrawler - [23/53] Crawling room detail: https://v2.localhome.vn/room/green-haven/
+2026-03-13 04:26:42.891 [INFO ] crawler.RoomDetailCrawler -   => Green Haven | amenities=5 | images=6
+2026-03-13 04:26:45.392 [INFO ] crawler.RoomDetailCrawler - [24/53] Crawling room detail: https://v2.localhome.vn/room/zone-x/
+2026-03-13 04:26:52.942 [INFO ] crawler.RoomDetailCrawler -   => Zone X (Bida) | amenities=7 | images=6
+2026-03-13 04:26:55.443 [INFO ] crawler.RoomDetailCrawler - [25/53] Crawling room detail: https://v2.localhome.vn/room/my-konos/
+2026-03-13 04:27:03.026 [INFO ] crawler.RoomDetailCrawler -   => Mykonos | amenities=5 | images=6
+2026-03-13 04:27:05.528 [INFO ] crawler.RoomDetailCrawler - [26/53] Crawling room detail: https://v2.localhome.vn/room/orange-pop/
+2026-03-13 04:27:13.059 [INFO ] crawler.RoomDetailCrawler -   => Orange Pop | amenities=5 | images=6
+2026-03-13 04:27:15.562 [INFO ] crawler.RoomDetailCrawler - [27/53] Crawling room detail: https://v2.localhome.vn/room/moon-space/
+2026-03-13 04:27:23.164 [INFO ] crawler.RoomDetailCrawler -   => Moon Space | amenities=8 | images=6
+2026-03-13 04:27:25.665 [INFO ] crawler.RoomDetailCrawler - [28/53] Crawling room detail: https://v2.localhome.vn/room/cheese/
+2026-03-13 04:27:33.215 [INFO ] crawler.RoomDetailCrawler -   => Cheese (Bếp) | amenities=8 | images=5
+2026-03-13 04:27:35.716 [INFO ] crawler.RoomDetailCrawler - [29/53] Crawling room detail: https://v2.localhome.vn/room/love-pink/
+2026-03-13 04:27:43.411 [INFO ] crawler.RoomDetailCrawler -   => Love Pink | amenities=5 | images=7
+2026-03-13 04:27:45.912 [INFO ] crawler.RoomDetailCrawler - [30/53] Crawling room detail: https://v2.localhome.vn/room/blue-wave/
+2026-03-13 04:27:53.513 [INFO ] crawler.RoomDetailCrawler -   => Blue Wave | amenities=6 | images=5
+2026-03-13 04:27:56.014 [INFO ] crawler.RoomDetailCrawler - [31/53] Crawling room detail: https://v2.localhome.vn/room/homestay-khong-le-tan-can-tho-phong-fini-homestay-rieng-tu-lang-man-tai-can-tho-uu-dai-dac-biet/
+2026-03-13 04:27:58.784 [INFO ] crawler.RoomDetailCrawler -   => Fini Home | amenities=6 | images=3
+2026-03-13 04:28:01.287 [INFO ] crawler.RoomDetailCrawler - [32/53] Crawling room detail: https://v2.localhome.vn/room/homestay-khong-le-tan-phong-homestay-luca-tu-do-rieng-tu-tien-nghi-day-du-tai-can-tho/
+2026-03-13 04:28:03.861 [INFO ] crawler.RoomDetailCrawler -   => Luca Home | amenities=7 | images=3
+2026-03-13 04:28:06.362 [INFO ] crawler.RoomDetailCrawler - [33/53] Crawling room detail: https://v2.localhome.vn/room/homestay-khong-le-tan-phong-giong-rap-chieu-phim-cgv-cinemas-tai-can-tho-rieng-tu-hien-dai-tu-do/
+2026-03-13 04:28:08.914 [INFO ] crawler.RoomDetailCrawler -   => CCV Cinema | amenities=9 | images=3
+2026-03-13 04:28:11.415 [INFO ] crawler.RoomDetailCrawler - [34/53] Crawling room detail: https://v2.localhome.vn/room/beachhomestay-can-tho-phong-phim-rieng-tu-nhu-cgv-cinemas-trai-nghiem-doc-dao-tu-do/
+2026-03-13 04:28:14.166 [INFO ] crawler.RoomDetailCrawler -   => BEACH | amenities=9 | images=3
+2026-03-13 04:28:16.667 [INFO ] crawler.RoomDetailCrawler - [35/53] Crawling room detail: https://v2.localhome.vn/room/homestay-khong-le-tan-phong-homestay-sweet-dreams-tai-can-tho-thien-duong-cua-nhung-giac-mo-dep/
+2026-03-13 04:28:19.373 [INFO ] crawler.RoomDetailCrawler -   => Sweet Dreams | amenities=6 | images=3
+2026-03-13 04:28:21.875 [INFO ] crawler.RoomDetailCrawler - [36/53] Crawling room detail: https://v2.localhome.vn/room/homestay-khong-le-tan-homestay-phong-cach-da-lat-ngay-tai-can-tho/
+2026-03-13 04:28:24.522 [INFO ] crawler.RoomDetailCrawler -   => Da Lat | amenities=10 | images=3
+2026-03-13 04:28:27.023 [INFO ] crawler.RoomDetailCrawler - [37/53] Crawling room detail: https://v2.localhome.vn/room/pink-dream/
+2026-03-13 04:28:34.599 [INFO ] crawler.RoomDetailCrawler -   => Pink Dream | amenities=6 | images=4
+2026-03-13 04:28:37.100 [INFO ] crawler.RoomDetailCrawler - [38/53] Crawling room detail: https://v2.localhome.vn/room/blue-vibe/
+2026-03-13 04:28:44.623 [INFO ] crawler.RoomDetailCrawler -   => Blue Vibe | amenities=7 | images=4
+2026-03-13 04:28:47.125 [INFO ] crawler.RoomDetailCrawler - [39/53] Crawling room detail: https://v2.localhome.vn/room/pure-relax/
+2026-03-13 04:28:54.665 [INFO ] crawler.RoomDetailCrawler -   => Pure Relax | amenities=7 | images=3
+2026-03-13 04:28:57.166 [INFO ] crawler.RoomDetailCrawler - [40/53] Crawling room detail: https://v2.localhome.vn/room/honey-glow/
+2026-03-13 04:29:04.681 [INFO ] crawler.RoomDetailCrawler -   => Honey Glow | amenities=7 | images=4
+2026-03-13 04:29:07.182 [INFO ] crawler.RoomDetailCrawler - [41/53] Crawling room detail: https://v2.localhome.vn/room/cgv-room/
+2026-03-13 04:29:14.986 [INFO ] crawler.RoomDetailCrawler -   => CGV Room | amenities=7 | images=3
+2026-03-13 04:29:17.488 [INFO ] crawler.RoomDetailCrawler - [42/53] Crawling room detail: https://v2.localhome.vn/room/smoke-kitchen/
+2026-03-13 04:29:25.051 [INFO ] crawler.RoomDetailCrawler -   => Smoke Kitchen | amenities=7 | images=3
+2026-03-13 04:29:27.552 [INFO ] crawler.RoomDetailCrawler - [43/53] Crawling room detail: https://v2.localhome.vn/room/8-ball-house/
+2026-03-13 04:29:35.088 [INFO ] crawler.RoomDetailCrawler -   => 8 Ball House | amenities=7 | images=4
+2026-03-13 04:29:37.589 [INFO ] crawler.RoomDetailCrawler - [44/53] Crawling room detail: https://v2.localhome.vn/room/la-maison/
+2026-03-13 04:29:40.165 [INFO ] crawler.RoomDetailCrawler -   => La Maison | amenities=9 | images=3
+2026-03-13 04:29:42.666 [INFO ] crawler.RoomDetailCrawler - [45/53] Crawling room detail: https://v2.localhome.vn/room/masterchef/
+2026-03-13 04:29:45.293 [INFO ] crawler.RoomDetailCrawler -   => MasterChef | amenities=10 | images=3
+2026-03-13 04:29:47.795 [INFO ] crawler.RoomDetailCrawler - [46/53] Crawling room detail: https://v2.localhome.vn/room/atlantis/
+2026-03-13 04:29:50.333 [INFO ] crawler.RoomDetailCrawler -   => Atlantis | amenities=9 | images=3
+2026-03-13 04:29:52.835 [INFO ] crawler.RoomDetailCrawler - [47/53] Crawling room detail: https://v2.localhome.vn/room/forest/
+2026-03-13 04:29:55.362 [INFO ] crawler.RoomDetailCrawler -   => Forest | amenities=7 | images=3
+2026-03-13 04:29:57.863 [INFO ] crawler.RoomDetailCrawler - [48/53] Crawling room detail: https://v2.localhome.vn/room/vibe-home/
+2026-03-13 04:30:00.441 [INFO ] crawler.RoomDetailCrawler -   => Vibe Home | amenities=9 | images=3
+2026-03-13 04:30:02.942 [INFO ] crawler.RoomDetailCrawler - [49/53] Crawling room detail: https://v2.localhome.vn/room/wine-ball/
+2026-03-13 04:30:05.523 [INFO ] crawler.RoomDetailCrawler -   => Wine & Ball | amenities=12 | images=3
+2026-03-13 04:30:08.025 [INFO ] crawler.RoomDetailCrawler - [50/53] Crawling room detail: https://v2.localhome.vn/room/video-game/
+2026-03-13 04:30:10.608 [INFO ] crawler.RoomDetailCrawler -   => Video Game | amenities=13 | images=3
+2026-03-13 04:30:13.110 [INFO ] crawler.RoomDetailCrawler - [51/53] Crawling room detail: https://v2.localhome.vn/room/lasaoma/
+2026-03-13 04:30:15.696 [INFO ] crawler.RoomDetailCrawler -   => Lasaoma | amenities=12 | images=3
+2026-03-13 04:30:18.197 [INFO ] crawler.RoomDetailCrawler - [52/53] Crawling room detail: https://v2.localhome.vn/room/doreamon/
+2026-03-13 04:30:25.696 [INFO ] crawler.RoomDetailCrawler -   => Doreamon | amenities=4 | images=2
+2026-03-13 04:30:28.198 [INFO ] crawler.RoomDetailCrawler - [53/53] Crawling room detail: https://v2.localhome.vn/room/game-room-ps4/
+2026-03-13 04:30:35.705 [INFO ] crawler.RoomDetailCrawler -   => Game Room (PS4) | amenities=5 | images=2
+2026-03-13 04:30:35.705 [INFO ] crawler.RoomDetailCrawler - Successfully crawled 53/53 rooms.
+2026-03-13 04:30:35.705 [INFO ] crawler.Main - 
+2026-03-13 04:30:35.705 [INFO ] crawler.Main - STEP 4: Normalizing data and generating SQL...
+2026-03-13 04:30:35.707 [INFO ] crawler.SqlGenerator - Normalizing 53 scraped rooms...
+2026-03-13 04:30:35.713 [INFO ] crawler.SqlGenerator - Normalization complete: 53 room types, 22 amenities, 53 rooms, 400 room-amenities, 202 images
+2026-03-13 04:30:35.713 [INFO ] crawler.SqlGenerator - Generating SQL insert statements to: D:\Documents\FPT_Education\SP26\SWP391\project\remake-db\crawler-tool\output\insert.sql
+2026-03-13 04:30:35.726 [INFO ] crawler.SqlGenerator - SQL file generated successfully: 53 room types, 22 amenities, 53 rooms, 400 room-amenities, 202 images
+2026-03-13 04:30:35.726 [INFO ] crawler.Main - 
+2026-03-13 04:30:35.726 [INFO ] crawler.Main - === CRAWL COMPLETE ===
+2026-03-13 04:30:35.726 [INFO ] crawler.Main -   Room Types:     53
+2026-03-13 04:30:35.726 [INFO ] crawler.Main -   Amenities:      22
+2026-03-13 04:30:35.727 [INFO ] crawler.Main -   Rooms:          53
+2026-03-13 04:30:35.727 [INFO ] crawler.Main -   Room-Amenities: 400
+2026-03-13 04:30:35.727 [INFO ] crawler.Main -   Images:         202
+2026-03-13 04:30:35.727 [INFO ] crawler.Main -   SQL file:       D:\Documents\FPT_Education\SP26\SWP391\project\remake-db\crawler-tool\output\insert.sql
+2026-03-13 04:30:35.727 [INFO ] crawler.Main -   Time elapsed:   410 seconds
+2026-03-13 04:30:35.951 [INFO ] crawler.Main - Browser closed.

@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chi tiết phản hồi - BookNow</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            light: '#60a5fa', // blue-400
+                            DEFAULT: '#3b82f6', // blue-500
+                            dark: '#2563eb', // blue-600
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <style>
+        /* Specific Logo Positioning Rule */
+        .logo-fixed {
+            position: fixed;
+            top: 0;
+            left: 0;
+            margin-top: 25px;
+            margin-left: 25px;
+            z-index: 60; /* Higher than sidebar */
+        }
+
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-icon {
+            color: #3b82f6;
+        }
+
+        /* Sidebar transitions */
+        .sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+
+        /* Hide scrollbar for sidebar */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+
+    <!-- LOGO (Fixed Position) -->
+    <div class="logo-fixed flex items-center gap-3 select-none bg-white/90 backdrop-blur px-3 py-2 rounded-xl shadow-sm lg:shadow-none lg:bg-transparent lg:p-0">
+        <div class="w-10 h-10 bg-white rounded-lg shadow-md flex items-center justify-center border border-blue-100">
+            <i class="fa-solid fa-house-chimney gradient-icon text-xl"></i>
+        </div>
+        <div class="flex flex-col justify-center">
+            <span class="text-2xl font-extrabold tracking-tight gradient-text leading-none">BookNow</span>
+            <span class="text-[10px] text-gray-500 font-medium uppercase tracking-wider pl-0.5">Homestay System</span>
+        </div>
+    </div>
+
+    <!-- MOBILE HEADER (Hamburger) -->
+    <div class="lg:hidden fixed top-0 w-full bg-white h-20 shadow-sm z-40 flex items-center justify-end px-6">
+        <button id="mobileMenuBtn" class="text-gray-500 hover:text-blue-600 focus:outline-none">
+            <i class="fa-solid fa-bars text-2xl"></i>
+        </button>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 z-50 transform -translate-x-full lg:translate-x-0 pt-28 overflow-y-auto no-scrollbar">
+        <!-- Navigation Links -->
+        <nav class="px-4 space-y-2">
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg font-medium transition-colors">
+                <i class="fa-solid fa-chart-line w-5"></i>
+                Bảng điều khiển
+            </a>
+            <a href="booking_list.html" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg font-medium transition-colors">
+                <i class="fa-regular fa-calendar-check w-5"></i>
+                Đơn đặt phòng
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg font-medium transition-colors">
+                <i class="fa-solid fa-door-open w-5"></i>
+                Phòng
+            </a>
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg font-medium transition-colors">
+                <i class="fa-solid fa-users-gear w-5"></i>
+                Tài khoản nhân viên
+            </a>
+            <a href="feedback_list.html" class="flex items-center gap-3 px-4 py-3 bg-blue-50 text-blue-600 rounded-lg font-medium transition-colors shadow-sm ring-1 ring-black/5">
+                <i class="fa-regular fa-comment-dots w-5"></i>
+                Phản hồi khách hàng
+            </a>
+        </nav>
+
+        <!-- Logout at Bottom -->
+        <div class="absolute bottom-0 w-full p-4 border-t border-gray-100 bg-white">
+            <a href="#" class="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg font-medium transition-colors">
+                <i class="fa-solid fa-arrow-right-from-bracket w-5"></i>
+                Đăng xuất
+            </a>
+        </div>
+    </aside>
+
+    <!-- OVERLAY (for mobile) -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden glass-effect"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="lg:ml-64 min-h-screen pt-24 lg:pt-8 px-6 pb-10 transition-all duration-300">
+        
+        <!-- HEADER & ACTIONS -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+            <div class="flex items-center gap-3">
+                <a href="feedback_list.html" class="w-8 h-8 flex items-center justify-center rounded-full bg-white border border-gray-200 text-gray-500 hover:text-blue-600 hover:border-blue-200 transition-colors">
+                    <i class="fa-solid fa-arrow-left"></i>
+                </a>
+                <div>
+                    <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-3">
+                        Chi tiết phản hồi #FB-00128
+                        <span id="statusBadge" class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800">
+                            <i class="fa-regular fa-eye mr-1.5"></i> Đang hiển thị
+                        </span>
+                    </h1>
+                    <p class="text-sm text-gray-500 mt-1">Đánh giá ngày 20/01/2026</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-wrap gap-2">
+                <button id="toggleVisibilityBtn" class="flex items-center gap-2 bg-white border border-gray-300 text-gray-700 hover:bg-gray-50 px-4 py-2 rounded-lg font-medium transition-colors shadow-sm">
+                    <i class="fa-regular fa-eye-slash"></i>
+                    <span>Ẩn phản hồi</span>
+                </button>
+                <button class="flex items-center gap-2 bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow-sm font-medium transition-colors">
+                    <i class="fa-solid fa-reply"></i>
+                    <span>Trả lời</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- CONTENT GRID -->
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
+            
+            <!-- LEFT COLUMN (2/3 width) - Review Content -->
+            <div class="xl:col-span-2 space-y-6">
+                
+                <!-- Review Card -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="p-8">
+                        <!-- Rating -->
+                        <div class="flex items-center gap-2 mb-6">
+                            <div class="flex text-yellow-400 text-xl">
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                                <i class="fa-solid fa-star"></i>
+                            </div>
+                            <span class="text-lg font-bold text-gray-800 ml-2">5.0</span>
+                            <span class="text-gray-400 text-sm">/ 5.0</span>
+                        </div>
+
+                        <!-- Feedback Text -->
+                        <div class="relative">
+                            <i class="fa-solid fa-quote-left absolute -top-4 -left-4 text-gray-100 text-5xl -z-10"></i>
+                            <h3 class="text-xl font-medium text-gray-800 italic leading-relaxed">
+                                "Phòng rất sạch sẽ, view đẹp nhìn thẳng ra thung lũng. Nhân viên lễ tân cực kỳ nhiệt tình và hỗ trợ check-in sớm. Bữa sáng tuy đơn giản nhưng rất ngon miệng. Chắc chắn sẽ quay lại vào lần sau!"
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Reply Section -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                        <h3 class="font-semibold text-gray-800 flex items-center gap-2">
+                            <i class="fa-solid fa-reply text-blue-500"></i>
+                            Phản hồi từ Homestay
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <textarea class="w-full p-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none min-h-[120px] text-sm" placeholder="Nhập nội dung trả lời khách hàng..."></textarea>
+                        <div class="flex justify-end mt-4">
+                            <button class="bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-lg font-medium transition-colors shadow-sm">
+                                Gửi phản hồi
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN (1/3 width) - Info Cards -->
+            <div class="space-y-6">
+                
+                <!-- Customer Info -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                        <h3 class="font-semibold text-gray-800 flex items-center gap-2">
+                            <i class="fa-regular fa-user text-blue-500"></i>
+                            Thông tin khách hàng
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center gap-4 mb-6">
+                            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center text-blue-600 text-2xl font-bold">
+                                AT
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-bold text-gray-800">Anh Tuấn</h4>
+                                <p class="text-xs text-green-600 bg-green-50 px-2 py-0.5 rounded-full inline-block mt-1 font-medium">Khách hàng VIP</p>
+                            </div>
+                        </div>
+                        
+                        <div class="space-y-4">
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 flex-shrink-0">
+                                    <i class="fa-regular fa-envelope text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Email</p>
+                                    <p class="font-medium text-gray-800 text-sm">anhtuan***@gmail.com</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="w-8 h-8 rounded-full bg-gray-50 flex items-center justify-center text-gray-400 flex-shrink-0">
+                                    <i class="fa-solid fa-phone text-sm"></i>
+                                </div>
+                                <div>
+                                    <p class="text-xs text-gray-500">Số điện thoại</p>
+                                    <p class="font-medium text-gray-800 text-sm">0988 *** 999</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stay Details -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                        <h3 class="font-semibold text-gray-800 flex items-center gap-2">
+                            <i class="fa-solid fa-bed text-blue-500"></i>
+                            Thông tin lưu trú
+                        </h3>
+                    </div>
+                    <div class="p-6 space-y-4">
+                        <div class="flex justify-between items-center pb-4 border-b border-gray-100">
+                            <div>
+                                <p class="text-xs text-gray-500 mb-1">Số phòng</p>
+                                <p class="text-lg font-bold text-gray-800">P.305</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-xs text-gray-500 mb-1">Loại phòng</p>
+                                <p class="text-sm font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">Single Room</p>
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <p class="text-xs text-gray-500 mb-2">Thời gian lưu trú</p>
+                            <div class="flex items-center gap-2 text-sm text-gray-800 font-medium">
+                                <i class="fa-regular fa-calendar text-gray-400"></i>
+                                <span>18/01/2026</span>
+                                <i class="fa-solid fa-arrow-right text-xs text-gray-300"></i>
+                                <span>20/01/2026</span>
+                            </div>
+                            <p class="text-xs text-gray-400 mt-1 pl-6">(2 Đêm)</p>
+                        </div>
+                        
+                        <div class="pt-2">
+                            <a href="#" class="text-sm text-blue-600 hover:text-blue-700 hover:underline flex items-center gap-1">
+                                Xem chi tiết đơn đặt phòng
+                                <i class="fa-solid fa-arrow-up-right-from-square text-xs"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- SCRIPT -->
+    <script>
+        // Mobile Sidebar Toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const toggleVisibilityBtn = document.getElementById('toggleVisibilityBtn');
+        const statusBadge = document.getElementById('statusBadge');
+
+        function toggleSidebar() {
+            const isClosed = sidebar.classList.contains('-translate-x-full');
+            if (isClosed) {
+                sidebar.classList.remove('-translate-x-full');
+                sidebarOverlay.classList.remove('hidden');
+            } else {
+                sidebar.classList.add('-translate-x-full');
+                sidebarOverlay.classList.add('hidden');
+            }
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // Toggle Feedback Visibility Logic
+        toggleVisibilityBtn.addEventListener('click', () => {
+            const isVisible = statusBadge.classList.contains('bg-green-100');
+            
+            if (isVisible) {
+                // Change to Hidden
+                statusBadge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-gray-100 text-gray-600';
+                statusBadge.innerHTML = '<i class="fa-regular fa-eye-slash mr-1.5"></i> Đã ẩn';
+                
+                toggleVisibilityBtn.innerHTML = '<i class="fa-regular fa-eye"></i><span>Hiện phản hồi</span>';
+                toggleVisibilityBtn.classList.remove('bg-white', 'border-gray-300', 'text-gray-700');
+                toggleVisibilityBtn.classList.add('bg-blue-50', 'border-blue-200', 'text-blue-700');
+            } else {
+                // Change to Visible
+                statusBadge.className = 'inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-green-100 text-green-800';
+                statusBadge.innerHTML = '<i class="fa-regular fa-eye mr-1.5"></i> Đang hiển thị';
+                
+                toggleVisibilityBtn.innerHTML = '<i class="fa-regular fa-eye-slash"></i><span>Ẩn phản hồi</span>';
+                toggleVisibilityBtn.classList.add('bg-white', 'border-gray-300', 'text-gray-700');
+                toggleVisibilityBtn.classList.remove('bg-blue-50', 'border-blue-200', 'text-blue-700');
+            }
+        });
+    </script>
+</body>
+</html>

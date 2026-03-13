@@ -6,6 +6,7 @@
 |------|-------------|-------------|
 | **Customer** | End-user who searches, books, pays for, and stays in homestay rooms. Registered via email/password or Google OAuth2. | Customer-facing UI only |
 | **Staff** | Operations personnel who manage day-to-day bookings, rooms, feedback, and reports. | Staff/Admin management dashboard |
+| **Housekeeping** | Cleaning and maintenance personnel responsible for room turnover and upkeep. | Housekeeping dashboard only |
 | **Admin** | System administrator with full control over staff accounts, user accounts, and all staff capabilities. | Full system access |
 
 ---
@@ -52,6 +53,40 @@
 | Hide/Show Feedback | Toggle feedback visibility |
 | Reply to Feedback | Add staff reply to feedback |
 | View Revenue Reports | View weekly, monthly, quarterly revenue reports |
+| View Housekeeping Dashboard | Monitor room cleaning status and task progress |
+| Assign Housekeeping Tasks | Assign cleaning/maintenance tasks to housekeeping staff |
+| Force Checkout | Force checkout for overdue guests |
+
+### Housekeeping
+
+**Registration**: Created by Admin only.
+
+| Permission | Description |
+|-----------|-------------|
+| Login / Logout | Authenticate via staff login (email/password) |
+| View Housekeeping Dashboard | See rooms needing cleaning, in progress, maintenance required |
+| View Task List | See all assigned and unassigned housekeeping tasks |
+| View Task Detail | See room info, checklist items, notes, priority |
+| Claim Task | Self-assign an unassigned task |
+| Start Cleaning | Mark a DIRTY room as CLEANING, begin task |
+| Update Checklist | Mark individual cleaning checklist items as complete |
+| Complete Task | Finish cleaning task, mark room as AVAILABLE |
+| Report Maintenance | Flag room for maintenance issues during cleaning |
+| Create Maintenance Task | Create new maintenance task with notes and priority |
+| Add Task Notes | Record observations during inspection or cleaning |
+| View Room Status History | View `RoomStatusLog` for a specific room |
+
+**Housekeeping staff CANNOT**:
+
+| Restricted Action | Reason |
+|-------------------|--------|
+| Manage bookings | Bookings handled by Staff/Admin |
+| Access customer data | Privacy restriction |
+| Process payments | Financial operations restricted |
+| Create/delete rooms | Room management handled by Staff/Admin |
+| Access revenue reports | Business intelligence restricted |
+| Manage user accounts | Admin-only function |
+| Approve check-ins | Admin-only function |
 
 ### Admin
 
@@ -59,37 +94,49 @@
 
 | Permission | Description |
 |-----------|-------------|
-| Create Staff Account | Register new staff/admin accounts |
-| Update Staff Role | Change account role between ADMIN and STAFF |
+| Create Staff Account | Register new staff/admin/housekeeping accounts |
+| Update Staff Role | Change account role between ADMIN, STAFF, and HOUSEKEEPING |
 | View User List | View all customers and staff with filters (role, status) |
 | View User Detail | See complete user/staff account information |
 | Activate/Deactivate Users | Toggle ACTIVE/INACTIVE status for any customer or staff account |
 | Approve Check-in | Review check-in video and approve (via WebSocket notification) |
+| Set Room Out of Service | Take a room offline from inventory |
+| Restore Room | Bring a room back online |
+| Manage Housekeeping Staff | Create, update, deactivate housekeeping accounts |
+| View All Task History | Access complete housekeeping task history |
+| Escalate Task Priority | Change task priority to URGENT |
 
 ---
 
 ## Role-Based Access Control (RBAC) Matrix
 
-| Feature | Customer | Staff | Admin |
-|---------|----------|-------|-------|
-| Customer Registration | ✅ | — | — |
-| Customer Login (email/Google) | ✅ | — | — |
-| Staff/Admin Login | — | ✅ | ✅ |
-| View/Update Own Profile | ✅ | — | — |
-| Change Own Password | ✅ | — | — |
-| Browse/Filter/Detail Rooms | ✅ | — | — |
-| Create Booking | ✅ | — | — |
-| View Own Booking History | ✅ | — | — |
-| Make Payment (MoMo) | ✅ | — | — |
-| Submit Check-in Video | ✅ | — | — |
-| Confirm Check-out | ✅ | — | — |
-| Manage Rooms (CRUD) | — | ✅ | ✅ |
-| Manage Bookings (view/update status) | — | ✅ | ✅ |
-| Manage Feedback | — | ✅ | ✅ |
-| View Revenue Reports | — | ✅ | ✅ |
-| Manage Staff Accounts | — | — | ✅ |
-| Manage All Users | — | — | ✅ |
-| Approve Check-in (WebSocket) | — | — | ✅ |
+| Feature | Customer | Staff | Housekeeping | Admin |
+|---------|----------|-------|--------------|-------|
+| Customer Registration | ✅ | — | — | — |
+| Customer Login (email/Google) | ✅ | — | — | — |
+| Staff/Admin/Housekeeping Login | — | ✅ | ✅ | ✅ |
+| View/Update Own Profile | ✅ | — | — | — |
+| Change Own Password | ✅ | — | — | — |
+| Browse/Filter/Detail Rooms | ✅ | — | — | — |
+| Create Booking | ✅ | — | — | — |
+| View Own Booking History | ✅ | — | — | — |
+| Make Payment (MoMo) | ✅ | — | — | — |
+| Submit Check-in Video | ✅ | — | — | — |
+| Confirm Check-out | ✅ | — | — | — |
+| Submit Feedback | ✅ | — | — | — |
+| Manage Rooms (CRUD) | — | ✅ | — | ✅ |
+| Manage Bookings (view/update status) | — | ✅ | — | ✅ |
+| Manage Feedback | — | ✅ | — | ✅ |
+| View Revenue Reports | — | ✅ | — | ✅ |
+| View Housekeeping Dashboard | — | ✅ | ✅ | ✅ |
+| Claim/Start/Complete Tasks | — | — | ✅ | — |
+| Report Maintenance | — | — | ✅ | — |
+| Assign Tasks to Housekeeping | — | ✅ | — | ✅ |
+| Force Checkout | — | ✅ | — | ✅ |
+| Manage Staff Accounts | — | — | — | ✅ |
+| Manage All Users | — | — | — | ✅ |
+| Approve Check-in (WebSocket) | — | — | — | ✅ |
+| Set Room Out of Service | — | — | — | ✅ |
 
 ---
 
@@ -99,7 +146,52 @@
 |-----------|--------------|---------|
 | Email + Password + reCAPTCHA | Customer | BCrypt hashing, Google reCAPTCHA v2/v3 |
 | Google OAuth2 | Customer | Google ID Token verification, auto-registration if new |
-| Email + Password | Staff, Admin | BCrypt hashing, no reCAPTCHA |
+| Email + Password | Staff, Admin, Housekeeping | BCrypt hashing, no reCAPTCHA |
 | JWT Access Token | All | Short-lived, used for API authorization |
 | Refresh Token | All | Long-lived, stored in DB, revocable. Constraint: exactly one owner (customer XOR staff). |
 | OTP (Email) | Customer | Used for registration verification and password reset. 1-minute expiration. |
+
+---
+
+## Housekeeping Workflow Permissions
+
+### Task Assignment Rules
+
+| Action | Who Can Perform | Conditions |
+|--------|-----------------|------------|
+| Auto-create cleaning task | System | After checkout completes |
+| Assign task to housekeeping | Staff, Admin | Task must be in PENDING status |
+| Self-assign (claim) task | Housekeeping | Task must be unassigned and PENDING |
+| Reassign task | Staff, Admin | Any open task |
+| Cancel task | Staff, Admin | Task not yet COMPLETED |
+| Escalate priority | Staff, Admin | Any open task |
+
+### Room Status Change Permissions
+
+| Status Change | Who Can Perform |
+|---------------|-----------------|
+| AVAILABLE → BOOKED | System (on payment success) |
+| BOOKED → OCCUPIED | Admin (on check-in approval) |
+| OCCUPIED → DIRTY | System (on checkout) |
+| OCCUPIED → CHECKOUT_PENDING | System (scheduled job) |
+| CHECKOUT_PENDING → DIRTY | Staff (force checkout) |
+| DIRTY → CLEANING | Housekeeping (start task) |
+| CLEANING → AVAILABLE | Housekeeping (complete task) |
+| CLEANING → MAINTENANCE | Housekeeping (report issue) |
+| MAINTENANCE → AVAILABLE | Staff, Housekeeping (resolve issue) |
+| Any → OUT_OF_SERVICE | Admin only |
+| OUT_OF_SERVICE → AVAILABLE | Admin only |
+
+---
+
+## Staff Account Role Values
+
+```sql
+CHECK (role IN ('ADMIN', 'STAFF', 'HOUSEKEEPING'))
+```
+
+| Role | Dashboard Access | API Endpoints |
+|------|------------------|---------------|
+| `ADMIN` | Full admin dashboard | `/api/admin/*`, `/api/staff/*`, `/api/housekeeping/*` |
+| `STAFF` | Staff dashboard | `/api/staff/*`, `/api/housekeeping/view/*` |
+| `HOUSEKEEPING` | Housekeeping dashboard only | `/api/housekeeping/*` |

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đánh giá Booking - BookNow</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            DEFAULT: '#2563eb', // blue-600
+                        }
+                    },
+                    animation: {
+                        'bounce-slight': 'bounce 0.5s',
+                        'fade-in': 'fadeIn 0.5s ease-out',
+                    },
+                    keyframes: {
+                        fadeIn: {
+                            '0%': { opacity: '0', transform: 'translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Ẩn thanh cuộn */
+        body {
+            overflow-y: auto; /* Cho phép cuộn nếu nội dung dài */
+        }
+        /* Star hover effect */
+        .star-icon {
+            transition: color 0.2s, transform 0.1s;
+        }
+        .star-icon:hover {
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<!-- UPDATED: Removed justify-center, added specific top padding for desktop (md:pt-[150px]) to clear logo by ~50px -->
+<body class="bg-gray-100 font-sans text-gray-800 min-h-screen flex flex-col items-center relative pt-24 pb-12 md:pt-[150px]">
+
+    <!-- === BACKGROUND DECORATION === -->
+    <div class="fixed top-0 left-0 w-full h-full overflow-hidden -z-10 pointer-events-none">
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-yellow-100 rounded-full opacity-40 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-80 h-80 bg-blue-200 rounded-full opacity-30 blur-3xl"></div>
+    </div>
+
+    <!-- === LOGO (Fixed Top-Left, 25px margin) === -->
+    <div style="position: fixed; top: 25px; left: 25px; z-index: 100;" class="bg-white/90 backdrop-blur px-6 py-3 rounded-2xl shadow-sm border border-white/50 hidden md:block">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center border border-blue-100">
+                <i class="fa-solid fa-house-chimney gradient-icon text-2xl text-blue-600"></i>
+            </div>
+            <div class="flex flex-col justify-center">
+                <span class="text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-blue-500 to-blue-700 leading-none">BookNow</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- === MAIN CARD CONTAINER === -->
+    <div class="w-full max-w-5xl px-4 relative z-10 flex gap-6 flex-col md:flex-row items-start">
+        
+        <!-- LEFT COLUMN: BOOKING INFO (Read-only) -->
+        <div class="w-full md:w-1/3 bg-white rounded-3xl shadow-xl p-6 border border-gray-100 relative overflow-hidden h-fit sticky md:top-8">
+            <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-blue-400 to-purple-500"></div>
+            
+            <h2 class="text-lg font-bold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-receipt text-blue-500"></i> Thông tin chuyến đi
+            </h2>
+
+            <div class="space-y-4">
+                <!-- Booking Code -->
+                <div class="bg-blue-50 p-3 rounded-xl border border-blue-100">
+                    <p class="text-xs text-blue-500 uppercase font-bold tracking-wide">Mã Booking</p>
+                    <p class="text-xl font-mono font-black text-gray-800 tracking-wider">#BK88921</p>
+                    <div class="mt-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-700">
+                        <i class="fa-solid fa-check-circle mr-1"></i> Đã hoàn thành
+                    </div>
+                </div>
+
+                <!-- Homestay Info -->
+                <div class="flex gap-3 items-start">
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=100&q=80" class="w-16 h-16 rounded-lg object-cover bg-gray-200">
+                    <div>
+                        <h3 class="font-bold text-gray-900 leading-tight">Green Valley Homestay</h3>
+                        <p class="text-sm text-gray-500 mt-1">Phòng Tiêu Chuẩn P.101</p>
+                    </div>
+                </div>
+
+                <div class="border-t border-dashed border-gray-200 my-4"></div>
+
+                <!-- Dates -->
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <p class="text-xs text-gray-400 font-medium uppercase">Check-in</p>
+                        <p class="text-sm font-bold text-gray-700">27/06/2026</p>
+                        <p class="text-xs text-gray-500">14:00</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-xs text-gray-400 font-medium uppercase">Check-out</p>
+                        <p class="text-sm font-bold text-gray-700">28/06/2026</p>
+                        <p class="text-xs text-gray-500">12:00</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT COLUMN: FEEDBACK FORM -->
+        <div class="w-full md:w-2/3 bg-white rounded-[2.5rem] shadow-2xl p-8 md:p-12 border border-white/60 relative overflow-hidden">
+            
+            <!-- Header Icon/Image -->
+            <div class="text-center mb-8">
+                <div class="w-20 h-20 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4 text-gray-400 shadow-sm border border-gray-100 transition-all duration-300" id="emotion-icon">
+                    <i class="fa-regular fa-face-smile text-4xl"></i>
+                </div>
+                <h1 class="text-2xl md:text-3xl font-extrabold text-gray-900 mb-2" id="rating-title">Trải nghiệm của bạn thế nào?</h1>
+                <p class="text-gray-500 text-sm">Hãy cho chúng tôi biết cảm nhận của bạn để cải thiện dịch vụ tốt hơn.</p>
+            </div>
+
+            <!-- 1. Star Rating -->
+            <div class="mb-8 text-center">
+                <p class="text-sm font-bold text-gray-700 mb-3">Đánh giá chung <span class="text-red-500">*</span></p>
+                <div class="flex justify-center gap-2 sm:gap-4" id="star-container">
+                    <button onclick="setRating(1)" class="star-icon text-gray-200 text-4xl sm:text-5xl focus:outline-none transition-colors" data-value="1"><i class="fa-solid fa-star"></i></button>
+                    <button onclick="setRating(2)" class="star-icon text-gray-200 text-4xl sm:text-5xl focus:outline-none transition-colors" data-value="2"><i class="fa-solid fa-star"></i></button>
+                    <button onclick="setRating(3)" class="star-icon text-gray-200 text-4xl sm:text-5xl focus:outline-none transition-colors" data-value="3"><i class="fa-solid fa-star"></i></button>
+                    <button onclick="setRating(4)" class="star-icon text-gray-200 text-4xl sm:text-5xl focus:outline-none transition-colors" data-value="4"><i class="fa-solid fa-star"></i></button>
+                    <button onclick="setRating(5)" class="star-icon text-gray-200 text-4xl sm:text-5xl focus:outline-none transition-colors" data-value="5"><i class="fa-solid fa-star"></i></button>
+                </div>
+                <input type="hidden" id="rating-value" value="0">
+                <p id="rating-error" class="text-red-500 text-xs mt-2 hidden animate-pulse">Vui lòng chọn số sao đánh giá</p>
+            </div>
+
+            <!-- 2. Comment -->
+            <div class="mb-6 relative group">
+                <label for="comment" class="block text-sm font-bold text-gray-700 mb-2 ml-1">Nội dung nhận xét</label>
+                <textarea 
+                    id="comment" 
+                    rows="4" 
+                    class="w-full bg-gray-50 border-2 border-gray-200 rounded-2xl p-4 text-gray-800 placeholder-gray-400 focus:outline-none focus:border-blue-500 focus:bg-white focus:ring-4 focus:ring-blue-100 transition-all resize-none"
+                    placeholder="Phòng sạch sẽ, nhân viên thân thiện..."
+                ></textarea>
+            </div>
+
+            <!-- 3. Image Upload (Optional) -->
+            <div class="mb-8">
+                <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Hình ảnh thực tế (Tùy chọn)</label>
+                <div class="border-2 border-dashed border-gray-300 rounded-2xl p-6 text-center hover:bg-blue-50 hover:border-blue-400 transition-colors cursor-pointer relative group" onclick="document.getElementById('file-upload').click()">
+                    <input type="file" id="file-upload" class="hidden" accept="image/*" multiple onchange="handleFileSelect(this)">
+                    <div id="upload-placeholder">
+                        <i class="fa-solid fa-cloud-arrow-up text-3xl text-gray-400 group-hover:text-blue-500 mb-2 transition-colors"></i>
+                        <p class="text-sm text-gray-500 font-medium">Chạm để tải ảnh lên</p>
+                        <p class="text-xs text-gray-400 mt-1">Hỗ trợ JPG, PNG (Tối đa 5 ảnh)</p>
+                    </div>
+                    <!-- Image Preview Container -->
+                    <div id="image-preview" class="hidden flex gap-2 justify-center flex-wrap mt-2"></div>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="flex flex-col gap-3">
+                <button onclick="submitFeedback()" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-xl font-bold py-4 rounded-2xl shadow-xl shadow-blue-500/30 transition-all transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3 group">
+                    <span>Gửi đánh giá</span>
+                    <i class="fa-solid fa-paper-plane group-hover:translate-x-1 transition-transform"></i>
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- === SCRIPT LOGIC === -->
+    <script>
+        const stars = document.querySelectorAll('.star-icon');
+        const ratingInput = document.getElementById('rating-value');
+        const ratingTitle = document.getElementById('rating-title');
+        const emotionIcon = document.getElementById('emotion-icon');
+        const ratingError = document.getElementById('rating-error');
+        
+        // Mock Data Validation: Booking status Check
+        const bookingStatus = "COMPLETED"; // Or "CHECKED_OUT"
+        
+        // Cấu hình phản hồi dựa trên số sao
+        const feedbackConfig = {
+            1: { title: "Rất tiếc về trải nghiệm này...", icon: '<i class="fa-regular fa-face-frown text-4xl"></i>', color: 'text-red-500', bg: 'bg-red-50', border: 'border-red-200' },
+            2: { title: "Chúng tôi cần cải thiện điều gì?", icon: '<i class="fa-regular fa-face-meh text-4xl"></i>', color: 'text-orange-500', bg: 'bg-orange-50', border: 'border-orange-200' },
+            3: { title: "Cảm ơn bạn đã phản hồi", icon: '<i class="fa-regular fa-face-smile text-4xl"></i>', color: 'text-yellow-500', bg: 'bg-yellow-50', border: 'border-yellow-200' },
+            4: { title: "Tuyệt vời! Cảm ơn bạn", icon: '<i class="fa-regular fa-face-smile-beam text-4xl"></i>', color: 'text-blue-500', bg: 'bg-blue-50', border: 'border-blue-200' },
+            5: { title: "Trên cả tuyệt vời! ❤️", icon: '<i class="fa-regular fa-face-grin-hearts text-4xl"></i>', color: 'text-pink-500', bg: 'bg-pink-50', border: 'border-pink-200' }
+        };
+
+        function setRating(value) {
+            ratingInput.value = value;
+            ratingError.classList.add('hidden'); // Hide error if selected
+            
+            // Cập nhật giao diện sao
+            stars.forEach(star => {
+                const starVal = parseInt(star.getAttribute('data-value'));
+                if (starVal <= value) {
+                    star.classList.remove('text-gray-200');
+                    star.classList.add('text-yellow-400');
+                    star.classList.add('animate-[bounce_0.3s_ease-in-out]');
+                    setTimeout(() => star.classList.remove('animate-[bounce_0.3s_ease-in-out]'), 300);
+                } else {
+                    star.classList.add('text-gray-200');
+                    star.classList.remove('text-yellow-400');
+                }
+            });
+
+            // Cập nhật tiêu đề và icon cảm xúc
+            const config = feedbackConfig[value];
+            if (config) {
+                ratingTitle.textContent = config.title;
+                ratingTitle.classList.remove('animate-fade-in');
+                void ratingTitle.offsetWidth; // trigger reflow
+                ratingTitle.classList.add('animate-fade-in');
+                
+                emotionIcon.innerHTML = config.icon;
+                
+                // Reset classes for icon container
+                emotionIcon.className = `w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6 shadow-sm ${config.bg} ${config.color} ${config.border} border transition-all duration-300`;
+            }
+        }
+
+        function handleFileSelect(input) {
+            const previewContainer = document.getElementById('image-preview');
+            const placeholder = document.getElementById('upload-placeholder');
+            
+            if (input.files && input.files.length > 0) {
+                placeholder.classList.add('hidden');
+                previewContainer.classList.remove('hidden');
+                previewContainer.innerHTML = ''; // Clear old previews
+
+                Array.from(input.files).forEach(file => {
+                    const reader = new FileReader();
+                    reader.onload = function(e) {
+                        const imgDiv = document.createElement('div');
+                        imgDiv.className = 'w-16 h-16 rounded-lg border border-gray-200 overflow-hidden relative shadow-sm';
+                        imgDiv.innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover">`;
+                        previewContainer.appendChild(imgDiv);
+                    }
+                    reader.readAsDataURL(file);
+                });
+            }
+        }
+
+        function submitFeedback() {
+            // 1. Validate Booking Status (Mockup Logic)
+            if (bookingStatus !== "COMPLETED" && bookingStatus !== "CHECKED_OUT") {
+                alert("Bạn chỉ có thể đánh giá sau khi đã hoàn tất chuyến đi.");
+                return;
+            }
+
+            // 2. Validate Rating
+            const rating = ratingInput.value;
+            if (rating == 0) {
+                ratingError.classList.remove('hidden');
+                // Scroll to error
+                ratingError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
+            // 3. Mock Submit
+            const btn = document.querySelector('button[onclick="submitFeedback()"]');
+            
+            // Loading State
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang gửi...';
+            btn.classList.add('opacity-80', 'cursor-not-allowed');
+            btn.disabled = true;
+
+            setTimeout(() => {
+                alert("Cảm ơn đánh giá của bạn! Hệ thống đã ghi nhận.");
+                // Disable form to simulate "One feedback per booking"
+                document.body.innerHTML = `
+                    <div class="h-screen w-full flex flex-col items-center justify-center bg-gray-50">
+                        <div class="w-24 h-24 bg-green-100 rounded-full flex items-center justify-center text-green-600 mb-6 animate-bounce">
+                            <i class="fa-solid fa-check text-5xl"></i>
+                        </div>
+                        <h1 class="text-3xl font-bold text-gray-900">Gửi thành công!</h1>
+                        <p class="text-gray-500 mt-2">Cảm ơn bạn đã đóng góp ý kiến.</p>
+                        <button onclick="window.location.reload()" class="mt-8 text-blue-600 font-medium hover:underline">Quay lại trang chủ</button>
+                    </div>
+                `;
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

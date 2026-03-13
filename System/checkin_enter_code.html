@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Check-in Kiosk - BookNow</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            DEFAULT: '#2563eb', // blue-600
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        /* Hiệu ứng focus cho input kiosk */
+        .kiosk-input:focus {
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.2);
+            border-color: #2563eb;
+        }
+        /* Ẩn thanh cuộn để giao diện kiosk sạch sẽ */
+        body {
+            overflow: hidden; 
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 h-screen flex flex-col justify-center items-center relative overflow-hidden">
+
+    <!-- === BACKGROUND DECORATION === -->
+    <div class="absolute top-0 left-0 w-full h-full overflow-hidden -z-10">
+        <div class="absolute -top-40 -right-40 w-96 h-96 bg-blue-200 rounded-full opacity-30 blur-3xl"></div>
+        <div class="absolute bottom-0 left-0 w-80 h-80 bg-blue-300 rounded-full opacity-20 blur-3xl"></div>
+    </div>
+
+    <!-- === LOGO (Fixed Top-Left, 25px margin) === -->
+    <div style="position: fixed; top: 25px; left: 25px; z-index: 100;" class="bg-white/90 backdrop-blur px-6 py-3 rounded-2xl shadow-sm border border-white/50">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center border border-blue-100">
+                <i class="fa-solid fa-house-chimney gradient-icon text-2xl text-blue-600"></i>
+            </div>
+            <div class="flex flex-col justify-center">
+                <span class="text-3xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-blue-500 to-blue-700 leading-none">BookNow</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- === MAIN KIOSK CARD === -->
+    <div class="w-full max-w-lg px-4 relative z-10">
+        
+        <div class="bg-white rounded-[2rem] shadow-2xl p-8 md:p-10 text-center border border-white/50 relative overflow-hidden">
+            
+            <!-- Header Icon -->
+            <div class="w-16 h-16 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-5 text-blue-600 shadow-inner">
+                <i class="fa-solid fa-key text-2xl"></i>
+            </div>
+
+            <h1 class="text-2xl md:text-3xl font-extrabold text-gray-900 mb-3">Chào mừng quý khách!</h1>
+            <p class="text-base text-gray-500 mb-8 leading-relaxed">
+                Vui lòng nhập <span class="font-bold text-gray-800">mã booking</span> của bạn để làm thủ tục nhận phòng tự động.
+            </p>
+
+            <!-- Input Area -->
+            <div class="relative mb-2">
+                <div class="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
+                    <i class="fa-solid fa-hashtag text-gray-400 text-lg"></i>
+                </div>
+                <!-- Input lớn, font to, căn giữa cho dễ nhìn -->
+                <input type="text" 
+                       id="bookingCode" 
+                       placeholder="VD: BK88921" 
+                       class="kiosk-input w-full pl-12 pr-5 py-5 bg-gray-50 border-2 border-gray-200 rounded-2xl text-center text-2xl font-mono font-bold text-gray-800 placeholder-gray-300 uppercase outline-none transition-all"
+                       autocomplete="off"
+                       maxlength="10"
+                >
+            </div>
+
+            <!-- Error Message Container (Hidden by default) -->
+            <div id="error-container" class="h-6 mb-5 mt-2 opacity-0 transition-opacity duration-300 flex items-center justify-center gap-2 text-red-500 font-medium text-sm">
+                <i class="fa-solid fa-circle-exclamation"></i>
+                <span id="error-text">Lỗi hiển thị ở đây</span>
+            </div>
+
+            <!-- Action Button -->
+            <button onclick="startCheckIn()" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold py-4 rounded-2xl shadow-xl shadow-blue-500/30 transition-all transform hover:-translate-y-1 active:translate-y-0 flex items-center justify-center gap-3">
+                <span>Bắt đầu Check-in</span>
+                <i class="fa-solid fa-arrow-right"></i>
+            </button>
+
+            <!-- Keyboard Hint -->
+            <div class="mt-6 flex items-center justify-center gap-2 text-gray-400 text-xs">
+                <i class="fa-regular fa-keyboard"></i>
+                <span>Sử dụng bàn phím ảo hoặc thiết bị nhập liệu</span>
+            </div>
+
+        </div>
+
+        <!-- Help Info -->
+        <div class="text-center mt-6">
+            <p class="text-gray-500 font-medium text-sm">Gặp khó khăn? Gọi hỗ trợ</p>
+            <p class="text-xl font-bold text-gray-800 mt-1"><i class="fa-solid fa-phone-volume text-blue-600 mr-2"></i> 1900 8888</p>
+        </div>
+
+    </div>
+
+    <!-- === SCRIPT LOGIC === -->
+    <script>
+        const input = document.getElementById('bookingCode');
+        const errorContainer = document.getElementById('error-container');
+        const errorText = document.getElementById('error-text');
+
+        // Tự động focus vào input khi tải trang
+        window.onload = () => {
+            input.focus();
+        };
+
+        // Chuyển chữ thường thành chữ hoa khi nhập
+        input.addEventListener('input', function() {
+            this.value = this.value.toUpperCase();
+            hideError();
+        });
+
+        // Xử lý khi nhấn Enter
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                startCheckIn();
+            }
+        });
+
+        function showError(message) {
+            errorText.textContent = message;
+            errorContainer.classList.remove('opacity-0');
+            // Rung input để báo lỗi
+            input.classList.add('animate-pulse', 'border-red-500', 'bg-red-50');
+            setTimeout(() => {
+                input.classList.remove('animate-pulse', 'border-red-500', 'bg-red-50');
+            }, 500);
+        }
+
+        function hideError() {
+            errorContainer.classList.add('opacity-0');
+            input.classList.remove('border-red-500', 'bg-red-50');
+        }
+
+        function startCheckIn() {
+            const code = input.value.trim();
+
+            // 1. Kiểm tra rỗng
+            if (!code) {
+                showError("Vui lòng nhập mã booking!");
+                return;
+            }
+
+            // --- GIẢ LẬP CÁC TRƯỜNG HỢP LỖI (MOCKUP) ---
+            
+            // Case 1: Mã không tồn tại (Ví dụ nhập: ERR404)
+            if (code === 'ERR404') {
+                showError("Mã booking không tồn tại. Vui lòng kiểm tra lại.");
+                return;
+            }
+
+            // Case 2: Chưa thanh toán (Ví dụ nhập: UNPAID)
+            if (code === 'UNPAID') {
+                showError("Booking này chưa được thanh toán. Vui lòng thanh toán trước.");
+                return;
+            }
+
+            // Case 3: Đã Check-in trước đó (Ví dụ nhập: CHECKED)
+            if (code === 'CHECKED') {
+                showError("Booking này đã hoàn tất thủ tục check-in trước đó.");
+                return;
+            }
+
+            // Case 4: Thành công (Mã bất kỳ khác)
+            // Hiệu ứng loading
+            const btn = document.querySelector('button');
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang tìm kiếm...';
+            btn.disabled = true;
+            btn.classList.add('opacity-75');
+
+            setTimeout(() => {
+                // Chuyển hướng đến trang chi tiết (Giả lập)
+                alert(`Tìm thấy Booking ${code}! Chuyển đến màn hình xác nhận thông tin...`);
+                // Trong thực tế sẽ chuyển: window.location.href = 'kiosk_booking_confirm.html';
+                
+                // Reset nút (cho demo)
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                btn.classList.remove('opacity-75');
+                input.value = '';
+            }, 1500);
+        }
+    </script>
+</body>
+</html>

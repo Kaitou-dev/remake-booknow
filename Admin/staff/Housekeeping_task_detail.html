@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Detail - BookNow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: { light: '#60a5fa', DEFAULT: '#3b82f6', dark: '#2563eb' },
+                        room: {
+                            available:   '#10b981',
+                            booked:      '#3b82f6',
+                            occupied:    '#6b7280',
+                            cleaning:    '#f59e0b',
+                            maintenance: '#ef4444',
+                            deleted:     '#374151',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .gradient-icon { color: #3b82f6; }
+
+        .logo-fixed {
+            position: fixed; top: 0; left: 0;
+            margin-top: 25px; margin-left: 25px; z-index: 60;
+        }
+
+        .sidebar { transition: transform 0.3s ease-in-out; }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+        @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.4} }
+        .pulse-slow { animation: blink 2s infinite; }
+
+        .checklist-item input[type="checkbox"]:checked + label {
+            text-decoration: line-through;
+            color: #9ca3af;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-50 font-sans text-gray-800">
+
+    <!-- LOGO -->
+    <div class="logo-fixed flex items-center gap-3 select-none bg-white/90 backdrop-blur px-3 py-2 rounded-xl shadow-sm lg:shadow-none lg:bg-transparent lg:p-0">
+        <div class="w-10 h-10 bg-white rounded-lg shadow-md flex items-center justify-center border border-blue-100">
+            <i class="fa-solid fa-house-chimney gradient-icon text-xl"></i>
+        </div>
+        <div class="flex flex-col justify-center">
+            <span class="text-2xl font-extrabold tracking-tight gradient-text leading-none">BookNow</span>
+            <span class="text-[10px] text-gray-500 font-medium uppercase tracking-wider pl-0.5">Homestay System</span>
+        </div>
+    </div>
+
+    <!-- MOBILE HEADER -->
+    <div class="lg:hidden fixed top-0 w-full bg-white h-20 shadow-sm z-40 flex items-center justify-end px-6">
+        <button id="mobileMenuBtn" class="text-gray-500 hover:text-blue-600 focus:outline-none">
+            <i class="fa-solid fa-bars text-2xl"></i>
+        </button>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside id="sidebar" class="sidebar fixed top-0 left-0 h-full w-64 bg-white border-r border-gray-200 z-50 transform -translate-x-full lg:translate-x-0 pt-28 overflow-y-auto no-scrollbar">
+        <div class="px-4 mb-4">
+            <span class="text-[10px] font-bold text-gray-400 uppercase tracking-widest px-4">Housekeeping</span>
+        </div>
+        <nav class="px-4 space-y-1">
+            <a href="Housekeeping_task_list.html" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg font-medium transition-colors">
+                <i class="fa-solid fa-list-check w-5"></i>
+                Task List
+            </a>
+            <a href="Housekeeping_dashboard.html" class="flex items-center gap-3 px-4 py-3 text-gray-600 hover:bg-gray-50 hover:text-gray-900 rounded-lg font-medium transition-colors">
+                <i class="fa-solid fa-broom w-5"></i>
+                Dashboard
+            </a>
+        </nav>
+        <div class="absolute bottom-0 w-full p-4 border-t border-gray-100 bg-white">
+            <div class="flex items-center gap-3 px-4 py-2 mb-2">
+                <div class="w-9 h-9 rounded-full bg-amber-100 flex items-center justify-center text-amber-700 font-bold text-sm border-2 border-white shadow-sm">HK</div>
+                <div>
+                    <p class="text-sm font-bold text-gray-800 leading-none">Trần Thị B</p>
+                    <span class="text-[11px] text-amber-600 font-semibold">Housekeeping</span>
+                </div>
+            </div>
+            <a href="login-admin.html" class="flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 rounded-lg font-medium transition-colors">
+                <i class="fa-solid fa-arrow-right-from-bracket w-5"></i>
+                Đăng xuất
+            </a>
+        </div>
+    </aside>
+
+    <!-- OVERLAY (mobile) -->
+    <div id="sidebarOverlay" class="fixed inset-0 bg-black/50 z-40 hidden lg:hidden"></div>
+
+    <!-- MAIN CONTENT -->
+    <main class="lg:ml-64 min-h-screen pt-24 lg:pt-8 px-4 sm:px-6 pb-10 transition-all duration-300">
+
+        <!-- BACK + HEADER -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between mb-6 gap-4">
+            <div>
+                <a href="Housekeeping_task_list.html" class="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-amber-600 font-medium mb-2 transition-colors">
+                    <i class="fa-solid fa-arrow-left text-xs"></i> Back to Task List
+                </a>
+                <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+                    <i class="fa-solid fa-door-open text-amber-500"></i>
+                    Room <span id="headerRoom">203</span>
+                </h1>
+                <p class="text-sm text-gray-500 mt-1">Cleaning task details &amp; checklist</p>
+            </div>
+            <div id="headerBadge">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold bg-yellow-50 text-yellow-700 border border-yellow-200">
+                    <span class="w-2 h-2 rounded-full bg-yellow-500 pulse-slow"></span>
+                    CLEANING
+                </span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- LEFT COLUMN: Room Info + Checklist -->
+            <div class="lg:col-span-2 space-y-6">
+
+                <!-- ROOM INFORMATION -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h3 class="font-bold text-gray-800 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-circle-info text-blue-400 text-sm"></i>
+                            Room Information
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <p class="text-[11px] text-gray-400 uppercase tracking-wider font-semibold mb-1">Room Number</p>
+                                <p class="text-xl font-bold text-gray-800" id="infoRoom">203</p>
+                            </div>
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <p class="text-[11px] text-gray-400 uppercase tracking-wider font-semibold mb-1">Current Status</p>
+                                <p id="infoStatus">
+                                    <span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-yellow-50 text-yellow-700">
+                                        <span class="w-2 h-2 rounded-full bg-yellow-500 pulse-slow"></span>
+                                        CLEANING
+                                    </span>
+                                </p>
+                            </div>
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <p class="text-[11px] text-gray-400 uppercase tracking-wider font-semibold mb-1">Last Checkout</p>
+                                <p class="text-sm font-semibold text-gray-700" id="infoCheckout">10:30 AM</p>
+                            </div>
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <p class="text-[11px] text-gray-400 uppercase tracking-wider font-semibold mb-1">Task Type</p>
+                                <p class="text-sm font-semibold text-gray-700" id="infoTaskType">
+                                    <i class="fa-solid fa-broom text-amber-500 mr-1"></i> Cleaning
+                                </p>
+                            </div>
+                            <div class="bg-gray-50 rounded-xl p-4">
+                                <p class="text-[11px] text-gray-400 uppercase tracking-wider font-semibold mb-1">Priority</p>
+                                <p id="infoPriority">
+                                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700">
+                                        <i class="fa-solid fa-minus text-[8px]"></i> Normal
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CLEANING CHECKLIST -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden" id="checklistSection">
+                    <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+                        <h3 class="font-bold text-gray-800 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-clipboard-check text-amber-500 text-sm"></i>
+                            Cleaning Checklist
+                        </h3>
+                        <span class="text-xs text-gray-400 font-medium" id="checkProgress">0 / 5 completed</span>
+                    </div>
+                    <div class="p-6 space-y-3">
+
+                        <div class="checklist-item flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-amber-50/50 transition-colors">
+                            <input type="checkbox" id="check1" class="w-5 h-5 rounded border-gray-300 text-amber-500 focus:ring-amber-400 cursor-pointer" onchange="updateProgress()">
+                            <label for="check1" class="text-sm font-medium text-gray-700 cursor-pointer flex items-center gap-2 flex-1">
+                                <i class="fa-solid fa-bed text-gray-400 text-xs w-4"></i>
+                                Change bedsheets
+                            </label>
+                        </div>
+
+                        <div class="checklist-item flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-amber-50/50 transition-colors">
+                            <input type="checkbox" id="check2" class="w-5 h-5 rounded border-gray-300 text-amber-500 focus:ring-amber-400 cursor-pointer" onchange="updateProgress()">
+                            <label for="check2" class="text-sm font-medium text-gray-700 cursor-pointer flex items-center gap-2 flex-1">
+                                <i class="fa-solid fa-shower text-gray-400 text-xs w-4"></i>
+                                Clean bathroom
+                            </label>
+                        </div>
+
+                        <div class="checklist-item flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-amber-50/50 transition-colors">
+                            <input type="checkbox" id="check3" class="w-5 h-5 rounded border-gray-300 text-amber-500 focus:ring-amber-400 cursor-pointer" onchange="updateProgress()">
+                            <label for="check3" class="text-sm font-medium text-gray-700 cursor-pointer flex items-center gap-2 flex-1">
+                                <i class="fa-solid fa-broom text-gray-400 text-xs w-4"></i>
+                                Vacuum floor
+                            </label>
+                        </div>
+
+                        <div class="checklist-item flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-amber-50/50 transition-colors">
+                            <input type="checkbox" id="check4" class="w-5 h-5 rounded border-gray-300 text-amber-500 focus:ring-amber-400 cursor-pointer" onchange="updateProgress()">
+                            <label for="check4" class="text-sm font-medium text-gray-700 cursor-pointer flex items-center gap-2 flex-1">
+                                <i class="fa-solid fa-pump-soap text-gray-400 text-xs w-4"></i>
+                                Refill amenities
+                            </label>
+                        </div>
+
+                        <div class="checklist-item flex items-center gap-3 p-3 bg-gray-50 rounded-xl hover:bg-amber-50/50 transition-colors">
+                            <input type="checkbox" id="check5" class="w-5 h-5 rounded border-gray-300 text-amber-500 focus:ring-amber-400 cursor-pointer" onchange="updateProgress()">
+                            <label for="check5" class="text-sm font-medium text-gray-700 cursor-pointer flex items-center gap-2 flex-1">
+                                <i class="fa-solid fa-wine-bottle text-gray-400 text-xs w-4"></i>
+                                Check minibar
+                            </label>
+                        </div>
+
+                        <!-- Progress Bar -->
+                        <div class="mt-4 pt-4 border-t border-gray-100">
+                            <div class="w-full bg-gray-200 rounded-full h-2">
+                                <div id="progressBar" class="bg-amber-500 h-2 rounded-full transition-all duration-300" style="width: 0%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NOTES SECTION -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h3 class="font-bold text-gray-800 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-note-sticky text-blue-400 text-sm"></i>
+                            Staff Notes
+                        </h3>
+                    </div>
+                    <div class="p-6">
+                        <textarea id="staffNotes" rows="4" placeholder="Add notes about this room (e.g., damaged items, special requests, issues found...)" class="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-amber-300 focus:border-amber-400 resize-none"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT COLUMN: Actions -->
+            <div class="space-y-6">
+
+                <!-- ACTION BUTTONS -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h3 class="font-bold text-gray-800 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-bolt text-amber-500 text-sm"></i>
+                            Actions
+                        </h3>
+                    </div>
+                    <div class="p-6 space-y-3">
+
+                        <!-- Start Cleaning -->
+                        <button id="btnStartCleaning" onclick="startCleaning()" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold bg-amber-500 text-white hover:bg-amber-600 transition-colors shadow-sm">
+                            <i class="fa-solid fa-play"></i>
+                            Start Cleaning
+                        </button>
+
+                        <!-- Mark Cleaned -->
+                        <button id="btnMarkCleaned" onclick="markCleaned()" disabled class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold bg-emerald-500 text-white hover:bg-emerald-600 transition-colors shadow-sm disabled:opacity-40 disabled:cursor-not-allowed">
+                            <i class="fa-solid fa-circle-check"></i>
+                            Mark as Cleaned
+                        </button>
+
+                        <!-- Report Maintenance -->
+                        <button id="btnMaintenance" onclick="reportMaintenance()" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold bg-red-500 text-white hover:bg-red-600 transition-colors shadow-sm">
+                            <i class="fa-solid fa-wrench"></i>
+                            Report Maintenance
+                        </button>
+
+                        <div class="border-t border-gray-100 pt-3">
+                            <a href="Housekeeping_task_list.html" class="w-full flex items-center justify-center gap-2 px-4 py-3 rounded-xl text-sm font-bold bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors">
+                                <i class="fa-solid fa-arrow-left"></i>
+                                Back to List
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STATUS FLOW INFO -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h3 class="font-bold text-gray-800 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-route text-gray-400 text-sm"></i>
+                            Status Flow
+                        </h3>
+                    </div>
+                    <div class="p-6 space-y-3">
+                        <div class="flex items-center gap-2 text-xs">
+                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full font-bold bg-yellow-50 text-yellow-700">CLEANING</span>
+                            <i class="fa-solid fa-arrow-right text-gray-300"></i>
+                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full font-bold bg-emerald-50 text-emerald-700">AVAILABLE</span>
+                        </div>
+                        <div class="flex items-center gap-2 text-xs">
+                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full font-bold bg-yellow-50 text-yellow-700">CLEANING</span>
+                            <i class="fa-solid fa-arrow-right text-gray-300"></i>
+                            <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full font-bold bg-red-50 text-red-600">MAINTENANCE</span>
+                        </div>
+                        <p class="text-[11px] text-gray-400 mt-2">Mark cleaned to make the room available, or report maintenance if issues are found.</p>
+                    </div>
+                </div>
+
+                <!-- ACTIVITY LOG -->
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100">
+                        <h3 class="font-bold text-gray-800 text-base flex items-center gap-2">
+                            <i class="fa-solid fa-clock-rotate-left text-gray-400 text-sm"></i>
+                            Activity Log
+                        </h3>
+                    </div>
+                    <div class="p-6" id="activityLog">
+                        <div class="space-y-3">
+                            <div class="flex items-start gap-3">
+                                <div class="w-2 h-2 rounded-full bg-gray-300 mt-1.5 shrink-0"></div>
+                                <div>
+                                    <p class="text-xs text-gray-600 font-medium">Guest checked out</p>
+                                    <p class="text-[11px] text-gray-400">10:30 AM · Auto-assigned</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start gap-3">
+                                <div class="w-2 h-2 rounded-full bg-yellow-400 mt-1.5 shrink-0"></div>
+                                <div>
+                                    <p class="text-xs text-gray-600 font-medium">Status changed to CLEANING</p>
+                                    <p class="text-[11px] text-gray-400">10:30 AM · System</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+    </main>
+
+    <!-- CONFIRMATION MODAL -->
+    <div id="confirmModal" class="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center hidden">
+        <div class="bg-white rounded-2xl shadow-xl max-w-sm w-full mx-4 overflow-hidden">
+            <div class="p-6 text-center">
+                <div id="modalIcon" class="w-14 h-14 mx-auto rounded-full bg-emerald-50 flex items-center justify-center mb-4">
+                    <i class="fa-solid fa-circle-check text-emerald-500 text-2xl"></i>
+                </div>
+                <h3 id="modalTitle" class="text-lg font-bold text-gray-800 mb-2">Mark as Cleaned?</h3>
+                <p id="modalDesc" class="text-sm text-gray-500">This will change the room status to AVAILABLE.</p>
+            </div>
+            <div class="flex border-t border-gray-100">
+                <button onclick="closeModal()" class="flex-1 py-3 text-sm font-semibold text-gray-600 hover:bg-gray-50 transition-colors">Cancel</button>
+                <button id="modalConfirmBtn" onclick="confirmAction()" class="flex-1 py-3 text-sm font-bold text-white bg-emerald-500 hover:bg-emerald-600 transition-colors">Confirm</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- SUCCESS TOAST -->
+    <div id="toast" class="fixed top-6 right-6 z-[110] hidden">
+        <div class="bg-white rounded-xl shadow-lg border border-gray-100 flex items-center gap-3 px-5 py-4">
+            <i id="toastIcon" class="fa-solid fa-circle-check text-emerald-500 text-lg"></i>
+            <div>
+                <p id="toastTitle" class="text-sm font-bold text-gray-800">Status Updated</p>
+                <p id="toastDesc" class="text-xs text-gray-500">Room is now AVAILABLE</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script>
+        // ── Mobile sidebar ──
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarOverlay.classList.toggle('hidden');
+        }
+        mobileMenuBtn.addEventListener('click', toggleSidebar);
+        sidebarOverlay.addEventListener('click', toggleSidebar);
+
+        // ── Room data (mock, would come from API) ──
+        const rooms = {
+            '101': { room: '101', floor: 'Floor 1', status: 'CLEANING', checkout: '10:00 AM', taskType: 'Cleaning', priority: 'High',   reason: 'Overdue Checkout' },
+            '203': { room: '203', floor: 'Floor 2', status: 'CLEANING', checkout: '10:30 AM', taskType: 'Cleaning', priority: 'Normal', reason: 'Checkout' },
+            '105': { room: '105', floor: 'Floor 1', status: 'CLEANING', checkout: '09:15 AM', taskType: 'Cleaning', priority: 'Normal', reason: 'Checkout' },
+            '302': { room: '302', floor: 'Floor 3', status: 'CLEANING', checkout: '08:00 AM', taskType: 'Cleaning', priority: 'High',   reason: 'Overdue Checkout' },
+            '301': { room: '301', floor: 'Floor 3', status: 'MAINTENANCE', checkout: 'Yesterday 3:00 PM', taskType: 'Maintenance', priority: 'High', reason: 'Maintenance' },
+            '204': { room: '204', floor: 'Floor 2', status: 'CLEANING', checkout: '11:45 AM', taskType: 'Cleaning', priority: 'Low',    reason: 'Checkout' },
+            '103': { room: '103', floor: 'Floor 1', status: 'MAINTENANCE', checkout: 'Today 07:30 AM', taskType: 'Maintenance', priority: 'Normal', reason: 'Maintenance' },
+            '201': { room: '201', floor: 'Floor 2', status: 'CLEANING', checkout: '12:00 PM', taskType: 'Cleaning', priority: 'Low',    reason: 'Checkout' },
+        };
+
+        let currentRoom = null;
+        let pendingAction = null;
+        let cleaningStarted = false;
+
+        // ── Load room from URL params ──
+        function loadRoom() {
+            const params = new URLSearchParams(window.location.search);
+            const roomId = params.get('room') || '203';
+            currentRoom = rooms[roomId] || rooms['203'];
+
+            document.getElementById('headerRoom').textContent = currentRoom.room;
+            document.getElementById('infoRoom').textContent = currentRoom.room;
+            document.getElementById('infoFloor').textContent = currentRoom.floor;
+            document.getElementById('infoCheckout').textContent = currentRoom.checkout;
+
+            // Status badge
+            const statusBadge = getStatusBadge(currentRoom.status);
+            document.getElementById('infoStatus').innerHTML = statusBadge;
+            document.getElementById('headerBadge').innerHTML = statusBadge;
+
+            // Task type
+            if (currentRoom.taskType === 'Maintenance') {
+                document.getElementById('infoTaskType').innerHTML = '<i class="fa-solid fa-wrench text-red-500 mr-1"></i> Maintenance';
+                document.getElementById('checklistSection').classList.add('hidden');
+                document.getElementById('btnStartCleaning').classList.add('hidden');
+                document.getElementById('btnMarkCleaned').classList.add('hidden');
+            }
+
+            // Priority
+            document.getElementById('infoPriority').innerHTML = getPriorityBadge(currentRoom.priority);
+
+            document.title = 'Room ' + currentRoom.room + ' - Task Detail - BookNow';
+        }
+
+        function getStatusBadge(status) {
+            const map = {
+                'CLEANING':    '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-yellow-50 text-yellow-700"><span class="w-2 h-2 rounded-full bg-yellow-500 pulse-slow"></span>CLEANING</span>',
+                'MAINTENANCE': '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-red-50 text-red-600"><span class="w-2 h-2 rounded-full bg-red-500"></span>MAINTENANCE</span>',
+                'AVAILABLE':   '<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-50 text-emerald-700"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>AVAILABLE</span>',
+            };
+            return map[status] || map['CLEANING'];
+        }
+
+        function getPriorityBadge(priority) {
+            const map = {
+                'High':   '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-red-50 text-red-600"><i class="fa-solid fa-arrow-up text-[8px]"></i> High</span>',
+                'Normal': '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-700"><i class="fa-solid fa-minus text-[8px]"></i> Normal</span>',
+                'Low':    '<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[11px] font-bold bg-gray-100 text-gray-500"><i class="fa-solid fa-arrow-down text-[8px]"></i> Low</span>',
+            };
+            return map[priority] || map['Normal'];
+        }
+
+        // ── Checklist progress ──
+        function updateProgress() {
+            const checks = document.querySelectorAll('#checklistSection input[type="checkbox"]');
+            const total = checks.length;
+            const done = [...checks].filter(c => c.checked).length;
+            document.getElementById('checkProgress').textContent = done + ' / ' + total + ' completed';
+            document.getElementById('progressBar').style.width = (done / total * 100) + '%';
+
+            // Enable "Mark Cleaned" only when all checked and cleaning started
+            const btnMark = document.getElementById('btnMarkCleaned');
+            if (done === total && cleaningStarted) {
+                btnMark.disabled = false;
+            } else {
+                btnMark.disabled = true;
+            }
+        }
+
+        // ── Actions ──
+        function startCleaning() {
+            cleaningStarted = true;
+            const btn = document.getElementById('btnStartCleaning');
+            btn.disabled = true;
+            btn.classList.remove('bg-amber-500', 'hover:bg-amber-600');
+            btn.classList.add('bg-gray-300', 'cursor-not-allowed');
+            btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> In Progress...';
+
+            addLogEntry('Cleaning started', 'Just now · Trần Thị B', 'bg-amber-400');
+            updateProgress();
+            showToast('Cleaning Started', 'You can now complete the checklist', 'fa-solid fa-play text-amber-500');
+        }
+
+        function markCleaned() {
+            pendingAction = 'cleaned';
+            document.getElementById('modalIcon').innerHTML = '<i class="fa-solid fa-circle-check text-emerald-500 text-2xl"></i>';
+            document.getElementById('modalIcon').className = 'w-14 h-14 mx-auto rounded-full bg-emerald-50 flex items-center justify-center mb-4';
+            document.getElementById('modalTitle').textContent = 'Mark as Cleaned?';
+            document.getElementById('modalDesc').textContent = 'This will change Room ' + currentRoom.room + ' status to AVAILABLE.';
+            document.getElementById('modalConfirmBtn').className = 'flex-1 py-3 text-sm font-bold text-white bg-emerald-500 hover:bg-emerald-600 transition-colors';
+            document.getElementById('modalConfirmBtn').textContent = 'Confirm';
+            document.getElementById('confirmModal').classList.remove('hidden');
+        }
+
+        function reportMaintenance() {
+            pendingAction = 'maintenance';
+            document.getElementById('modalIcon').innerHTML = '<i class="fa-solid fa-wrench text-red-500 text-2xl"></i>';
+            document.getElementById('modalIcon').className = 'w-14 h-14 mx-auto rounded-full bg-red-50 flex items-center justify-center mb-4';
+            document.getElementById('modalTitle').textContent = 'Report Maintenance?';
+            document.getElementById('modalDesc').textContent = 'This will change Room ' + currentRoom.room + ' status to MAINTENANCE.';
+            document.getElementById('modalConfirmBtn').className = 'flex-1 py-3 text-sm font-bold text-white bg-red-500 hover:bg-red-600 transition-colors';
+            document.getElementById('modalConfirmBtn').textContent = 'Report';
+            document.getElementById('confirmModal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('confirmModal').classList.add('hidden');
+            pendingAction = null;
+        }
+
+        function confirmAction() {
+            closeModal();
+
+            if (pendingAction === 'cleaned') {
+                currentRoom.status = 'AVAILABLE';
+                const badge = getStatusBadge('AVAILABLE');
+                document.getElementById('infoStatus').innerHTML = badge;
+                document.getElementById('headerBadge').innerHTML = badge;
+                addLogEntry('Marked as Cleaned — AVAILABLE', 'Just now · Trần Thị B', 'bg-emerald-500');
+                disableAllActions();
+                showToast('Status Updated', 'Room ' + currentRoom.room + ' is now AVAILABLE', 'fa-solid fa-circle-check text-emerald-500');
+            }
+
+            if (pendingAction === 'maintenance') {
+                currentRoom.status = 'MAINTENANCE';
+                const badge = getStatusBadge('MAINTENANCE');
+                document.getElementById('infoStatus').innerHTML = badge;
+                document.getElementById('headerBadge').innerHTML = badge;
+                addLogEntry('Reported Maintenance', 'Just now · Trần Thị B', 'bg-red-500');
+                disableAllActions();
+                showToast('Maintenance Reported', 'Room ' + currentRoom.room + ' is now MAINTENANCE', 'fa-solid fa-wrench text-red-500');
+            }
+
+            pendingAction = null;
+        }
+
+        function disableAllActions() {
+            ['btnStartCleaning', 'btnMarkCleaned', 'btnMaintenance'].forEach(id => {
+                const btn = document.getElementById(id);
+                if (btn) {
+                    btn.disabled = true;
+                    btn.classList.add('opacity-40', 'cursor-not-allowed');
+                }
+            });
+            document.querySelectorAll('#checklistSection input[type="checkbox"]').forEach(cb => cb.disabled = true);
+        }
+
+        // ── Activity log ──
+        function addLogEntry(text, meta, dotColor) {
+            const container = document.querySelector('#activityLog .space-y-3');
+            const entry = document.createElement('div');
+            entry.className = 'flex items-start gap-3';
+            entry.innerHTML = '<div class="w-2 h-2 rounded-full ' + dotColor + ' mt-1.5 shrink-0"></div><div><p class="text-xs text-gray-600 font-medium">' + text + '</p><p class="text-[11px] text-gray-400">' + meta + '</p></div>';
+            container.insertBefore(entry, container.firstChild);
+        }
+
+        // ── Toast ──
+        function showToast(title, desc, iconClass) {
+            document.getElementById('toastIcon').className = iconClass + ' text-lg';
+            document.getElementById('toastTitle').textContent = title;
+            document.getElementById('toastDesc').textContent = desc;
+            const toast = document.getElementById('toast');
+            toast.classList.remove('hidden');
+            setTimeout(() => toast.classList.add('hidden'), 3000);
+        }
+
+        // ── Init ──
+        loadRoom();
+    </script>
+
+</body>
+</html>
