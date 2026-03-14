@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Overdue Checkout - BookNow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold">Housekeeping Dashboard</h1>
+            <div class="flex items-center gap-4">
+                <span class="text-sm">Welcome, Nguyen Van A</span>
+                <a href="#" class="text-sm bg-blue-700 px-3 py-1 rounded hover:bg-blue-800">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex gap-6 py-3">
+                <a href="housekeeping-dashboard.html" class="text-gray-600 hover:text-blue-600">Dashboard</a>
+                <a href="cleaning-task-list.html" class="text-gray-600 hover:text-blue-600">Cleaning Tasks</a>
+                <a href="maintenance-room-list.html" class="text-gray-600 hover:text-blue-600">Maintenance</a>
+                <a href="overdue-checkout.html" class="text-blue-600 font-medium border-b-2 border-blue-600 pb-1">Overdue Checkout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Page Header -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">Overdue Checkout</h2>
+                <p class="text-sm text-gray-500">Rooms where guests have not checked out by scheduled time</p>
+            </div>
+            <div class="text-sm text-gray-500">
+                Current Time: <span class="font-medium text-gray-700">2026-03-13 02:30 PM</span>
+            </div>
+        </div>
+
+        <!-- Alert Banner -->
+        <div class="bg-orange-100 border-l-4 border-orange-500 p-4 mb-6">
+            <div class="flex items-center">
+                <svg class="w-5 h-5 text-orange-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
+                </svg>
+                <p class="text-orange-700 text-sm">
+                    <strong>1 room</strong> has exceeded checkout time. Please inspect and take appropriate action.
+                </p>
+            </div>
+        </div>
+
+        <!-- Task Table -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                    <tr class="text-left text-sm text-gray-600">
+                        <th class="px-6 py-4 font-medium">Room Number</th>
+                        <th class="px-6 py-4 font-medium">Room Type</th>
+                        <th class="px-6 py-4 font-medium">Customer</th>
+                        <th class="px-6 py-4 font-medium">Scheduled Checkout</th>
+                        <th class="px-6 py-4 font-medium">Overdue Duration</th>
+                        <th class="px-6 py-4 font-medium">Booking Code</th>
+                        <th class="px-6 py-4 font-medium">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <!-- Row 1 - Overdue by 2+ hours -->
+                    <tr class="hover:bg-gray-50 bg-red-50">
+                        <td class="px-6 py-4">
+                            <span class="font-bold text-gray-800">301</span>
+                        </td>
+                        <td class="px-6 py-4 text-gray-600">Deluxe Double</td>
+                        <td class="px-6 py-4">
+                            <div class="text-gray-800 font-medium">Le Van C</div>
+                            <div class="text-xs text-gray-400">0912-345-678</div>
+                        </td>
+                        <td class="px-6 py-4 text-gray-600">
+                            <div>2026-03-13</div>
+                            <div class="text-xs text-gray-400">12:00 PM</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-red-600 text-white rounded text-xs font-medium">2h 30m</span>
+                        </td>
+                        <td class="px-6 py-4 text-gray-600 font-mono text-sm">BK20260313001</td>
+                        <td class="px-6 py-4">
+                            <div class="flex gap-2">
+                                <a href="inspect-overdue-room.html?room=301" class="bg-orange-600 text-white px-3 py-1 rounded text-sm hover:bg-orange-700">Inspect Room</a>
+                                <button class="bg-red-600 text-white px-3 py-1 rounded text-sm hover:bg-red-700">Force Checkout</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Empty State (for when no overdue checkouts) -->
+        <!--
+        <div class="bg-white rounded-lg shadow p-12 text-center">
+            <svg class="w-16 h-16 text-green-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-600 mb-2">No Overdue Checkouts</h3>
+            <p class="text-sm text-gray-400">All guests have checked out on time</p>
+        </div>
+        -->
+
+        <!-- Summary -->
+        <div class="mt-6 flex justify-between items-center text-sm text-gray-500">
+            <p>Showing 1 overdue checkout</p>
+        </div>
+
+        <!-- Instructions -->
+        <div class="mt-8 bg-white rounded-lg shadow p-6">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Handling Overdue Checkouts</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-sm text-gray-600">
+                <div>
+                    <h4 class="font-medium text-gray-700 mb-2">1. Inspect Room</h4>
+                    <p>Visit the room to check if the guest is still present or has left without checking out.</p>
+                </div>
+                <div>
+                    <h4 class="font-medium text-gray-700 mb-2">2. Contact Guest</h4>
+                    <p>If the guest is reachable, remind them to complete checkout via the app.</p>
+                </div>
+                <div>
+                    <h4 class="font-medium text-gray-700 mb-2">3. Force Checkout</h4>
+                    <p>If the guest has departed without checkout, staff can force checkout to release the room.</p>
+                </div>
+                <div>
+                    <h4 class="font-medium text-gray-700 mb-2">4. Create Cleaning Task</h4>
+                    <p>After checkout, a cleaning task will be automatically created for the room.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center py-4 mt-8">
+        <p class="text-sm">BookNow Homestay Management System</p>
+    </footer>
+</body>
+</html>

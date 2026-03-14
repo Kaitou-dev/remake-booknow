@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maintenance Rooms - BookNow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold">Housekeeping Dashboard</h1>
+            <div class="flex items-center gap-4">
+                <span class="text-sm">Welcome, Nguyen Van A</span>
+                <a href="#" class="text-sm bg-blue-700 px-3 py-1 rounded hover:bg-blue-800">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex gap-6 py-3">
+                <a href="housekeeping-dashboard.html" class="text-gray-600 hover:text-blue-600">Dashboard</a>
+                <a href="cleaning-task-list.html" class="text-gray-600 hover:text-blue-600">Cleaning Tasks</a>
+                <a href="maintenance-room-list.html" class="text-blue-600 font-medium border-b-2 border-blue-600 pb-1">Maintenance</a>
+                <a href="overdue-checkout.html" class="text-gray-600 hover:text-blue-600">Overdue Checkout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Page Header -->
+        <div class="flex justify-between items-center mb-6">
+            <div>
+                <h2 class="text-2xl font-bold text-gray-800">Maintenance Rooms</h2>
+                <p class="text-sm text-gray-500">Rooms requiring repair or maintenance work</p>
+            </div>
+            <a href="report-issue-form.html" class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700 inline-block">
+                + Report New Issue
+            </a>
+        </div>
+
+        <!-- Task Table -->
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+            <table class="w-full">
+                <thead class="bg-gray-50">
+                    <tr class="text-left text-sm text-gray-600">
+                        <th class="px-6 py-4 font-medium">Room Number</th>
+                        <th class="px-6 py-4 font-medium">Room Type</th>
+                        <th class="px-6 py-4 font-medium">Issue Type</th>
+                        <th class="px-6 py-4 font-medium">Reported Time</th>
+                        <th class="px-6 py-4 font-medium">Priority</th>
+                        <th class="px-6 py-4 font-medium">Status</th>
+                        <th class="px-6 py-4 font-medium">Notes</th>
+                        <th class="px-6 py-4 font-medium">Action</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <!-- Row 1 - AC Issue -->
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4">
+                            <span class="font-bold text-gray-800">204</span>
+                        </td>
+                        <td class="px-6 py-4 text-gray-600">Deluxe Double</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs">AC Not Working</span>
+                        </td>
+                        <td class="px-6 py-4 text-gray-600">
+                            <div>2026-03-12</div>
+                            <div class="text-xs text-gray-400">02:30 PM</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-red-600 text-white rounded text-xs font-medium">URGENT</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs font-medium">IN_PROGRESS</span>
+                        </td>
+                        <td class="px-6 py-4 text-gray-600 text-sm max-w-xs truncate" title="AC compressor making loud noise, not cooling. Technician scheduled for today.">
+                            AC compressor making loud noise, not cooling...
+                        </td>
+                        <td class="px-6 py-4">
+                            <button class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">Mark Fixed</button>
+                        </td>
+                    </tr>
+
+                    <!-- Row 2 - Plumbing -->
+                    <tr class="hover:bg-gray-50">
+                        <td class="px-6 py-4">
+                            <span class="font-bold text-gray-800">307</span>
+                        </td>
+                        <td class="px-6 py-4 text-gray-600">Suite</td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">Plumbing Leak</span>
+                        </td>
+                        <td class="px-6 py-4 text-gray-600">
+                            <div>2026-03-13</div>
+                            <div class="text-xs text-gray-400">08:15 AM</div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs font-medium">HIGH</span>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs font-medium">PENDING</span>
+                        </td>
+                        <td class="px-6 py-4 text-gray-600 text-sm max-w-xs truncate" title="Bathroom sink pipe leaking. Water damage to cabinet underneath.">
+                            Bathroom sink pipe leaking. Water damage...
+                        </td>
+                        <td class="px-6 py-4">
+                            <button class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700 mr-1">Start</button>
+                            <button class="bg-green-600 text-white px-3 py-1 rounded text-sm hover:bg-green-700">Mark Fixed</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Empty State (for when no maintenance tasks) -->
+        <!--
+        <div class="bg-white rounded-lg shadow p-12 text-center">
+            <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            <h3 class="text-lg font-medium text-gray-600 mb-2">No Maintenance Issues</h3>
+            <p class="text-sm text-gray-400">All rooms are in good condition</p>
+        </div>
+        -->
+
+        <!-- Summary -->
+        <div class="mt-6 flex justify-between items-center text-sm text-gray-500">
+            <p>Showing 2 maintenance tasks</p>
+        </div>
+
+        <!-- Report Issue Form (Hidden by default, shown via JS) -->
+        <div class="hidden mt-8 bg-white rounded-lg shadow p-6" id="reportForm">
+            <h3 class="text-lg font-semibold text-gray-800 mb-4">Report Maintenance Issue</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Room Number</label>
+                    <select class="w-full border border-gray-300 rounded px-3 py-2">
+                        <option value="">Select Room</option>
+                        <option value="101">101 - Deluxe Double</option>
+                        <option value="102">102 - Standard Single</option>
+                        <option value="201">201 - Suite</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Issue Type</label>
+                    <select class="w-full border border-gray-300 rounded px-3 py-2">
+                        <option value="">Select Issue Type</option>
+                        <option value="ac">AC / Heating</option>
+                        <option value="plumbing">Plumbing</option>
+                        <option value="electrical">Electrical</option>
+                        <option value="furniture">Furniture Damage</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+                    <select class="w-full border border-gray-300 rounded px-3 py-2">
+                        <option value="LOW">Low</option>
+                        <option value="NORMAL" selected>Normal</option>
+                        <option value="HIGH">High</option>
+                        <option value="URGENT">Urgent</option>
+                    </select>
+                </div>
+                <div class="md:col-span-2">
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                    <textarea class="w-full border border-gray-300 rounded px-3 py-2" rows="3" placeholder="Describe the issue in detail..."></textarea>
+                </div>
+            </div>
+            <div class="mt-4 flex gap-2">
+                <button class="bg-blue-600 text-white px-4 py-2 rounded text-sm hover:bg-blue-700">Submit Report</button>
+                <button class="bg-gray-300 text-gray-700 px-4 py-2 rounded text-sm hover:bg-gray-400">Cancel</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center py-4 mt-8">
+        <p class="text-sm">BookNow Homestay Management System</p>
+    </footer>
+</body>
+</html>

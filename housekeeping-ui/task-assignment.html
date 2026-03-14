@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Assign Task - BookNow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold">Housekeeping Dashboard</h1>
+            <div class="flex items-center gap-4">
+                <span class="text-sm">Welcome, Nguyen Van A</span>
+                <a href="#" class="text-sm bg-blue-700 px-3 py-1 rounded hover:bg-blue-800">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex gap-6 py-3">
+                <a href="housekeeping-dashboard.html" class="text-gray-600 hover:text-blue-600">Dashboard</a>
+                <a href="cleaning-task-list.html" class="text-blue-600 font-medium border-b-2 border-blue-600 pb-1">Cleaning Tasks</a>
+                <a href="maintenance-room-list.html" class="text-gray-600 hover:text-blue-600">Maintenance</a>
+                <a href="overdue-checkout.html" class="text-gray-600 hover:text-blue-600">Overdue Checkout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Back Link -->
+        <a href="cleaning-task-list.html" class="text-blue-600 hover:underline text-sm mb-4 inline-block">
+            &larr; Back to Cleaning Tasks
+        </a>
+
+        <!-- Page Header -->
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Assign Task to Staff</h2>
+            <p class="text-sm text-gray-500">Assign a pending cleaning task to a housekeeping staff member</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Main Form -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <form>
+                        <!-- Task Information (Read-only) -->
+                        <div class="mb-6 pb-6 border-b">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Task Information</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Task ID</label>
+                                    <input type="text" value="#1025" readonly class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 text-gray-700 font-mono">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Room Number</label>
+                                    <input type="text" value="205" readonly class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 text-gray-700 font-bold text-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Room Type</label>
+                                    <input type="text" value="Standard Single" readonly class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 text-gray-700">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+                                    <input type="text" value="HIGH" readonly class="w-full border border-gray-300 rounded px-3 py-2 bg-red-100 text-red-700 font-medium">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Last Checkout</label>
+                                    <input type="text" value="2026-03-13 01:00 PM" readonly class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 text-gray-700">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Current Status</label>
+                                    <input type="text" value="PENDING" readonly class="w-full border border-gray-300 rounded px-3 py-2 bg-yellow-100 text-yellow-700 font-medium">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Staff Assignment Section -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Select Housekeeping Staff</h3>
+                            
+                            <!-- Filter Options -->
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Filter by Status</label>
+                                <select id="staffStatus" class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+                                    <option value="">All Status</option>
+                                    <option value="available" selected>Available</option>
+                                    <option value="busy">Busy</option>
+                                </select>
+                            </div>
+
+                            <!-- Staff List (Radio buttons) -->
+                            <fieldset class="space-y-3 p-4 border border-gray-200 rounded bg-gray-50">
+                                <legend class="text-sm font-medium text-gray-700 px-2">Available Staff Members</legend>
+                                
+                                <label class="flex items-start p-3 border border-transparent rounded hover:bg-white hover:border-blue-300 cursor-pointer transition">
+                                    <input type="radio" name="assignedStaff" value="12" class="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <div class="ml-3 flex-1">
+                                        <div class="text-sm font-medium text-gray-900">Nguyen Van A</div>
+                                        <div class="text-xs text-gray-500">Staff ID: 12</div>
+                                        <div class="text-xs mt-1 text-green-600">✓ Available - Tasks: 1 active</div>
+                                    </div>
+                                </label>
+
+                                <label class="flex items-start p-3 border border-transparent rounded hover:bg-white hover:border-blue-300 cursor-pointer transition">
+                                    <input type="radio" name="assignedStaff" value="14" class="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <div class="ml-3 flex-1">
+                                        <div class="text-sm font-medium text-gray-900">Tran Van B</div>
+                                        <div class="text-xs text-gray-500">Staff ID: 14</div>
+                                        <div class="text-xs mt-1 text-green-600">✓ Available - Tasks: 0 active</div>
+                                    </div>
+                                </label>
+
+                                <label class="flex items-start p-3 border border-transparent rounded hover:bg-white hover:border-blue-300 cursor-pointer transition">
+                                    <input type="radio" name="assignedStaff" value="16" class="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded">
+                                    <div class="ml-3 flex-1">
+                                        <div class="text-sm font-medium text-gray-900">Pham Thi C</div>
+                                        <div class="text-xs text-gray-500">Staff ID: 16</div>
+                                        <div class="text-xs mt-1 text-green-600">✓ Available - Tasks: 2 active</div>
+                                    </div>
+                                </label>
+
+                                <label class="flex items-start p-3 border border-gray-300 rounded bg-gray-100 cursor-not-allowed opacity-60">
+                                    <input type="radio" name="assignedStaff" value="18" disabled class="mt-1 h-4 w-4 text-gray-400 border-gray-300 rounded">
+                                    <div class="ml-3 flex-1">
+                                        <div class="text-sm font-medium text-gray-500">Hoang Van D</div>
+                                        <div class="text-xs text-gray-400">Staff ID: 18</div>
+                                        <div class="text-xs mt-1 text-orange-600">⊘ Busy - Tasks: 3 active</div>
+                                    </div>
+                                </label>
+                            </fieldset>
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Additional Notes</label>
+                            <textarea rows="3" class="w-full border border-gray-300 rounded px-3 py-2 text-sm" placeholder="Add any special instructions or notes for this task..."></textarea>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-3">
+                            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded font-medium hover:bg-blue-700 transition">
+                                Assign Task
+                            </button>
+                            <a href="cleaning-task-list.html" class="bg-gray-300 text-gray-700 px-6 py-2 rounded font-medium hover:bg-gray-400 transition">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sidebar - Staff Details -->
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow p-4">
+                    <h4 class="font-semibold text-gray-800 mb-3 text-sm">Task Priority</h4>
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="px-3 py-1 bg-red-100 text-red-700 rounded text-xs font-medium">HIGH</span>
+                        <span class="text-xs text-gray-600">Needs immediate attention</span>
+                    </div>
+                    <p class="text-sm text-gray-600">Room was evacuated 2+ hours ago. Quick cleaning required.</p>
+                </div>
+
+                <div class="bg-white rounded-lg shadow p-4">
+                    <h4 class="font-semibold text-gray-800 mb-3 text-sm">Assignment will:</h4>
+                    <ul class="space-y-2 text-sm text-gray-600">
+                        <li class="flex items-start gap-2">
+                            <span class="text-blue-600 font-bold mt-0.5">•</span>
+                            <span>Change task status from PENDING → ASSIGNED</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-blue-600 font-bold mt-0.5">•</span>
+                            <span>Notify assigned staff</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-blue-600 font-bold mt-0.5">•</span>
+                            <span>Add task to staff's "My Tasks"</span>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <span class="text-blue-600 font-bold mt-0.5">•</span>
+                            <span>Record assignment timestamp</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-blue-900 mb-2 text-sm">💡 Tip</h4>
+                    <p class="text-xs text-blue-800">Assign tasks based on staff availability and current workload for optimal efficiency.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

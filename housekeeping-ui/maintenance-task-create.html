@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Maintenance Task - BookNow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold">Housekeeping Dashboard</h1>
+            <div class="flex items-center gap-4">
+                <span class="text-sm">Welcome, Nguyen Van A</span>
+                <a href="#" class="text-sm bg-blue-700 px-3 py-1 rounded hover:bg-blue-800">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex gap-6 py-3">
+                <a href="housekeeping-dashboard.html" class="text-gray-600 hover:text-blue-600">Dashboard</a>
+                <a href="cleaning-task-list.html" class="text-blue-600 font-medium border-b-2 border-blue-600 pb-1">Cleaning Tasks</a>
+                <a href="maintenance-room-list.html" class="text-gray-600 hover:text-blue-600">Maintenance</a>
+                <a href="overdue-checkout.html" class="text-gray-600 hover:text-blue-600">Overdue Checkout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Page Header -->
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Create Maintenance Task</h2>
+            <p class="text-sm text-gray-500">Submit maintenance request for room repair and maintenance</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Main Form -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <!-- Success Message (if shown after submission) -->
+                    <div id="successMessage" class="hidden mb-6 bg-green-50 border border-green-200 rounded-lg p-4">
+                        <div class="flex items-center gap-2 mb-2">
+                            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                            <span class="font-semibold text-green-900">Maintenance Task Created!</span>
+                        </div>
+                        <p class="text-sm text-green-800">Task ID: <strong id="newTaskId">#2045</strong></p>
+                        <p class="text-sm text-green-800 mt-1">The technician has been notified.</p>
+                    </div>
+
+                    <form id="maintenanceForm">
+                        <!-- Room Information -->
+                        <div class="mb-6 pb-6 border-b">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Room Information</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Room Number</label>
+                                    <input type="text" value="101" readonly class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 text-gray-700 font-bold text-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Room Type</label>
+                                    <input type="text" value="Deluxe Double" readonly class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 text-gray-700">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Issue Information -->
+                        <div class="mb-6 pb-6 border-b">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Issue Information</h3>
+                            
+                            <!-- Issue Type -->
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Issue Category *</label>
+                                <select name="issueCategory" required class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+                                    <option value="">-- Select Category --</option>
+                                    <option value="electrical">Electrical / Lighting</option>
+                                    <option value="plumbing">Plumbing / Water System</option>
+                                    <option value="hvac">HVAC / Air Conditioner</option>
+                                    <option value="furniture">Furniture / Fixtures</option>
+                                    <option value="appliances">Appliances</option>
+                                    <option value="structural">Structural / Building</option>
+                                    <option value="door_lock">Door / Lock / Window</option>
+                                </select>
+                            </div>
+
+                            <!-- Severity -->
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-3">Priority Level *</label>
+                                <div class="space-y-2">
+                                    <label class="flex items-center gap-3">
+                                        <input type="radio" name="priority" value="URGENT" class="h-4 w-4 text-red-600">
+                                        <span class="text-sm">
+                                            <strong class="text-red-600">URGENT</strong> - Safety risk or critical function (Fix before next booking)
+                                        </span>
+                                    </label>
+                                    <label class="flex items-center gap-3">
+                                        <input type="radio" name="priority" value="HIGH" class="h-4 w-4 text-orange-600">
+                                        <span class="text-sm">
+                                            <strong class="text-orange-600">HIGH</strong> - Affects guest comfort (Fix within 24 hours)
+                                        </span>
+                                    </label>
+                                    <label class="flex items-center gap-3">
+                                        <input type="radio" name="priority" value="NORMAL" class="h-4 w-4 text-yellow-600" checked>
+                                        <span class="text-sm">
+                                            <strong class="text-yellow-600">NORMAL</strong> - Minor issue (Fix within 3 days)
+                                        </span>
+                                    </label>
+                                    <label class="flex items-center gap-3">
+                                        <input type="radio" name="priority" value="LOW" class="h-4 w-4 text-green-600">
+                                        <span class="text-sm">
+                                            <strong class="text-green-600">LOW</strong> - Cosmetic or non-urgent (Fix within a week)
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Detailed Description *</label>
+                                <textarea name="description" rows="4" required class="w-full border border-gray-300 rounded px-3 py-2 text-sm" placeholder="Describe the issue in detail. What is broken and what needs to be fixed?">AC not cooling, making noise</textarea>
+                            </div>
+                        </div>
+
+                        <!-- Related Cleaning Task -->
+                        <div class="mb-6 pb-6 border-b">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Related Cleaning Task</h3>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Task ID</label>
+                                    <input type="text" value="#1024" readonly class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 text-gray-700 font-mono">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Reported By</label>
+                                    <input type="text" value="Nguyen Van A" readonly class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 text-gray-700">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Assigned Technician -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Assign to Technician (Optional)</label>
+                            <select name="technicianId" class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+                                <option value="">-- Let system auto-assign --</option>
+                                <option value="T001">Tran Minh Duc (Electrical)</option>
+                                <option value="T002">Pham Van Tuan (Plumbing)</option>
+                                <option value="T003">Hoang Thanh Long (HVAC)</option>
+                                <option value="T004">Nguyen Van Hung (General Maintenance)</option>
+                            </select>
+                        </div>
+
+                        <!-- Pause Cleaning -->
+                        <div class="mb-6 bg-red-50 border border-red-200 rounded-lg p-4">
+                            <label class="flex items-start gap-3">
+                                <input type="checkbox" name="pauseCleaning" checked class="mt-1 h-4 w-4 text-red-600 rounded">
+                                <div class="flex-1">
+                                    <span class="text-sm font-medium text-gray-900">Room Status: MAINTENANCE</span>
+                                    <p class="text-xs text-gray-600 mt-1">Room will be set to MAINTENANCE status. It will NOT be available for booking until this issue is resolved.</p>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-3">
+                            <button type="submit" class="bg-red-600 text-white px-6 py-2 rounded font-medium hover:bg-red-700 transition">
+                                Create Maintenance Task
+                            </button>
+                            <a href="maintenance-room-list.html" class="bg-gray-300 text-gray-700 px-6 py-2 rounded font-medium hover:bg-gray-400 transition">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow p-4">
+                    <h4 class="font-semibold text-gray-800 mb-3 text-sm">Workflow</h4>
+                    <ol class="space-y-2 text-sm text-gray-600 list-decimal list-inside">
+                        <li>Task created</li>
+                        <li>Status: IN_PROGRESS</li>
+                        <li>Technician assigned</li>
+                        <li>Work performed</li>
+                        <li>Marked complete</li>
+                        <li>Room → AVAILABLE</li>
+                    </ol>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-blue-900 mb-2 text-sm">📋 Form Tips</h4>
+                    <ul class="text-xs text-blue-800 space-y-1 list-disc list-inside">
+                        <li>Be specific about the issue</li>
+                        <li>Include symptoms/observations</li>
+                        <li>Specify priority correctly</li>
+                        <li>Note is auto-linked to cleaning task</li>
+                    </ul>
+                </div>
+
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-yellow-900 mb-2 text-sm">⚠️ Important</h4>
+                    <p class="text-xs text-yellow-800">
+                        For safety issues, call management immediately instead of waiting for task submission.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('maintenanceForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Simulate form submission
+            document.getElementById('successMessage').classList.remove('hidden');
+            this.reset();
+            setTimeout(() => {
+                window.location.href = 'maintenance-room-list.html';
+            }, 2000);
+        });
+    </script>
+</body>
+</html>

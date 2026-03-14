@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Issue - BookNow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold">Housekeeping Dashboard</h1>
+            <div class="flex items-center gap-4">
+                <span class="text-sm">Welcome, Nguyen Van A</span>
+                <a href="#" class="text-sm bg-blue-700 px-3 py-1 rounded hover:bg-blue-800">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex gap-6 py-3">
+                <a href="housekeeping-dashboard.html" class="text-gray-600 hover:text-blue-600">Dashboard</a>
+                <a href="cleaning-task-list.html" class="text-blue-600 font-medium border-b-2 border-blue-600 pb-1">Cleaning Tasks</a>
+                <a href="maintenance-room-list.html" class="text-gray-600 hover:text-blue-600">Maintenance</a>
+                <a href="overdue-checkout.html" class="text-gray-600 hover:text-blue-600">Overdue Checkout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Back Link -->
+        <a href="task-detail.html?id=1024" class="text-blue-600 hover:underline text-sm mb-4 inline-block">
+            &larr; Back to Task
+        </a>
+
+        <!-- Page Header -->
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Report Issue During Cleaning</h2>
+            <p class="text-sm text-gray-500">Report damage, maintenance issues, or problems found during room cleaning</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Main Form -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <form>
+                        <!-- Task/Room Information -->
+                        <div class="mb-6 pb-6 border-b">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Cleaning Task Information</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Task ID</label>
+                                    <input type="text" value="#1024" readonly class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 text-gray-700 font-mono">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Room Number</label>
+                                    <input type="text" value="101" readonly class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 text-gray-700 font-bold text-lg">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Room Type</label>
+                                    <input type="text" value="Deluxe Double" readonly class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 text-gray-700">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-1">Reported By</label>
+                                    <input type="text" value="Nguyen Van A" readonly class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 text-gray-700">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Issue Information -->
+                        <div class="mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Issue Details</h3>
+                            
+                            <!-- Issue Type -->
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Issue Type *</label>
+                                <select name="issueType" required class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+                                    <option value="">-- Select Issue Type --</option>
+                                    <option value="electrical">Electrical / Light / Power</option>
+                                    <option value="plumbing">Plumbing / Water / Sewage</option>
+                                    <option value="hvac">HVAC / Air Conditioner / Heating</option>
+                                    <option value="furniture">Furniture / Broken Items</option>
+                                    <option value="appliances">Appliances / TV / Microwave</option>
+                                    <option value="structural">Structural / Wall / Floor / Ceiling</option>
+                                    <option value="door_lock">Door / Lock / Window</option>
+                                    <option value="cleanliness">Cleanliness Issues</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+
+                            <!-- Severity Level -->
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-3">Severity Level *</label>
+                                <div class="space-y-2">
+                                    <label class="flex items-center gap-3">
+                                        <input type="radio" name="severity" value="LOW" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                                        <span class="text-sm text-gray-700">
+                                            <strong>Low</strong> - Can be fixed later, doesn't affect guest stay
+                                        </span>
+                                    </label>
+                                    <label class="flex items-center gap-3">
+                                        <input type="radio" name="severity" value="MEDIUM" class="h-4 w-4 text-blue-600 border-gray-300 rounded" checked>
+                                        <span class="text-sm text-gray-700">
+                                            <strong>Medium</strong> - Should be fixed soon, may affect comfort
+                                        </span>
+                                    </label>
+                                    <label class="flex items-center gap-3">
+                                        <input type="radio" name="severity" value="HIGH" class="h-4 w-4 text-blue-600 border-gray-300 rounded">
+                                        <span class="text-sm text-gray-700">
+                                            <strong>High</strong> - Urgent, affects safety or guest experience
+                                        </span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <!-- Description -->
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Description *</label>
+                                <textarea name="description" rows="4" required class="w-full border border-gray-300 rounded px-3 py-2 text-sm" placeholder="Describe the issue in detail. What is broken? What did you observe?"></textarea>
+                            </div>
+
+                            <!-- Priority -->
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Priority for Maintenance</label>
+                                <select name="priority" class="w-full border border-gray-300 rounded px-3 py-2 text-sm">
+                                    <option value="URGENT">⚠️ Urgent - Fix before next booking</option>
+                                    <option value="HIGH">🔴 High - Fix within 24 hours</option>
+                                    <option value="NORMAL" selected>🟡 Normal - Fix within 3 days</option>
+                                    <option value="LOW">🟢 Low - Fix within a week</option>
+                                </select>
+                            </div>
+
+                            <!-- Attachments -->
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Upload Photos (Optional)</label>
+                                <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition cursor-pointer bg-gray-50">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" stroke="currentColor" fill="none" viewBox="0 0 48 48">
+                                        <path d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-12l-3.172-3.172a4 4 0 00-5.656 0L28 12M9 20l3.172-3.172a4 4 0 015.656 0L28 20"></path>
+                                    </svg>
+                                    <p class="text-sm text-gray-600 mt-2">Click to upload images or drag and drop</p>
+                                    <p class="text-xs text-gray-400">PNG, JPG, GIF up to 10MB</p>
+                                    <input type="file" multiple accept="image/*" class="hidden">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pause Cleaning -->
+                        <div class="mb-6 bg-orange-50 border border-orange-200 rounded-lg p-4">
+                            <label class="flex items-start gap-3">
+                                <input type="checkbox" name="pauseCleaning" class="mt-1 h-4 w-4 text-orange-600 rounded">
+                                <div class="flex-1">
+                                    <span class="text-sm font-medium text-gray-900">Pause cleaning task</span>
+                                    <p class="text-xs text-gray-600 mt-1">Check this if cleaning work should stop until issue is resolved</p>
+                                </div>
+                            </label>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-3">
+                            <button type="submit" class="bg-red-600 text-white px-6 py-2 rounded font-medium hover:bg-red-700 transition">
+                                Report Issue & Create Maintenance Task
+                            </button>
+                            <a href="task-detail.html?id=1024" class="bg-gray-300 text-gray-700 px-6 py-2 rounded font-medium hover:bg-gray-400 transition">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sidebar - Info -->
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow p-4">
+                    <h4 class="font-semibold text-gray-800 mb-3 text-sm">What happens next?</h4>
+                    <ol class="space-y-2 text-sm text-gray-600 list-decimal list-inside">
+                        <li>Maintenance task created</li>
+                        <li>Issue assigned to technician</li>
+                        <li>You'll be notified when fixed</li>
+                        <li>Room status: MAINTENANCE</li>
+                    </ol>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-blue-900 mb-2 text-sm">💡 Tips</h4>
+                    <ul class="text-xs text-blue-800 space-y-1 list-disc list-inside">
+                        <li>Be as detailed as possible</li>
+                        <li>Take photos if possible</li>
+                        <li>Specify when issue was noticed</li>
+                        <li>Don't attempt repairs yourself</li>
+                    </ul>
+                </div>
+
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-yellow-900 mb-2 text-sm">⚠️ Critical Issues</h4>
+                    <p class="text-xs text-yellow-800">
+                        For safety issues like gas leaks or electrical hazards, contact management immediately by phone.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

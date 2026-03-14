@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inspect Overdue Room - BookNow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold">Housekeeping Dashboard</h1>
+            <div class="flex items-center gap-4">
+                <span class="text-sm">Welcome, Nguyen Van A</span>
+                <a href="#" class="text-sm bg-blue-700 px-3 py-1 rounded hover:bg-blue-800">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex gap-6 py-3">
+                <a href="housekeeping-dashboard.html" class="text-gray-600 hover:text-blue-600">Dashboard</a>
+                <a href="cleaning-task-list.html" class="text-gray-600 hover:text-blue-600">Cleaning Tasks</a>
+                <a href="maintenance-room-list.html" class="text-gray-600 hover:text-blue-600">Maintenance</a>
+                <a href="overdue-checkout.html" class="text-blue-600 font-medium border-b-2 border-blue-600 pb-1">Overdue Checkout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Back Link -->
+        <a href="overdue-checkout.html" class="text-blue-600 hover:underline text-sm mb-4 inline-block">
+            &larr; Back to Overdue Checkout
+        </a>
+
+        <!-- Alert -->
+        <div class="bg-orange-50 border-l-4 border-orange-500 p-4 mb-6">
+            <div class="flex items-start gap-3">
+                <svg class="w-5 h-5 text-orange-600 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                <div>
+                    <p class="text-orange-900 font-semibold">Room #301 - Overdue Checkout</p>
+                    <p class="text-sm text-orange-800">Overdue Duration: 2h 30m | Current Time: 2026-03-13 02:30 PM</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Main Content -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Room & Guest Information -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Room & Guest Information</h3>
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+                        <div>
+                            <span class="text-gray-500 text-xs">Room Number</span>
+                            <p class="font-bold text-lg text-gray-800">301</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500 text-xs">Room Type</span>
+                            <p class="font-medium">Deluxe Double</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500 text-xs">Floor</span>
+                            <p class="font-medium">3</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500 text-xs">Guest Name</span>
+                            <p class="font-medium">Le Van C</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500 text-xs">Guest Phone</span>
+                            <p class="font-medium">0912-345-678</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500 text-xs">Booking Code</span>
+                            <p class="font-mono text-sm">BK20260313001</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Checkout Information -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Checkout Information</h3>
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <span class="text-gray-500 text-xs">Scheduled Checkout</span>
+                            <p class="font-medium">2026-03-13 12:00 PM</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500 text-xs">Current Time</span>
+                            <p class="font-medium">2026-03-13 02:30 PM</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500 text-xs">Overdue Duration</span>
+                            <p class="font-bold text-red-600">2 hours 30 minutes</p>
+                        </div>
+                        <div>
+                            <span class="text-gray-500 text-xs">Check-in Time</span>
+                            <p class="font-medium">2026-03-12 02:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Inspection Form -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4 border-b pb-2">Inspection Results</h3>
+                    
+                    <form id="inspectionForm">
+                        <!-- Room Condition -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-3">Room Condition *</label>
+                            <div class="space-y-3">
+                                <label class="flex items-start p-3 border border-transparent rounded hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="radio" name="roomCondition" value="OCCUPIED" class="mt-1 h-4 w-4 text-blue-600">
+                                    <div class="ml-3 flex-1">
+                                        <div class="text-sm font-medium text-gray-800">Still Occupied</div>
+                                        <p class="text-xs text-gray-600">Guest is still in the room</p>
+                                    </div>
+                                </label>
+
+                                <label class="flex items-start p-3 border border-transparent rounded hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="radio" name="roomCondition" value="EMPTY_CLEAN" class="mt-1 h-4 w-4 text-blue-600">
+                                    <div class="ml-3 flex-1">
+                                        <div class="text-sm font-medium text-gray-800">Empty & Clean</div>
+                                        <p class="text-xs text-gray-600">Room is vacant and appears clean</p>
+                                    </div>
+                                </label>
+
+                                <label class="flex items-start p-3 border border-transparent rounded hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="radio" name="roomCondition" value="EMPTY_DIRTY" class="mt-1 h-4 w-4 text-blue-600">
+                                    <div class="ml-3 flex-1">
+                                        <div class="text-sm font-medium text-gray-800">Empty & Needs Cleaning</div>
+                                        <p class="text-xs text-gray-600">Room is vacant but requires cleaning</p>
+                                    </div>
+                                </label>
+
+                                <label class="flex items-start p-3 border border-transparent rounded hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="radio" name="roomCondition" value="DAMAGE" class="mt-1 h-4 w-4 text-blue-600">
+                                    <div class="ml-3 flex-1">
+                                        <div class="text-sm font-medium text-gray-800">Damage Detected</div>
+                                        <p class="text-xs text-gray-600">Room has damage or issues</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Additional Notes -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Inspection Notes *</label>
+                            <textarea name="notes" rows="4" required class="w-full border border-gray-300 rounded px-3 py-2 text-sm" placeholder="Document your inspection findings..."></textarea>
+                        </div>
+
+                        <!-- Action to Take -->
+                        <div class="mb-6 pb-6 border-b">
+                            <label class="block text-sm font-medium text-gray-700 mb-3">Action to Take *</label>
+                            <div class="space-y-3">
+                                <label class="flex items-start p-3 border border-transparent rounded hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="radio" name="action" value="ALLOW_STAY" class="mt-1 h-4 w-4 text-blue-600">
+                                    <div class="ml-3 flex-1">
+                                        <div class="text-sm font-medium text-gray-800">Allow Extended Stay</div>
+                                        <p class="text-xs text-gray-600">Guest can stay with negotiated terms</p>
+                                    </div>
+                                </label>
+
+                                <label class="flex items-start p-3 border border-transparent rounded hover:bg-gray-50 cursor-pointer transition">
+                                    <input type="radio" name="action" value="REQUEST_CHECKOUT" class="mt-1 h-4 w-4 text-blue-600">
+                                    <div class="ml-3 flex-1">
+                                        <div class="text-sm font-medium text-gray-800">Request Immediate Checkout</div>
+                                        <p class="text-xs text-gray-600">Politely ask guest to leave now</p>
+                                    </div>
+                                </label>
+
+                                <label class="flex items-start p-3 border border-red-300 rounded bg-red-50 cursor-pointer transition">
+                                    <input type="radio" name="action" value="FORCE_CHECKOUT" class="mt-1 h-4 w-4 text-red-600">
+                                    <div class="ml-3 flex-1">
+                                        <div class="text-sm font-medium text-gray-800">Force Checkout</div>
+                                        <p class="text-xs text-gray-600 text-red-800">Guest will be asked to leave immediately (Requires Manager approval)</p>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Charge Details -->
+                        <div class="mb-6 bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <h4 class="text-sm font-semibold text-blue-900 mb-2">Potential Charges</h4>
+                            <div class="space-y-2 text-sm text-blue-800">
+                                <div class="flex justify-between">
+                                    <span>Original Rate:</span>
+                                    <span class="font-medium">$150/night</span>
+                                </div>
+                                <div class="flex justify-between">
+                                    <span>Overdue Duration:</span>
+                                    <span class="font-medium">2h 30m</span>
+                                </div>
+                                <div class="border-t border-blue-300 pt-2 flex justify-between font-medium">
+                                    <span>Additional Charge:</span>
+                                    <span>$18.75 (proportional)</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="flex gap-3">
+                            <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded font-medium hover:bg-blue-700 transition">
+                                Submit Inspection & Take Action
+                            </button>
+                            <a href="overdue-checkout.html" class="bg-gray-300 text-gray-700 px-6 py-2 rounded font-medium hover:bg-gray-400 transition">
+                                Back
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="space-y-4">
+                <div class="bg-white rounded-lg shadow p-4">
+                    <h4 class="font-semibold text-gray-800 mb-3 text-sm">Workflow After Inspection</h4>
+                    <ol class="space-y-2 text-sm text-gray-600 list-decimal list-inside">
+                        <li>Document condition</li>
+                        <li>Choose action</li>
+                        <li>Proceed with checkout</li>
+                        <li>Auto-create cleaning task</li>
+                        <li>Calculate charges</li>
+                        <li>Update booking status</li>
+                    </ol>
+                </div>
+
+                <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-blue-900 mb-2 text-sm">💡 Tips</h4>
+                    <ul class="text-xs text-blue-800 space-y-1 list-disc list-inside">
+                        <li>Be objective in inspection</li>
+                        <li>Document all issues clearly</li>
+                        <li>Take photos if possible</li>
+                        <li>Consult manager for disputes</li>
+                    </ul>
+                </div>
+
+                <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                    <h4 class="font-semibold text-yellow-900 mb-2 text-sm">⚠️ Manager Approval</h4>
+                    <p class="text-xs text-yellow-800">
+                        For "Force Checkout" action, manager approval is required before proceeding.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        document.getElementById('inspectionForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const action = document.querySelector('input[name="action"]:checked').value;
+            
+            if (action === 'FORCE_CHECKOUT') {
+                alert('This action requires manager approval. Please contact your manager.');
+                return;
+            }
+            
+            // Simulate submission
+            alert('Inspection submitted successfully!');
+            window.location.href = 'overdue-checkout.html';
+        });
+    </script>
+</body>
+</html>

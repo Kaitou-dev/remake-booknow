@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Housekeeping Dashboard - BookNow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold">Housekeeping Dashboard</h1>
+            <div class="flex items-center gap-4">
+                <span class="text-sm">Welcome, Nguyen Van A</span>
+                <a href="#" class="text-sm bg-blue-700 px-3 py-1 rounded hover:bg-blue-800">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex gap-6 py-3">
+                <a href="housekeeping-dashboard.html" class="text-blue-600 font-medium border-b-2 border-blue-600 pb-1">Dashboard</a>
+                <a href="cleaning-task-list.html" class="text-gray-600 hover:text-blue-600">Cleaning Tasks</a>
+                <a href="maintenance-room-list.html" class="text-gray-600 hover:text-blue-600">Maintenance</a>
+                <a href="overdue-checkout.html" class="text-gray-600 hover:text-blue-600">Overdue Checkout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Statistics Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            <!-- Rooms Need Cleaning -->
+            <a href="cleaning-task-list.html" class="block bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500">Needs Cleaning</p>
+                        <p class="text-3xl font-bold text-yellow-600">5</p>
+                    </div>
+                    <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-400 mt-2">DIRTY status rooms</p>
+            </a>
+
+            <!-- Rooms Under Maintenance -->
+            <a href="maintenance-room-list.html" class="block bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500">Under Maintenance</p>
+                        <p class="text-3xl font-bold text-red-600">2</p>
+                    </div>
+                    <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-400 mt-2">MAINTENANCE status rooms</p>
+            </a>
+
+            <!-- Overdue Checkout -->
+            <a href="overdue-checkout.html" class="block bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500">Overdue Checkout</p>
+                        <p class="text-3xl font-bold text-orange-600">1</p>
+                    </div>
+                    <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-400 mt-2">CHECKOUT_PENDING rooms</p>
+            </a>
+
+            <!-- Available Rooms -->
+            <div class="bg-white rounded-lg shadow p-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <p class="text-sm text-gray-500">Available</p>
+                        <p class="text-3xl font-bold text-green-600">12</p>
+                    </div>
+                    <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                        <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                        </svg>
+                    </div>
+                </div>
+                <p class="text-xs text-gray-400 mt-2">Ready for booking</p>
+            </div>
+        </div>
+
+        <!-- Quick Actions -->
+        <div class="bg-white rounded-lg shadow mb-8">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-800">My Assigned Tasks</h2>
+            </div>
+            <div class="p-6">
+                <table class="w-full">
+                    <thead>
+                        <tr class="text-left text-sm text-gray-500 border-b">
+                            <th class="pb-3">Room</th>
+                            <th class="pb-3">Type</th>
+                            <th class="pb-3">Task</th>
+                            <th class="pb-3">Priority</th>
+                            <th class="pb-3">Status</th>
+                            <th class="pb-3">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-sm">
+                        <tr class="border-b">
+                            <td class="py-3 font-medium">101</td>
+                            <td class="py-3">Deluxe</td>
+                            <td class="py-3">CLEANING</td>
+                            <td class="py-3"><span class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-xs">NORMAL</span></td>
+                            <td class="py-3"><span class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-xs">IN_PROGRESS</span></td>
+                            <td class="py-3">
+                                <a href="task-detail.html?id=1024" class="text-blue-600 hover:underline mr-2">View</a>
+                                <a href="room-cleaning-complete.html?room=101" class="text-green-600 hover:underline">Complete</a>
+                            </td>
+                        </tr>
+                        <tr class="border-b">
+                            <td class="py-3 font-medium">205</td>
+                            <td class="py-3">Standard</td>
+                            <td class="py-3">CLEANING</td>
+                            <td class="py-3"><span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs">HIGH</span></td>
+                            <td class="py-3"><span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">PENDING</span></td>
+                            <td class="py-3">
+                                <a href="task-detail.html?id=1025" class="text-blue-600 hover:underline mr-2">View</a>
+                                <button class="text-green-600 hover:underline">Start</button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="py-3 font-medium">302</td>
+                            <td class="py-3">Suite</td>
+                            <td class="py-3">MAINTENANCE</td>
+                            <td class="py-3"><span class="px-2 py-1 bg-red-100 text-red-700 rounded text-xs">URGENT</span></td>
+                            <td class="py-3"><span class="px-2 py-1 bg-gray-100 text-gray-700 rounded text-xs">PENDING</span></td>
+                            <td class="py-3">
+                                <a href="task-detail.html?id=1026" class="text-blue-600 hover:underline mr-2">View</a>
+                                <button class="text-green-600 hover:underline">Start</button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- All Rooms Overview -->
+        <div class="bg-white rounded-lg shadow">
+            <div class="px-6 py-4 border-b border-gray-200">
+                <h2 class="text-lg font-semibold text-gray-800">All Rooms Status</h2>
+            </div>
+            <div class="p-6">
+                <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                    <!-- AVAILABLE -->
+                    <div class="border rounded p-3 text-center bg-green-50 border-green-200">
+                        <p class="font-bold text-lg">101</p>
+                        <p class="text-xs text-green-600">AVAILABLE</p>
+                    </div>
+                    <div class="border rounded p-3 text-center bg-green-50 border-green-200">
+                        <p class="font-bold text-lg">102</p>
+                        <p class="text-xs text-green-600">AVAILABLE</p>
+                    </div>
+                    <!-- BOOKED -->
+                    <div class="border rounded p-3 text-center bg-blue-50 border-blue-200">
+                        <p class="font-bold text-lg">103</p>
+                        <p class="text-xs text-blue-600">BOOKED</p>
+                    </div>
+                    <!-- OCCUPIED -->
+                    <div class="border rounded p-3 text-center bg-purple-50 border-purple-200">
+                        <p class="font-bold text-lg">104</p>
+                        <p class="text-xs text-purple-600">OCCUPIED</p>
+                    </div>
+                    <!-- DIRTY -->
+                    <div class="border rounded p-3 text-center bg-yellow-50 border-yellow-200">
+                        <p class="font-bold text-lg">201</p>
+                        <p class="text-xs text-yellow-600">DIRTY</p>
+                    </div>
+                    <div class="border rounded p-3 text-center bg-yellow-50 border-yellow-200">
+                        <p class="font-bold text-lg">202</p>
+                        <p class="text-xs text-yellow-600">DIRTY</p>
+                    </div>
+                    <!-- CLEANING -->
+                    <div class="border rounded p-3 text-center bg-cyan-50 border-cyan-200">
+                        <p class="font-bold text-lg">203</p>
+                        <p class="text-xs text-cyan-600">CLEANING</p>
+                    </div>
+                    <!-- MAINTENANCE -->
+                    <div class="border rounded p-3 text-center bg-red-50 border-red-200">
+                        <p class="font-bold text-lg">204</p>
+                        <p class="text-xs text-red-600">MAINTENANCE</p>
+                    </div>
+                    <!-- CHECKOUT_PENDING -->
+                    <div class="border rounded p-3 text-center bg-orange-50 border-orange-200">
+                        <p class="font-bold text-lg">301</p>
+                        <p class="text-xs text-orange-600">CHECKOUT_PENDING</p>
+                    </div>
+                    <!-- More AVAILABLE -->
+                    <div class="border rounded p-3 text-center bg-green-50 border-green-200">
+                        <p class="font-bold text-lg">302</p>
+                        <p class="text-xs text-green-600">AVAILABLE</p>
+                    </div>
+                    <div class="border rounded p-3 text-center bg-green-50 border-green-200">
+                        <p class="font-bold text-lg">303</p>
+                        <p class="text-xs text-green-600">AVAILABLE</p>
+                    </div>
+                    <div class="border rounded p-3 text-center bg-green-50 border-green-200">
+                        <p class="font-bold text-lg">304</p>
+                        <p class="text-xs text-green-600">AVAILABLE</p>
+                    </div>
+                </div>
+
+                <!-- Legend -->
+                <div class="mt-6 pt-4 border-t flex flex-wrap gap-4 text-xs">
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 bg-green-200 rounded"></span> Available</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 bg-blue-200 rounded"></span> Booked</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 bg-purple-200 rounded"></span> Occupied</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 bg-yellow-200 rounded"></span> Dirty</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 bg-cyan-200 rounded"></span> Cleaning</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 bg-red-200 rounded"></span> Maintenance</div>
+                    <div class="flex items-center gap-1"><span class="w-3 h-3 bg-orange-200 rounded"></span> Checkout Pending</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center py-4 mt-8">
+        <p class="text-sm">BookNow Homestay Management System</p>
+    </footer>
+</body>
+</html>

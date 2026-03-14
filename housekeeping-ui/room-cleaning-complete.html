@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Cleaning - BookNow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen">
+    <!-- Header -->
+    <header class="bg-blue-600 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold">Housekeeping Dashboard</h1>
+            <div class="flex items-center gap-4">
+                <span class="text-sm">Welcome, Nguyen Van A</span>
+                <a href="#" class="text-sm bg-blue-700 px-3 py-1 rounded hover:bg-blue-800">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow">
+        <div class="max-w-7xl mx-auto px-4">
+            <div class="flex gap-6 py-3">
+                <a href="housekeeping-dashboard.html" class="text-gray-600 hover:text-blue-600">Dashboard</a>
+                <a href="cleaning-task-list.html" class="text-blue-600 font-medium border-b-2 border-blue-600 pb-1">Cleaning Tasks</a>
+                <a href="maintenance-room-list.html" class="text-gray-600 hover:text-blue-600">Maintenance</a>
+                <a href="overdue-checkout.html" class="text-gray-600 hover:text-blue-600">Overdue Checkout</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        <!-- Back Link -->
+        <a href="cleaning-task-list.html" class="text-blue-600 hover:underline text-sm mb-4 inline-block">
+            &larr; Back to Cleaning Tasks
+        </a>
+
+        <!-- Page Header -->
+        <div class="mb-6">
+            <h2 class="text-2xl font-bold text-gray-800">Complete Room Cleaning</h2>
+            <p class="text-sm text-gray-500">Mark room as cleaned and update room password</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Main Form -->
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-lg shadow p-6">
+                    <form>
+                        <!-- Room Info (Read-only) -->
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Room Number</label>
+                                <input type="text" value="101" readonly class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 text-gray-700 font-bold text-lg">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Room Type</label>
+                                <input type="text" value="Deluxe Double" readonly class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 text-gray-600">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Task Started At</label>
+                                <input type="text" value="2026-03-13 01:00 PM" readonly class="w-full border border-gray-300 rounded px-3 py-2 bg-gray-100 text-gray-600">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Cleaning Status</label>
+                                <input type="text" value="COMPLETED" readonly class="w-full border border-gray-300 rounded px-3 py-2 bg-green-100 text-green-700 font-medium">
+                            </div>
+                        </div>
+
+                        <!-- Checklist -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-3">Cleaning Checklist</label>
+                            <div class="border border-gray-200 rounded p-4 space-y-3">
+                                <label class="flex items-center gap-3">
+                                    <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                    <span class="text-sm text-gray-700">Change bedsheets</span>
+                                </label>
+                                <label class="flex items-center gap-3">
+                                    <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                    <span class="text-sm text-gray-700">Clean bathroom</span>
+                                </label>
+                                <label class="flex items-center gap-3">
+                                    <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                    <span class="text-sm text-gray-700">Vacuum/mop floor</span>
+                                </label>
+                                <label class="flex items-center gap-3">
+                                    <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                    <span class="text-sm text-gray-700">Restock amenities</span>
+                                </label>
+                                <label class="flex items-center gap-3">
+                                    <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                    <span class="text-sm text-gray-700">Check minibar</span>
+                                </label>
+                                <label class="flex items-center gap-3">
+                                    <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                    <span class="text-sm text-gray-700">Inspect for damage</span>
+                                </label>
+                                <label class="flex items-center gap-3">
+                                    <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                    <span class="text-sm text-gray-700">Wipe surfaces</span>
+                                </label>
+                                <label class="flex items-center gap-3">
+                                    <input type="checkbox" checked class="w-4 h-4 text-blue-600 rounded">
+                                    <span class="text-sm text-gray-700">Empty trash</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- New Room Password -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">New Room Password <span class="text-red-500">*</span></label>
+                            <input type="text" placeholder="Enter new door lock password" class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <p class="text-xs text-gray-400 mt-1">This password will be sent to the next guest upon check-in.</p>
+                        </div>
+
+                        <!-- Notes -->
+                        <div class="mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-1">Notes (Optional)</label>
+                            <textarea rows="3" placeholder="Any observations or notes about the room condition..." class="w-full border border-gray-300 rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"></textarea>
+                        </div>
+
+                        <!-- Report Issue -->
+                        <div class="mb-6 p-4 border border-orange-200 bg-orange-50 rounded">
+                            <p class="text-sm text-gray-700 font-medium mb-3">Found any maintenance issues?</p>
+                            <a href="report-issue-form.html?room=101" class="text-white bg-orange-500 px-4 py-2 rounded font-medium hover:bg-orange-600 inline-block">
+                                Report Maintenance Issue
+                            </a>
+                        </div>
+
+                        <!-- Submit Buttons -->
+                        <div class="flex gap-3">
+                            <button type="submit" class="bg-green-600 text-white px-6 py-2 rounded font-medium hover:bg-green-700">
+                                Complete Cleaning
+                            </button>
+                            <a href="cleaning-task-list.html" class="bg-gray-300 text-gray-700 px-6 py-2 rounded font-medium hover:bg-gray-400">
+                                Cancel
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Sidebar -->
+            <div class="lg:col-span-1">
+                <!-- Room Info Card -->
+                <div class="bg-white rounded-lg shadow p-6 mb-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Room Information</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Room Number</span>
+                            <span class="font-medium">101</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Room Type</span>
+                            <span class="font-medium">Deluxe Double</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Floor</span>
+                            <span class="font-medium">1st Floor</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Area</span>
+                            <span class="font-medium">35 m²</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Max Guests</span>
+                            <span class="font-medium">2</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Last Booking Info -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <h3 class="text-lg font-semibold text-gray-800 mb-4">Last Booking</h3>
+                    <div class="space-y-3 text-sm">
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Booking Code</span>
+                            <span class="font-mono text-xs">BK20260312005</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Check-in</span>
+                            <span class="font-medium">2026-03-12</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Check-out</span>
+                            <span class="font-medium">2026-03-13 11:00</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-gray-500">Guest</span>
+                            <span class="font-medium">Tran Van B</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center py-4 mt-8">
+        <p class="text-sm">BookNow Homestay Management System</p>
+    </footer>
+
+    <!-- Form Submission Handler -->
+    <script>
+        document.querySelector('form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Validate password is entered
+            const passwordInput = this.querySelector('input[placeholder*="password"]');
+            if (!passwordInput.value.trim()) {
+                alert('Please enter the new room password');
+                return;
+            }
+            // Simulate form submission
+            alert('Room cleaning marked as complete! Room status updated to AVAILABLE.');
+            window.location.href = 'cleaning-task-list.html';
+        });
+    </script>
+</body>
+</html>
