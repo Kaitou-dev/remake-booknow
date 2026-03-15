@@ -1151,7 +1151,7 @@ CREATE TABLE [dbo].[Room](
         REFERENCES [dbo].[RoomType]([room_type_id]),
     CONSTRAINT [CK_Room_Status] CHECK ([status] IN (
         'AVAILABLE', 'BOOKED', 'OCCUPIED', 'CHECKOUT_PENDING',
-        'DIRTY', 'CLEANING', 'MAINTENANCE', 'OUT_OF_SERVICE'
+        'DIRTY', 'CLEANING', 'OUT_OF_SERVICE'
     ))
 );
 GO
@@ -1229,7 +1229,7 @@ CREATE TABLE [dbo].[Booking](
     CONSTRAINT [FK_Booking_Room] FOREIGN KEY ([room_id])
         REFERENCES [dbo].[Room]([room_id]),
     CONSTRAINT [CK_Booking_Status] CHECK ([booking_status] IN (           -- NEW
-        'PENDING', 'WAITING_PAYMENT', 'PAID',
+        'PENDING', 'PENDING_PAYMENT', 'PAID',
         'CHECKED_IN', 'CHECKED_OUT', 'COMPLETED', 'CANCELLED'
     ))
 );
@@ -1373,7 +1373,7 @@ CREATE TABLE [dbo].[HousekeepingTask](
         'CLEANING', 'MAINTENANCE', 'INSPECTION', 'OVERDUE_CHECKOUT'
     )),
     CONSTRAINT [CK_HousekeepingTask_Status] CHECK ([task_status] IN (
-        'PENDING', 'IN_PROGRESS', 'COMPLETED', 'CANCELLED'
+        'PENDING', 'IN_PROGRESS', 'COMPLETED', 'ASSIGNED'
     )),
     CONSTRAINT [CK_HousekeepingTask_Priority] CHECK ([priority] IN (
         'LOW', 'NORMAL', 'HIGH', 'URGENT'
