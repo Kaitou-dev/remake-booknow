@@ -3,14 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đánh giá phòng - BookNow</title>
-    <!-- Tailwind CSS -->
+    <title>Đánh giá trải nghiệm - BookNow</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <script>
         tailwind.config = {
             theme: {
@@ -28,267 +25,220 @@
         }
     </script>
     <style>
-        .gradient-text {
-            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        
-        /* Star Rating Interactive */
-        .star-rating {
+        html, body { height: 100%; overflow: hidden; }
+
+        .star-group {
             display: flex;
             flex-direction: row-reverse;
-            justify-content: flex-end;
+            justify-content: center;
+            gap: 6px;
         }
-        .star-rating input {
-            display: none;
-        }
-        .star-rating label {
+        .star-group input { display: none; }
+        .star-group label {
             cursor: pointer;
-            width: 40px;
-            height: 40px;
-            font-size: 32px;
+            font-size: 36px;
             color: #e5e7eb;
-            transition: all 0.2s ease;
+            transition: color 0.15s ease, transform 0.15s ease;
+            line-height: 1;
         }
-        .star-rating label:before {
-            content: '\f005';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
+        .star-group label:hover,
+        .star-group label:hover ~ label,
+        .star-group input:checked ~ label {
+            color: #facc15;
         }
-        .star-rating input:checked ~ label,
-        .star-rating label:hover,
-        .star-rating label:hover ~ label {
-            color: #fbbf24;
-            transform: scale(1.1);
+        .star-group label:hover { transform: scale(1.15); }
+        .star-group label:active { transform: scale(0.95); }
+
+        .feedback-textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
+
     </style>
 </head>
-<body class="bg-gray-50 font-sans text-gray-800">
+<body class="font-sans text-gray-800 h-screen flex flex-col">
 
-    <!-- === LOGO (Fixed Top-Left) === -->
-    <div style="position: fixed; top: 25px; left: 25px; z-index: 100;" class="bg-white/90 backdrop-blur px-4 py-2 rounded-xl shadow-sm border border-white/50">
+    <!-- Top Bar -->
+    <header class="bg-white border-b border-gray-100 px-8 py-3 flex items-center justify-between flex-shrink-0">
         <div class="flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
-            <div class="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center border border-blue-100">
-                <i class="fa-solid fa-house-chimney gradient-icon text-xl text-blue-600"></i>
+            <div class="w-9 h-9 bg-blue-50 rounded-lg flex items-center justify-center border border-blue-100">
+                <i class="fa-solid fa-house-chimney text-lg text-blue-600"></i>
             </div>
-            <div class="flex flex-col justify-center">
-                <span class="text-2xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-blue-500 to-blue-700 leading-none">BookNow</span>
+            <span class="text-xl font-extrabold tracking-tight text-transparent bg-clip-text bg-gradient-to-br from-blue-500 to-blue-700">BookNow</span>
+        </div>
+        <a href="booking_detail.html" class="w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition" title="Đóng">
+            <i class="fa-solid fa-xmark text-lg"></i>
+        </a>
+    </header>
+
+    <!-- Main 2-Column Layout -->
+    <div class="flex-1 flex min-h-0 p-5 gap-5 bg-gray-100">
+
+        <!-- LEFT: Booking & Room Info -->
+        <div class="w-[420px] flex-shrink-0 bg-gradient-to-b from-slate-700 to-slate-800 text-white flex flex-col rounded-2xl overflow-hidden">
+
+            <!-- Header -->
+            <div class="px-8 pt-8 pb-5">
+                <div class="flex items-center gap-2.5 mb-1">
+                    <i class="fa-solid fa-pen-to-square text-slate-400"></i>
+                    <h1 class="text-lg font-bold">Đánh giá trải nghiệm</h1>
+                </div>
+                <p class="text-slate-400 text-sm">Chia sẻ cảm nhận giúp chúng tôi cải thiện dịch vụ</p>
             </div>
-        </div>
-    </div>
 
-    <!-- Main Container -->
-    <div class="max-w-3xl mx-auto px-4 md:px-8 pt-32 pb-12">
-
-        <!-- Page Title -->
-        <div class="mb-8 text-center">
-            <h1 class="text-3xl font-bold text-gray-900 mb-2">Đánh giá trải nghiệm</h1>
-            <p class="text-gray-500">Chia sẻ ý kiến của bạn để giúp chúng tôi cải thiện dịch vụ</p>
-        </div>
-
-        <!-- Feedback Form Card -->
-        <div class="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden">
-            
-            <!-- Room & Booking Summary -->
-            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 p-6 border-b border-blue-100">
-                <div class="flex items-center gap-4">
-                    <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-1.2.1&auto=format&fit=crop&w=150&q=80" 
-                         alt="Room" 
-                         class="w-20 h-20 rounded-xl object-cover shadow-sm">
-                    <div class="flex-1">
-                        <h2 class="text-lg font-bold text-gray-900">Phòng Tiêu Chuẩn P.101</h2>
-                        <p class="text-sm text-gray-500">Tầng 1, Khu A • View vườn</p>
-                        <div class="flex items-center gap-4 mt-2 text-sm">
-                            <span class="text-gray-600"><i class="fa-regular fa-calendar mr-1"></i> 27/06/2026</span>
-                            <span class="text-blue-600 font-medium"><i class="fa-regular fa-clock mr-1"></i> Qua đêm</span>
-                        </div>
-                    </div>
-                    <div class="text-right hidden sm:block">
-                        <p class="text-xs text-gray-500">Mã đặt phòng</p>
-                        <p class="font-mono font-bold text-gray-800">#BK88921</p>
+            <!-- Room Card -->
+            <div class="mx-6 bg-white/[0.07] rounded-xl p-4 border border-white/10">
+                <div class="flex gap-3">
+                    <img src="https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-1.2.1&auto=format&fit=crop&w=200&q=80"
+                         alt="Room"
+                         class="w-20 h-20 rounded-lg object-cover flex-shrink-0">
+                    <div class="flex-1 min-w-0">
+                        <h2 class="text-base font-bold truncate">Phòng Tiêu Chuẩn P.101</h2>
+                        <span class="inline-flex items-center gap-1 mt-2 text-xs font-medium bg-white/10 px-2 py-0.5 rounded">
+                            <i class="fa-solid fa-user-group text-[10px]"></i> 2 Người
+                        </span>
                     </div>
                 </div>
             </div>
 
-            <!-- Feedback Form -->
-            <form id="feedbackForm" class="p-6 space-y-8">
-                
-                <!-- Star Rating Section -->
+            <!-- Booking Details -->
+            <div class="mx-6 mt-4 space-y-3 flex-1">
+                <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-400">Thông tin đặt phòng</h3>
+
+                <div class="grid grid-cols-2 gap-3">
+                    <div class="bg-white/[0.07] rounded-lg px-3 py-2.5">
+                        <span class="text-[11px] text-slate-400 block"><i class="fa-solid fa-hashtag mr-1"></i>Mã booking</span>
+                        <span class="text-sm font-bold">#BK88921</span>
+                    </div>
+                    <div class="bg-white/[0.07] rounded-lg px-3 py-2.5">
+                        <span class="text-[11px] text-slate-400 block"><i class="fa-regular fa-calendar mr-1"></i>Ngày</span>
+                        <span class="text-sm font-bold">27/06/2026</span>
+                    </div>
+                    <div class="bg-white/[0.07] rounded-lg px-3 py-2.5">
+                        <span class="text-[11px] text-slate-400 block"><i class="fa-regular fa-clock mr-1"></i>Khung giờ</span>
+                        <span class="text-sm font-bold">21:00 - 09:30</span>
+                    </div>
+                    <div class="bg-white/[0.07] rounded-lg px-3 py-2.5">
+                        <span class="text-[11px] text-slate-400 block"><i class="fa-solid fa-moon mr-1"></i>Loại</span>
+                        <span class="text-sm font-bold">Qua đêm</span>
+                    </div>
+                </div>
+
+                <!-- Payment -->
+                <div class="bg-white/[0.07] rounded-lg px-4 py-3 flex items-center justify-between">
+                    <div>
+                        <span class="text-[11px] text-slate-400 block">Tổng thanh toán</span>
+                        <span class="text-lg font-bold">500.000đ</span>
+                    </div>
+                    <span class="flex items-center gap-1 text-xs font-semibold bg-emerald-500/15 text-emerald-300 px-2.5 py-1 rounded-full">
+                        <i class="fa-solid fa-circle-check text-[10px]"></i> Đã thanh toán
+                    </span>
+                </div>
+            </div>
+
+            <!-- Status Badge -->
+            <div class="px-6 py-4">
+                <div class="bg-emerald-500/10 border border-emerald-500/20 rounded-lg px-4 py-2.5 flex items-center justify-center gap-2">
+                    <i class="fa-solid fa-check-circle text-emerald-400"></i>
+                    <span class="font-semibold text-emerald-300 text-sm">Đã hoàn thành lưu trú</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT: Feedback Form -->
+        <div class="flex-1 bg-white flex flex-col min-h-0 rounded-2xl overflow-hidden border border-gray-200">
+            <form id="feedbackForm" class="flex-1 flex flex-col px-12 py-8 gap-6" method="post">
+
+                <!-- General Error from Server -->
+                <p th:if="${error}" th:text="${error}" class="text-sm text-red-500 bg-red-50 border border-red-200 rounded-lg px-4 py-2.5 flex-shrink-0"><i class="fa-solid fa-circle-exclamation mr-1"></i>Đã có lỗi xảy ra</p>
+
+                <!-- Success Message from Server -->
+                <p th:if="${success}" th:text="${success}" class="text-sm text-green-600 bg-green-50 border border-green-200 rounded-lg px-4 py-2.5 flex-shrink-0"><i class="fa-solid fa-circle-check mr-1"></i>Gửi đánh giá thành công</p>
+
+                <!-- Star Rating -->
                 <div class="text-center">
-                    <label class="block text-lg font-semibold text-gray-800 mb-4">
-                        Bạn đánh giá trải nghiệm này thế nào?
-                    </label>
-                    <div class="star-rating justify-center">
+                    <label class="block text-base font-bold text-gray-800 mb-1">Bạn đánh giá như thế nào?</label>
+                    <p class="text-sm text-gray-500 mb-4">Chọn số sao phù hợp với trải nghiệm của bạn</p>
+
+                    <div class="star-group" id="starGroup">
                         <input type="radio" id="star5" name="rating" value="5" required>
-                        <label for="star5" title="5 sao - Tuyệt vời"></label>
+                        <label for="star5" title="Tuyệt vời">&#9733;</label>
                         <input type="radio" id="star4" name="rating" value="4">
-                        <label for="star4" title="4 sao - Rất tốt"></label>
+                        <label for="star4" title="Rất tốt">&#9733;</label>
                         <input type="radio" id="star3" name="rating" value="3">
-                        <label for="star3" title="3 sao - Tốt"></label>
+                        <label for="star3" title="Tốt">&#9733;</label>
                         <input type="radio" id="star2" name="rating" value="2">
-                        <label for="star2" title="2 sao - Tạm được"></label>
+                        <label for="star2" title="Tạm được">&#9733;</label>
                         <input type="radio" id="star1" name="rating" value="1">
-                        <label for="star1" title="1 sao - Cần cải thiện"></label>
+                        <label for="star1" title="Cần cải thiện">&#9733;</label>
                     </div>
-                    <p id="rating-text" class="text-sm text-gray-500 mt-3 font-medium">Chọn số sao để đánh giá</p>
+                    <p id="ratingText" class="text-sm font-medium text-gray-400 mt-2 h-5 transition-all">Chạm vào ngôi sao để đánh giá</p>
+                    <p th:if="${ratingError}" th:text="${ratingError}" class="text-sm text-red-500 mt-1"><i class="fa-solid fa-circle-exclamation mr-1"></i>Vui lòng chọn số sao</p>
                 </div>
 
-                <!-- Comment Section -->
-                <div>
-                    <label class="block text-sm font-semibold text-gray-700 mb-3">
-                        Nội dung đánh giá <span class="text-gray-400 font-normal">(tùy chọn)</span>
-                    </label>
-                    <textarea 
+                <!-- Comment -->
+                <div class="flex-1 flex flex-col min-h-0">
+                    <div class="flex items-baseline justify-between mb-2">
+                        <label class="text-base font-bold text-gray-800">Nhận xét của bạn</label>
+                        <span id="charCount" class="text-xs text-gray-400 tabular-nums">0/1000</span>
+                    </div>
+                    <textarea
                         id="comment"
-                        name="comment" 
-                        rows="5" 
-                        placeholder="Chia sẻ chi tiết về trải nghiệm của bạn: Phòng sạch sẽ không? Nhân viên phục vụ thế nào? Bạn có quay lại không?"
-                        class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500 focus:bg-white transition-all resize-none"
+                        name="comment"
+                        placeholder="Phòng sạch sẽ, nhân viên thân thiện, check-in nhanh chóng..."
+                        class="feedback-textarea flex-1 w-full px-4 py-3 text-sm rounded-xl bg-white border border-gray-200 focus:outline-none transition-all resize-none"
                         maxlength="1000"
                     ></textarea>
-                    <div class="flex justify-between items-center mt-2">
-                        <p class="text-xs text-gray-400">Tối đa 1000 ký tự</p>
-                        <p id="char-count" class="text-xs text-gray-400">0/1000</p>
-                    </div>
+                    <p th:if="${commentError}" th:text="${commentError}" class="text-sm text-red-500 mt-1"><i class="fa-solid fa-circle-exclamation mr-1"></i>Nhận xét không hợp lệ</p>
                 </div>
 
-                <!-- Submit Buttons -->
-                <div class="flex flex-col sm:flex-row gap-4 pt-4 border-t border-gray-100">
-                    <button 
-                        type="button" 
+                <!-- Action Buttons -->
+                <div class="flex gap-3 flex-shrink-0">
+                    <button
+                        type="button"
                         onclick="window.location.href='booking_detail.html'"
-                        class="flex-1 sm:flex-none px-8 py-3 text-gray-600 bg-gray-100 hover:bg-gray-200 rounded-xl font-semibold transition-colors"
+                        class="px-8 py-2.5 text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 rounded-xl font-medium transition-all"
                     >
-                        <i class="fa-solid fa-arrow-left mr-2"></i>Quay lại
+                        Hủy bỏ
                     </button>
-                    <button 
-                        type="submit" 
+                    <button
+                        type="submit"
                         id="submitBtn"
-                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-xl shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                        class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 px-8 rounded-xl shadow-lg shadow-blue-500/30 transition-all transform hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none disabled:shadow-none flex items-center justify-center gap-2"
                     >
-                        <i class="fa-solid fa-paper-plane mr-2"></i>Gửi đánh giá
+                        <i class="fa-solid fa-paper-plane"></i> Gửi đánh giá
                     </button>
                 </div>
             </form>
-
-            <!-- Trust Badge -->
-            <div class="bg-green-50 px-6 py-4 border-t border-green-100">
-                <div class="flex items-center gap-3 text-green-700">
-                    <i class="fa-solid fa-shield-halved text-xl"></i>
-                    <div>
-                        <p class="font-semibold text-sm">Đánh giá ẩn danh & công bằng</p>
-                        <p class="text-xs text-green-600">Ý kiến của bạn sẽ được kiểm duyệt trước khi hiển thị</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Guidelines -->
-        <div class="mt-6 bg-blue-50 rounded-xl p-4 border border-blue-100">
-            <h4 class="font-semibold text-blue-800 mb-2 flex items-center gap-2">
-                <i class="fa-solid fa-circle-info"></i> Hướng dẫn viết đánh giá
-            </h4>
-            <ul class="text-sm text-blue-700 space-y-1 ml-5 list-disc">
-                <li>Chia sẻ trải nghiệm thực tế của bạn</li>
-                <li>Nêu rõ điểm tốt và điểm cần cải thiện (nếu có)</li>
-                <li>Không sử dụng từ ngữ thô tục hoặc xúc phạm</li>
-                <li>Đánh giá phải liên quan đến phòng và dịch vụ</li>
-            </ul>
-        </div>
-
-    </div>
-
-    <!-- Success Modal (Hidden by default) -->
-    <div id="successModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
-        <div class="bg-white rounded-2xl p-8 max-w-md mx-4 text-center shadow-2xl transform scale-100 transition-transform">
-            <div class="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <i class="fa-solid fa-check text-4xl text-green-600"></i>
-            </div>
-            <h2 class="text-2xl font-bold text-gray-900 mb-2">Cảm ơn bạn!</h2>
-            <p class="text-gray-600 mb-6">Đánh giá của bạn đã được gửi thành công. Nó sẽ hiển thị trên trang phòng sau khi được kiểm duyệt.</p>
-            <div class="flex flex-col gap-3">
-                <button onclick="window.location.href='room_detail.html'" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl transition-colors">
-                    <i class="fa-solid fa-eye mr-2"></i>Xem đánh giá
-                </button>
-                <button onclick="window.location.href='booking_history.html'" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 rounded-xl transition-colors">
-                    <i class="fa-solid fa-list mr-2"></i>Lịch sử đặt phòng
-                </button>
-            </div>
         </div>
     </div>
 
-    <!-- Script -->
+
     <script>
-        // Character count
-        const comment = document.getElementById('comment');
-        const charCount = document.getElementById('char-count');
-        
-        comment.addEventListener('input', function() {
-            const current = this.value.length;
-            charCount.textContent = `${current}/1000`;
-            if (current > 0) {
-                charCount.classList.add('text-blue-600');
-            } else {
-                charCount.classList.remove('text-blue-600');
-            }
-        });
-
-        // Rating text update
+        // === Star Rating UI ===
         const ratingInputs = document.querySelectorAll('input[name="rating"]');
-        const ratingText = document.getElementById('rating-text');
-        const ratingLabels = {
-            '1': 'Rất không hài lòng 😞',
-            '2': 'Cần cải thiện 😕',
-            '3': 'Tạm được 🙂',
-            '4': 'Rất tốt 😊',
-            '5': 'Tuyệt vời! 🤩'
+        const ratingText = document.getElementById('ratingText');
+        const ratingMessages = {
+            '1': { text: 'Cần cải thiện', color: 'text-red-500' },
+            '2': { text: 'Tạm được', color: 'text-orange-500' },
+            '3': { text: 'Tốt', color: 'text-yellow-600' },
+            '4': { text: 'Rất tốt', color: 'text-blue-600' },
+            '5': { text: 'Tuyệt vời!', color: 'text-green-600' }
         };
 
         ratingInputs.forEach(input => {
             input.addEventListener('change', function() {
-                ratingText.textContent = ratingLabels[this.value];
-                ratingText.classList.add('text-blue-600');
+                const msg = ratingMessages[this.value];
+                ratingText.textContent = msg.text;
+                ratingText.className = `text-sm font-semibold mt-2 h-5 transition-all ${msg.color}`;
             });
         });
 
-        // Toggle tags
-        function toggleTag(btn) {
-            btn.classList.toggle('bg-blue-100');
-            btn.classList.toggle('text-blue-600');
-            btn.classList.toggle('bg-gray-100');
-            btn.classList.toggle('text-gray-600');
-        }
-
-        // Form submission
-        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const submitBtn = document.getElementById('submitBtn');
-            const originalText = submitBtn.innerHTML;
-            
-            // Show loading state
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2"></i>Đang gửi...';
-            
-            // Simulate API call
-            setTimeout(() => {
-                // Show success modal
-                const modal = document.getElementById('successModal');
-                modal.classList.remove('hidden');
-                modal.classList.add('flex');
-                
-                // Reset button
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalText;
-            }, 1500);
-        });
-
-        // Close modal when clicking outside
-        document.getElementById('successModal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                window.location.href = 'room_detail.html';
-            }
+        // === Character Count ===
+        const commentEl = document.getElementById('comment');
+        const charCountEl = document.getElementById('charCount');
+        commentEl.addEventListener('input', function() {
+            charCountEl.textContent = `${this.value.length}/1000`;
         });
     </script>
 
