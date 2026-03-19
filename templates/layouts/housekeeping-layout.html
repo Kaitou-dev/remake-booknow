@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base-layout}">
+
+<body th:class="'bg-gray-100 min-h-screen'">
+
+    <!-- No logo for housekeeping -->
+    <th:block layout:fragment="logo"></th:block>
+
+    <!-- Override header with housekeeping header -->
+    <th:block layout:fragment="header">
+        <div th:replace="~{fragments/housekeeping/header :: header}"></div>
+    </th:block>
+
+    <!-- Main Content Area -->
+    <th:block layout:fragment="content">
+        <main class="max-w-7xl mx-auto px-4 py-6">
+            <!-- Page-specific content goes here -->
+            <th:block layout:fragment="page-content">
+                <!-- Child pages will inject their content here -->
+            </th:block>
+        </main>
+    </th:block>
+
+    <!-- Footer -->
+    <th:block layout:fragment="footer">
+        <div th:replace="~{fragments/housekeeping/footer :: footer}"></div>
+    </th:block>
+</body>
+</html>

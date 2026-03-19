@@ -1,0 +1,91 @@
+/* ═══════════════════════════════════════════════════════════════════
+   CUSTOMER-FACING STYLES - BookNow Homestay System
+   ═══════════════════════════════════════════════════════════════════ */
+
+/* ─── Hero Section ─── */
+.hero-bg {
+    background-size: cover;
+    background-position: center;
+    position: relative;
+}
+
+.hero-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.5));
+}
+
+/* ─── Room Cards ─── */
+.room-card {
+    transition: all 0.3s ease;
+}
+
+.room-card:hover {
+    transform: translateY(-4px);
+}
+
+.room-card img {
+    transition: transform 0.5s ease;
+}
+
+.room-card:hover img {
+    transform: scale(1.1);
+}
+
+/* ─── Booking Bar (Sticky Bottom) ─── */
+.booking-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    transition: transform 0.3s ease;
+}
+
+.booking-bar.hidden {
+    transform: translateY(100%);
+}
+
+/* ─── Search Form Enhancements ─── */
+.search-input:focus {
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* ─── Time Slot Buttons ─── */
+.slot-item {
+    transition: all 0.2s ease;
+}
+
+.slot-item:hover:not(.booked) {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+
+.slot-item.selected {
+    background-color: #3b82f6;
+    color: white;
+    border-color: #3b82f6;
+}
+
+.slot-item.booked {
+    background-color: #f3f4f6;
+    color: #9ca3af;
+    cursor: not-allowed;
+}
+
+/* ─── Footer ─── */
+footer a {
+    transition: color 0.2s ease;
+}
+
+/* ─── Responsive Adjustments ─── */
+@media (max-width: 768px) {
+    .hero-bg {
+        height: 400px !important;
+    }
+
+    .hero-bg h1 {
+        font-size: 2rem;
+    }
+}

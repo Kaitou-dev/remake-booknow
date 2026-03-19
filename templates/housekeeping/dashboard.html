@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/housekeeping-layout}">
+<head>
+    <title>Housekeeping Dashboard</title>
+</head>
+
+<body>
+    <!-- Set page variables -->
+    <th:block th:with="pageTitle='Housekeeping Dashboard'">
+
+        <!-- Page Content -->
+        <div layout:fragment="page-content">
+
+            <!-- Statistics Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+                <!-- Rooms Need Cleaning -->
+                <a th:href="@{/housekeeping/cleaning-tasks}"
+                    class="block bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">Needs Cleaning</p>
+                            <p class="text-3xl font-bold text-yellow-600" th:text="${needsCleaning ?: 5}">5</p>
+                        </div>
+                        <div class="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z">
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2">DIRTY status rooms</p>
+                </a>
+
+                <!-- Rooms Under Maintenance -->
+                <a th:href="@{/housekeeping/maintenance}"
+                    class="block bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">Under Maintenance</p>
+                            <p class="text-3xl font-bold text-red-600" th:text="${underMaintenance ?: 2}">2</p>
+                        </div>
+                        <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z">
+                                </path>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2">MAINTENANCE status rooms</p>
+                </a>
+
+                <!-- Overdue Checkout -->
+                <a th:href="@{/housekeeping/overdue-checkout}"
+                    class="block bg-white rounded-lg shadow p-6 hover:shadow-lg transition-shadow">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">Overdue Checkout</p>
+                            <p class="text-3xl font-bold text-orange-600" th:text="${overdueCheckout ?: 1}">1</p>
+                        </div>
+                        <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2">CHECKOUT_PENDING rooms</p>
+                </a>
+
+                <!-- Available Rooms -->
+                <div class="bg-white rounded-lg shadow p-6">
+                    <div class="flex items-center justify-between">
+                        <div>
+                            <p class="text-sm text-gray-500">Available</p>
+                            <p class="text-3xl font-bold text-green-600" th:text="${availableRooms ?: 12}">12</p>
+                        </div>
+                        <div class="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center">
+                            <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                            </svg>
+                        </div>
+                    </div>
+                    <p class="text-xs text-gray-400 mt-2">Ready for booking</p>
+                </div>
+            </div>
+
+            <!-- Tasks List -->
+            <div class="bg-white rounded-lg shadow mb-8 overflow-hidden">
+                <div class="px-6 py-4 border-b border-gray-200">
+                    <h2 class="text-lg font-semibold text-gray-800">Tasks List</h2>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead class="bg-gray-50">
+                            <tr class="text-left text-sm text-gray-600">
+                                <th class="px-6 py-4 font-medium">Room Number</th>
+                                <th class="px-6 py-4 font-medium">Room Type</th>
+                                <th class="px-6 py-4 font-medium">Last Checkout</th>
+                                <th class="px-6 py-4 font-medium">Priority</th>
+                                <th class="px-6 py-4 font-medium">Status</th>
+                                <th class="px-6 py-4 font-medium">Assigned To</th>
+                                <th class="px-6 py-4 font-medium">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200" th:if="${taskList}">
+                            <tr th:each="task : ${taskList}" class="hover:bg-gray-50"
+                                th:classappend="${task.priority == 'URGENT'} ? 'bg-red-50' : ''">
+                                <td class="px-6 py-4">
+                                    <span class="font-bold text-gray-800" th:text="${task.roomNumber}">101</span>
+                                </td>
+                                <td class="px-6 py-4 text-gray-600" th:text="${task.roomType}">Deluxe Double</td>
+                                <td class="px-6 py-4 text-gray-600">
+                                    <div th:text="${#temporals.format(task.lastCheckout, 'yyyy-MM-dd')}">2026-03-13</div>
+                                    <div class="text-xs text-gray-400" th:text="${#temporals.format(task.lastCheckout, 'HH:mm')}">11:00 AM</div>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span th:class="${task.priority == 'URGENT'} ? 'bg-red-600 text-white' :
+                                                     ${task.priority == 'HIGH'} ? 'bg-red-100 text-red-700' :
+                                                     ${task.priority == 'NORMAL'} ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-600'"
+                                          class="px-2 py-1 rounded text-xs font-medium"
+                                          th:text="${task.priority}">NORMAL</span>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <span th:class="${task.status == 'IN_PROGRESS'} ? 'bg-blue-100 text-blue-700' :
+                                                     ${task.status == 'ASSIGNED'} ? 'bg-yellow-100 text-yellow-700' : 'bg-gray-100 text-gray-700'"
+                                          class="px-2 py-1 rounded text-xs font-medium"
+                                          th:text="${task.status}">PENDING</span>
+                                </td>
+                                <td class="px-6 py-4" th:class="${task.assignedTo} ? 'text-gray-600' : 'text-gray-400'"
+                                    th:text="${task.assignedTo ?: 'Unassigned'}">Nguyen Van A</td>
+                                <td class="px-6 py-4">
+                                    <a th:href="@{/housekeeping/task/{id}(id=${task.id})}"
+                                       class="text-blue-600 hover:underline text-sm mr-3">View</a>
+                                    <a th:if="${task.status == 'PENDING'}"
+                                       th:href="@{/housekeeping/task/{id}/assign(id=${task.id})}"
+                                       class="bg-blue-600 text-white px-3 py-1 rounded text-sm hover:bg-blue-700">Assign</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </th:block>
+</body>
+</html>

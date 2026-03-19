@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Offline Check-in - BookNow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .gradient-text {
+            background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 font-sans text-gray-800">
+
+    <!-- LOGO -->
+    <div style="position: fixed; top: 25px; left: 25px; z-index: 100;"
+         class="bg-white/90 backdrop-blur px-6 py-3 rounded-2xl shadow-sm border border-white/50">
+        <div class="flex items-center gap-3">
+            <div class="w-12 h-12 bg-blue-50 rounded-xl flex items-center justify-center border border-blue-100">
+                <i class="fa-solid fa-house-chimney text-2xl text-blue-600"></i>
+            </div>
+            <div class="flex flex-col justify-center">
+                <span class="text-3xl font-extrabold tracking-tight gradient-text leading-none">BookNow</span>
+                <span class="text-[10px] text-gray-500 font-medium uppercase tracking-wider">Staff Portal</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="max-w-7xl mx-auto px-6 pt-32 pb-12">
+
+        <!-- PAGE HEADER -->
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold text-gray-900 mb-2">📝 Offline Check-in</h1>
+            <p class="text-gray-500">Staff-assisted check-in for customers unable to complete self-service check-in</p>
+        </div>
+
+        <!-- SEARCH PANEL -->
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-6">
+            <h3 class="font-semibold text-gray-800 mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-magnifying-glass text-blue-500"></i>
+                Search Booking by ID
+            </h3>
+
+            <div class="flex gap-4 items-end">
+                <div class="flex-1">
+                    <label class="block text-sm font-medium text-gray-700 mb-2">
+                        Booking ID
+                    </label>
+                    <input type="text"
+                           id="searchTerm"
+                           placeholder="Enter Booking ID (e.g., BK-2026-001)"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+
+                <button onclick="searchBooking()"
+                        class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-medium shadow-sm transition-colors flex items-center gap-2">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    Search
+                </button>
+            </div>
+
+            <!-- DEMO: Search Results -->
+            <div id="searchResults" class="mt-4 hidden">
+                <div class="bg-green-50 border border-green-200 rounded-xl p-4 flex items-center gap-3">
+                    <i class="fa-solid fa-circle-check text-green-600 text-xl"></i>
+                    <span class="text-green-800 font-medium">Booking found! Loading details...</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- BOOKING INFORMATION CARD -->
+        <div id="bookingInfoCard" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden mb-6 hidden">
+            <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                <h3 class="font-semibold text-gray-800 flex items-center gap-2">
+                    <i class="fa-regular fa-calendar-check text-blue-500"></i>
+                    Booking Information
+                </h3>
+            </div>
+
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- LEFT COL -->
+                    <div class="space-y-4">
+                        <div>
+                            <span class="text-xs font-semibold text-gray-400 uppercase block mb-1">Booking Code</span>
+                            <p class="font-mono font-bold text-xl text-gray-900">#BK-2026-001</p>
+                        </div>
+
+                        <div>
+                            <span class="text-xs font-semibold text-gray-400 uppercase block mb-1">Customer Name</span>
+                            <p class="font-medium text-gray-800">Nguyen Van A</p>
+                        </div>
+
+                        <div>
+                            <span class="text-xs font-semibold text-gray-400 uppercase block mb-1">Phone</span>
+                            <p class="font-medium text-gray-800">0909 123 456</p>
+                        </div>
+
+                        <div>
+                            <span class="text-xs font-semibold text-gray-400 uppercase block mb-1">Email</span>
+                            <p class="font-medium text-gray-800">nguyenvana@gmail.com</p>
+                        </div>
+                    </div>
+
+                    <!-- RIGHT COL -->
+                    <div class="space-y-4">
+                        <div>
+                            <span class="text-xs font-semibold text-gray-400 uppercase block mb-1">Room</span>
+                            <p class="font-bold text-lg text-blue-600">101 - Standard Single</p>
+                        </div>
+
+                        <div>
+                            <span class="text-xs font-semibold text-gray-400 uppercase block mb-1">Check-in Date</span>
+                            <p class="font-medium text-gray-800">24/01/2026 - 14:00</p>
+                        </div>
+
+                        <div>
+                            <span class="text-xs font-semibold text-gray-400 uppercase block mb-1">Status</span>
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-bold bg-green-100 text-green-700">
+                                💳 PAID
+                            </span>
+                        </div>
+
+                        <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-3">
+                            <p class="text-yellow-800 text-sm font-medium flex items-center gap-2">
+                                <i class="fa-solid fa-triangle-exclamation"></i>
+                                Missing CCCD Images
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- TWO COLUMN LAYOUT -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+            <!-- LEFT: CCCD UPLOAD PANEL -->
+            <div id="cccdPanel" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hidden">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                    <h3 class="font-semibold text-gray-800 flex items-center gap-2">
+                        <i class="fa-solid fa-id-card text-blue-500"></i>
+                        Upload CCCD Images
+                    </h3>
+                </div>
+
+                <div class="p-6 space-y-6">
+                    <!-- Front CCCD -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            CCCD Front Side <span class="text-red-500">*</span>
+                        </label>
+                        <div id="previewFrontContainer" class="w-full h-48 bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center mb-3 hidden">
+                            <img id="previewFront" class="max-w-full max-h-full rounded-lg">
+                        </div>
+                        <div id="frontPlaceholder" class="w-full h-48 bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center mb-3">
+                            <div class="text-gray-400 text-center">
+                                <i class="fa-regular fa-image text-4xl mb-2"></i>
+                                <p class="text-sm">Front side preview</p>
+                            </div>
+                        </div>
+                        <label class="w-full cursor-pointer">
+                            <input type="file" id="uploadFront" accept="image/*" class="hidden">
+                            <div class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors text-center flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-upload"></i>
+                                Upload Front Image
+                            </div>
+                        </label>
+                    </div>
+
+                    <!-- Back CCCD -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">
+                            CCCD Back Side <span class="text-red-500">*</span>
+                        </label>
+                        <div id="previewBackContainer" class="w-full h-48 bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center mb-3 hidden">
+                            <img id="previewBack" class="max-w-full max-h-full rounded-lg">
+                        </div>
+                        <div id="backPlaceholder" class="w-full h-48 bg-gray-100 rounded-xl border-2 border-dashed border-gray-300 flex items-center justify-center mb-3">
+                            <div class="text-gray-400 text-center">
+                                <i class="fa-regular fa-image text-4xl mb-2"></i>
+                                <p class="text-sm">Back side preview</p>
+                            </div>
+                        </div>
+                        <label class="w-full cursor-pointer">
+                            <input type="file" id="uploadBack" accept="image/*" class="hidden">
+                            <div class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-medium transition-colors text-center flex items-center justify-center gap-2">
+                                <i class="fa-solid fa-upload"></i>
+                                Upload Back Image
+                            </div>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- RIGHT: CUSTOMER INFORMATION FORM -->
+            <div id="customerInfoPanel" class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hidden">
+                <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                    <h3 class="font-semibold text-gray-800 flex items-center gap-2">
+                        <i class="fa-regular fa-user text-blue-500"></i>
+                        Customer Information
+                    </h3>
+                </div>
+
+                <div class="p-6">
+                    <form id="customerForm" class="space-y-4">
+                        <input type="hidden" id="bookingId" name="bookingId" value="123">
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Full Name <span class="text-red-500">*</span>
+                            </label>
+                            <input type="text"
+                                   id="fullName"
+                                   name="fullName"
+                                   value="Nguyen Van A"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                   required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Email <span class="text-red-500">*</span>
+                            </label>
+                            <input type="email"
+                                   id="email"
+                                   name="email"
+                                   value="nguyenvana@gmail.com"
+                                   placeholder="example@email.com"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                   required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Phone Number <span class="text-red-500">*</span>
+                            </label>
+                            <input type="tel"
+                                   id="phone"
+                                   name="phone"
+                                   value="0909123456"
+                                   pattern="[0-9]{10}"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                                   required>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                CCCD Number
+                            </label>
+                            <input type="text"
+                                   id="cccdNumber"
+                                   name="cccdNumber"
+                                   placeholder="079099001234"
+                                   pattern="[0-9]{12}"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">
+                                Verification Notes
+                            </label>
+                            <textarea id="verificationNotes"
+                                      name="verificationNotes"
+                                      rows="3"
+                                      placeholder="Add any notes about the verification process..."
+                                      class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"></textarea>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- ACTION BUTTONS -->
+        <div id="actionButtons" class="mt-6 flex gap-4 justify-end hidden">
+            <button onclick="cancelCheckin()"
+                    class="px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-xl font-bold hover:bg-gray-50 transition-colors">
+                ❌ Cancel
+            </button>
+            <button onclick="completeCheckin()"
+                    class="px-8 py-3 bg-green-600 hover:bg-green-700 text-white rounded-xl font-bold shadow-lg transition-colors">
+                ✅ COMPLETE CHECK-IN
+            </button>
+        </div>
+
+    </div>
+
+    <!-- DEMO SCRIPT -->
+    <script>
+        let cccdFrontBlob = null;
+        let cccdBackBlob = null;
+
+        // Search booking by ID (DEMO)
+        function searchBooking() {
+            const bookingId = document.getElementById('searchTerm').value.trim();
+
+            if (!bookingId) {
+                alert('Please enter a Booking ID');
+                return;
+            }
+
+            // Validate booking ID format (basic check)
+            const bookingIdPattern = /^BK-\d{4}-\d{3,}$/i;
+            if (!bookingIdPattern.test(bookingId)) {
+                alert('Invalid Booking ID format. Expected format: BK-YYYY-XXX (e.g., BK-2026-001)');
+                return;
+            }
+
+            // Show results
+            document.getElementById('searchResults').classList.remove('hidden');
+
+            // Simulate API call and loading booking details
+            setTimeout(() => {
+                showBookingDetails();
+            }, 800);
+        }
+
+        function showBookingDetails() {
+            document.getElementById('bookingInfoCard').classList.remove('hidden');
+            document.getElementById('cccdPanel').classList.remove('hidden');
+            document.getElementById('customerInfoPanel').classList.remove('hidden');
+            document.getElementById('actionButtons').classList.remove('hidden');
+        }
+
+        // File upload handlers
+        document.getElementById('uploadFront').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                // Validate file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size must be less than 5MB');
+                    e.target.value = '';
+                    return;
+                }
+
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    alert('Please upload an image file');
+                    e.target.value = '';
+                    return;
+                }
+
+                cccdFrontBlob = file;
+                const url = URL.createObjectURL(file);
+                document.getElementById('previewFront').src = url;
+                document.getElementById('previewFrontContainer').classList.remove('hidden');
+                document.getElementById('frontPlaceholder').classList.add('hidden');
+            }
+        });
+
+        document.getElementById('uploadBack').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                // Validate file size (max 5MB)
+                if (file.size > 5 * 1024 * 1024) {
+                    alert('File size must be less than 5MB');
+                    e.target.value = '';
+                    return;
+                }
+
+                // Validate file type
+                if (!file.type.startsWith('image/')) {
+                    alert('Please upload an image file');
+                    e.target.value = '';
+                    return;
+                }
+
+                cccdBackBlob = file;
+                const url = URL.createObjectURL(file);
+                document.getElementById('previewBack').src = url;
+                document.getElementById('previewBackContainer').classList.remove('hidden');
+                document.getElementById('backPlaceholder').classList.add('hidden');
+            }
+        });
+
+        // Complete check-in (DEMO)
+        async function completeCheckin() {
+            // Validate images
+            if (!cccdFrontBlob) {
+                alert('Please upload CCCD front image');
+                return;
+            }
+            if (!cccdBackBlob) {
+                alert('Please upload CCCD back image');
+                return;
+            }
+
+            // Validate required fields
+            const fullName = document.getElementById('fullName').value;
+            const email = document.getElementById('email').value;
+            const phone = document.getElementById('phone').value;
+
+            if (!fullName || !email || !phone) {
+                alert('Please fill in all required fields (Name, Email, and Phone)');
+                return;
+            }
+
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+
+            // Validate phone format (10 digits)
+            const phoneRegex = /^[0-9]{10}$/;
+            if (!phoneRegex.test(phone)) {
+                alert('Please enter a valid 10-digit phone number');
+                return;
+            }
+
+            // In real implementation, this would call the API
+            // For demo, just show success message
+            if (confirm('Complete check-in for this booking?\n\nBooking: BK-2026-001\nCustomer: ' + fullName + '\nEmail: ' + email)) {
+                // Simulate API call
+                const btn = event.target;
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
+
+                setTimeout(() => {
+                    alert('✅ Check-in completed successfully!\n\nBooking Status: CHECKED_IN\nRoom 101 Status: OCCUPIED\n\nGuest can now access the room.');
+                    resetForm();
+                    btn.disabled = false;
+                    btn.innerHTML = '✅ COMPLETE CHECK-IN';
+                }, 2000);
+            }
+        }
+
+        function cancelCheckin() {
+            if (confirm('Cancel check-in process? All uploaded data will be lost.')) {
+                resetForm();
+            }
+        }
+
+        function resetForm() {
+            // Reset form
+            document.getElementById('customerForm').reset();
+            document.getElementById('searchTerm').value = '';
+
+            // Clear file inputs
+            document.getElementById('uploadFront').value = '';
+            document.getElementById('uploadBack').value = '';
+
+            // Clear images
+            cccdFrontBlob = null;
+            cccdBackBlob = null;
+            document.getElementById('previewFrontContainer').classList.add('hidden');
+            document.getElementById('previewBackContainer').classList.add('hidden');
+            document.getElementById('frontPlaceholder').classList.remove('hidden');
+            document.getElementById('backPlaceholder').classList.remove('hidden');
+
+            // Hide panels
+            document.getElementById('searchResults').classList.add('hidden');
+            document.getElementById('bookingInfoCard').classList.add('hidden');
+            document.getElementById('cccdPanel').classList.add('hidden');
+            document.getElementById('customerInfoPanel').classList.add('hidden');
+            document.getElementById('actionButtons').classList.add('hidden');
+        }
+
+        // Allow Enter key to trigger search
+        document.getElementById('searchTerm').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                searchBooking();
+            }
+        });
+    </script>
+</body>
+</html>

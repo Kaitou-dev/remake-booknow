@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- Common Scripts Fragment -->
+    <th:block th:fragment="scripts">
+        <!-- Common JavaScript Utilities -->
+        <script th:src="@{/js/common.js}"></script>
+
+        <!-- Page-specific scripts will be injected here -->
+        <th:block layout:fragment="page-scripts"></th:block>
+    </th:block>
+</body>
+</html>

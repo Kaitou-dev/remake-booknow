@@ -1,0 +1,237 @@
+@startuml Offline Check-in Sequence Diagram
+
+title Staff Offline Check-in Flow - BookNow System
+
+actor Staff #LightBlue
+participant "UI\n(Thymeleaf\n+ JavaScript)" as UI #LightGreen
+participant "OfflineCheckinController\n@RestController" as Ctrl #Yellow
+participant "OfflineCheckinService\n@Service" as Svc #Orange
+participant "BookingRepository\nCustomerRepository\nRoomRepository\nCheckInSessionRepository\nRoomStatusLogRepository" as Repo #Pink
+participant "CloudinaryService" as Cloud #Purple
+database "SQL Server\nDatabase" as DB #LightGray
+
+== Phase 1: Search Booking ==
+
+Staff -> UI: Enter search term\n(Booking Code: BK-2026-001\nor Phone: 0909123456\nor Email: example@email.com)
+UI -> UI: Select search type\n(BOOKING_ID/PHONE/EMAIL)
+Staff -> UI: Click "Search" button
+
+UI -> Ctrl: GET /staff/offline-checkin/api/search\n?searchTerm=BK-2026-001\n&searchType=BOOKING_ID
+activate Ctrl
+
+Ctrl -> Svc: searchBookingForCheckin(\n  searchTerm="BK-2026-001",\n  searchType="BOOKING_ID"\n)
+activate Svc
+
+alt Search by Booking ID
+    Svc -> Repo: findByBookingCode("BK-2026-001")
+    activate Repo
+    Repo -> DB: SELECT * FROM Booking b\nJOIN Customer c ON b.customer_id = c.customer_id\nJOIN Room r ON b.room_id = r.room_id\nWHERE b.booking_code = 'BK-2026-001'
+    activate DB
+    DB --> Repo: Booking entity with relations
+    deactivate DB
+    Repo --> Svc: Optional<Booking>
+    deactivate Repo
+else Search by Phone
+    Svc -> Repo: findByCustomerPhone("0909123456")
+    Repo -> DB: SELECT * FROM Booking b\nJOIN Customer c ON b.customer_id = c.customer_id\nWHERE c.phone = '0909123456'\nORDER BY b.created_at DESC
+    DB --> Repo: Booking entity
+    Repo --> Svc: Optional<Booking>
+else Search by Email
+    Svc -> Repo: findByCustomerEmail("example@email.com")
+    Repo -> DB: SELECT * FROM Booking b\nJOIN Customer c ON b.customer_id = c.customer_id\nWHERE c.email = 'example@email.com'\nORDER BY b.created_at DESC
+    DB --> Repo: Booking entity
+    Repo --> Svc: Optional<Booking>
+end
+
+Svc -> Svc: Validate booking.status == "PAID"
+note right
+  If status != PAID, return error:
+  "Booking must be in PAID status"
+end note
+
+Svc -> Svc: mapToBookingDetailResponse(booking)
+note right
+  Map entity to DTO:
+  - bookingId, bookingCode, status
+  - customer info (name, phone, email)
+  - room info (number, type)
+  - check-in/out times
+  - CCCD URLs (if exist)
+  - flags: hasCCCDFront, hasCCCDBack
+end note
+
+Svc --> Ctrl: BookingDetailResponse DTO
+deactivate Svc
+
+Ctrl --> UI: ApiResponse<BookingDetailResponse>\n{\n  "success": true,\n  "data": {\n    "bookingId": 123,\n    "bookingCode": "BK-2026-001",\n    "bookingStatus": "PAID",\n    "customerName": "Nguyen Van A",\n    "hasCCCDFront": false,\n    "hasCCCDBack": false\n  }\n}
+deactivate Ctrl
+
+UI --> Staff: Display booking details:\n- Customer info\n- Room info\n- Status badges\n- ⚠️ Missing CCCD alert
+
+== Phase 2: Capture CCCD & Fill Customer Info ==
+
+Staff -> UI: Click "Open Camera"
+UI -> UI: navigator.mediaDevices.getUserMedia()
+UI --> Staff: Show live camera feed
+
+Staff -> Staff: Position CCCD front\nin camera frame
+Staff -> UI: Click "Capture Front"
+UI -> UI: Draw video frame to canvas\nconvert to JPEG blob (quality 85%)
+UI --> Staff: Show preview of\ncaptured front image
+
+Staff -> Staff: Flip CCCD to back side
+Staff -> UI: Click "Capture Back"
+UI -> UI: Draw video frame to canvas\nconvert to JPEG blob (quality 85%)
+UI --> Staff: Show preview of\ncaptured back image
+
+note right of UI
+  Alternative: Staff can upload
+  existing image files instead
+  of using camera
+end note
+
+Staff -> UI: Fill/verify customer information:\n- Full Name\n- Phone Number\n- CCCD Number\n- Date of Birth\n- Address
+Staff -> UI: Add verification notes\n(e.g., "Verified in person, ID matches")
+
+Staff -> UI: Click "COMPLETE CHECK-IN"
+
+== Phase 3: Process Offline Check-in ==
+
+UI -> UI: Validate form:\n- CCCD images present\n- Required fields filled
+UI -> Ctrl: POST /staff/offline-checkin/api/complete\nContent-Type: multipart/form-data\n\nFormData {\n  bookingId: 123,\n  cccdFrontImage: [JPEG Blob],\n  cccdBackImage: [JPEG Blob],\n  fullName: "Nguyen Van A",\n  phone: "0909123456",\n  cccdNumber: "079099001234",\n  dateOfBirth: "1990-01-15",\n  address: "Can Tho, Vietnam",\n  verificationNotes: "Verified in person"\n}
+activate Ctrl
+
+Ctrl -> Ctrl: Validate request:\n- bookingId present\n- images not empty\n- max size 5MB per image
+
+Ctrl -> Ctrl: Get authenticated staff ID\nfrom SecurityContext\n(staffId = 789)
+
+Ctrl -> Svc: processOfflineCheckin(request)
+activate Svc
+
+== Step 1: Validate Booking ==
+
+Svc -> Repo: findById(bookingId = 123)
+activate Repo
+Repo -> DB: SELECT * FROM Booking\nWHERE booking_id = 123
+activate DB
+DB --> Repo: Booking entity
+deactivate DB
+Repo --> Svc: Booking
+deactivate Repo
+
+alt Booking not found
+    Svc --> Ctrl: throw BookingNotFoundException
+    Ctrl --> UI: 404 "Booking not found"
+    UI --> Staff: ❌ Error alert
+end
+
+Svc -> Svc: Validate status == "PAID"
+note right
+  If status != PAID:
+  throw InvalidBookingStatusException
+  "Booking must be in PAID status.
+   Current: {status}"
+end note
+
+== Step 2: Upload CCCD Images to Cloudinary ==
+
+Svc -> Cloud: Upload front image\nwith metadata:\n{\n  folder: "booknow/cccd/BK-2026-001",\n  public_id: "front",\n  resource_type: "image",\n  format: "jpg",\n  quality: "auto:good",\n  transformation: { width: 1024 }\n}
+activate Cloud
+Cloud -> Cloud: Store image in CDN
+Cloud --> Svc: {\n  "secure_url": "https://res.cloudinary.com/.../front.jpg",\n  "public_id": "booknow/cccd/BK-2026-001/front"\n}
+deactivate Cloud
+
+Svc -> Cloud: Upload back image\n(same parameters, public_id: "back")
+activate Cloud
+Cloud -> Cloud: Store image in CDN
+Cloud --> Svc: {\n  "secure_url": "https://res.cloudinary.com/.../back.jpg",\n  "public_id": "booknow/cccd/BK-2026-001/back"\n}
+deactivate Cloud
+
+alt Upload fails
+    Svc --> Ctrl: throw ImageUploadException
+    Ctrl --> UI: 500 "Image upload failed"
+    UI --> Staff: ❌ Upload error alert
+end
+
+== Step 3: Update Customer Information ==
+
+Svc -> Repo: save(Customer)\nUPDATE:\n- full_name = "Nguyen Van A"\n- phone = "0909123456"
+activate Repo
+Repo -> DB: UPDATE Customer\nSET full_name = ?,\n    phone = ?,\n    updated_at = GETDATE()\nWHERE customer_id = ?
+activate DB
+DB --> Repo: 1 row updated
+deactivate DB
+Repo --> Svc: Customer entity (updated)
+deactivate Repo
+
+== Step 4: Update Booking with CCCD & Status ==
+
+Svc -> Repo: save(Booking)\nUPDATE:\n- id_card_front_url = cloudinary_url_front\n- id_card_back_url = cloudinary_url_back\n- booking_status = "CHECKED_IN"\n- actual_check_in_time = NOW()
+activate Repo
+Repo -> DB: UPDATE Booking\nSET id_card_front_url = ?,\n    id_card_back_url = ?,\n    booking_status = 'CHECKED_IN',\n    actual_check_in_time = GETDATE(),\n    update_at = GETDATE()\nWHERE booking_id = ?
+activate DB
+DB --> Repo: 1 row updated
+deactivate DB
+Repo --> Svc: Booking entity (updated)
+deactivate Repo
+
+== Step 5: Update Room Status ==
+
+Svc -> Repo: save(Room)\nUPDATE:\n- status = "OCCUPIED"
+activate Repo
+Repo -> DB: UPDATE Room\nSET status = 'OCCUPIED'\nWHERE room_id = ?
+activate DB
+DB --> Repo: 1 row updated
+deactivate DB
+Repo --> Svc: Room entity (updated)
+deactivate Repo
+
+== Step 6: Create Room Status Log ==
+
+Svc -> Svc: createRoomStatusLog(\n  room = room,\n  previousStatus = "BOOKED",\n  newStatus = "OCCUPIED",\n  staffId = 789,\n  reason = "Offline check-in completed by staff",\n  bookingId = 123\n)
+
+Svc -> Repo: save(RoomStatusLog)
+activate Repo
+Repo -> DB: INSERT INTO RoomStatusLog\n(room_id, previous_status, new_status,\n changed_by, change_reason, booking_id,\n created_at)\nVALUES\n(101, 'BOOKED', 'OCCUPIED',\n 789, 'Offline check-in completed by staff', 123,\n GETDATE())
+activate DB
+DB --> Repo: log_id = 456 (new record)
+deactivate DB
+Repo --> Svc: RoomStatusLog entity
+deactivate Repo
+
+== Step 7: Create CheckInSession Record ==
+
+Svc -> Svc: createOfflineCheckInSession(\n  booking = booking,\n  staffId = 789,\n  notes = "Verified in person"\n)
+
+Svc -> Repo: save(CheckInSession)\nINSERT:\n- booking_id = 123\n- video_url = NULL\n- video_public_id = NULL\n- checkin_method = "STAFF_OFFLINE"\n- status = "APPROVED"\n- reviewed_by = 789\n- created_at = NOW()\n- reviewed_at = NOW()\n- notes = verification_notes
+activate Repo
+Repo -> DB: INSERT INTO CheckInSession\n(booking_id, video_url, video_public_id,\n checkin_method, status, reviewed_by,\n created_at, reviewed_at, notes)\nVALUES\n(123, NULL, NULL,\n 'STAFF_OFFLINE', 'APPROVED', 789,\n GETDATE(), GETDATE(), 'Verified in person')
+activate DB
+DB --> Repo: check_in_session_id = 789 (new record)
+deactivate DB
+Repo --> Svc: CheckInSession entity
+deactivate Repo
+
+== Step 8: Return Success Response ==
+
+Svc -> Svc: Build OfflineCheckinResponse:\n{\n  success: true,\n  message: "Check-in completed successfully",\n  bookingId: 123,\n  newBookingStatus: "CHECKED_IN",\n  newRoomStatus: "OCCUPIED",\n  actualCheckInTime: "2026-01-24T14:05:00"\n}
+
+Svc --> Ctrl: OfflineCheckinResponse
+deactivate Svc
+
+Ctrl --> UI: ApiResponse<OfflineCheckinResponse>\n{\n  "success": true,\n  "message": "Check-in completed",\n  "data": {\n    "bookingId": 123,\n    "newBookingStatus": "CHECKED_IN",\n    "newRoomStatus": "OCCUPIED",\n    ...\n  }\n}
+deactivate Ctrl
+
+UI -> UI: Stop camera stream\nClear form fields\nReset UI state
+
+UI --> Staff: ✅ Success notification:\n"Check-in completed successfully!\n\nBooking: BK-2026-001\nStatus: CHECKED_IN\nRoom 101: OCCUPIED\n\nGuest can now access the room."
+
+note right of Staff
+  Staff can now:
+  1. Print room key card
+  2. Provide room number to guest
+  3. Show guest to the room
+  4. Process is complete!
+end note
+
+@enduml

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base-layout}">
+<head>
+    <!-- Additional styles for staff pages -->
+    <th:block layout:fragment="page-styles">
+        <link rel="stylesheet" th:href="@{/css/staff.css}">
+    </th:block>
+</head>
+
+<body>
+    <!-- Override header section with staff-specific header -->
+    <th:block layout:fragment="header">
+        <!-- Mobile Header -->
+        <div th:replace="~{fragments/staff/mobile-header :: mobile-header}"></div>
+
+        <!-- Sidebar Navigation -->
+        <div th:replace="~{fragments/staff/sidebar :: sidebar(${activePage ?: 'dashboard'})}"></div>
+    </th:block>
+
+    <!-- Main Content Area -->
+    <th:block layout:fragment="content">
+        <main class="lg:ml-64 min-h-screen pt-24 lg:pt-8 px-6 pb-10 transition-all duration-300">
+
+            <!-- User Info Header -->
+            <div class="flex flex-col md:flex-row md:items-center justify-between mb-8 gap-4">
+                <h1 class="text-2xl font-bold text-gray-800 lg:hidden" th:text="${pageTitle}">Dashboard</h1>
+
+                <!-- User Info Card -->
+                <div th:replace="~{fragments/staff/user-info :: user-info}"></div>
+            </div>
+
+            <!-- Page-specific content goes here -->
+            <th:block layout:fragment="page-content">
+                <!-- Child pages will inject their content here -->
+            </th:block>
+
+        </main>
+    </th:block>
+
+    <!-- Additional Scripts for staff pages -->
+    <th:block layout:fragment="page-scripts">
+        <script th:src="@{/js/staff-sidebar.js}"></script>
+    </th:block>
+</body>
+</html>

@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+    <!-- User Info Fragment -->
+    <div th:fragment="user-info" class="flex items-center gap-4 bg-white p-3 rounded-xl shadow-sm border border-gray-100 md:ml-auto">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center font-bold border-2 border-white shadow-sm"
+             th:classappend="${userRole == 'Admin'} ? 'bg-blue-100 text-blue-600' : 'bg-green-100 text-green-600'">
+            <span th:text="${userInitials ?: 'NV'}">NV</span>
+        </div>
+        <div class="pr-2">
+            <h4 class="text-sm font-bold text-gray-800 leading-none" th:text="${userName ?: 'Nhân viên'}">Nhân viên</h4>
+            <span class="text-xs font-semibold px-2 py-0.5 rounded-full mt-1 inline-block"
+                  th:classappend="${userRole == 'Admin'} ? 'text-blue-500 bg-blue-50' : 'text-green-600 bg-green-50'"
+                  th:text="${userRole ?: 'Nhân viên'}">Nhân viên</span>
+        </div>
+        <button class="text-gray-400 hover:text-gray-600 ml-2">
+            <i class="fa-solid fa-chevron-down text-xs"></i>
+        </button>
+    </div>
+</body>
+</html>

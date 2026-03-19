@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<body>
+    <!-- Customer Navbar Fragment -->
+    <nav th:fragment="navbar(transparent)"
+         th:classappend="${transparent} ? 'bg-gradient-to-b from-black/60 to-transparent' : 'bg-white shadow-md'"
+         class="fixed top-0 left-0 w-full flex justify-end items-center px-8 py-6 z-50 transition-all duration-300"
+         id="mainNavbar">
+        <div class="flex items-center gap-8">
+            <!-- Navigation Links -->
+            <a th:href="@{/about}"
+               th:class="${transparent} ? 'text-sm font-medium text-white hover:text-blue-200 transition-colors drop-shadow-sm' : 'text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors'">
+                Về chúng tôi
+            </a>
+            <a th:href="@{/contact}"
+               th:class="${transparent} ? 'text-sm font-medium text-white hover:text-blue-200 transition-colors drop-shadow-sm' : 'text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors'">
+                Liên hệ
+            </a>
+
+            <!-- Divider -->
+            <div th:class="${transparent} ? 'w-px h-6 bg-white/30' : 'w-px h-6 bg-gray-300'"></div>
+
+            <!-- Authenticated User -->
+            <div sec:authorize="isAuthenticated()" class="flex items-center gap-3">
+                <!-- Profile Dropdown -->
+                <th:block th:replace="~{fragments/customer/profile-dropdown :: profile-dropdown(${transparent})}"></th:block>
+            </div>
+
+            <!-- Guest User -->
+            <div sec:authorize="!isAuthenticated()" class="flex items-center gap-3">
+                <a th:href="@{/login}"
+                   th:class="${transparent} ? 'text-sm font-semibold text-white px-5 py-2.5 rounded-full shadow-md transition-all transform hover:text-blue-500 hover:-translate-y-0.5' : 'text-sm font-semibold text-gray-700 px-5 py-2.5 rounded-full border border-gray-300 hover:bg-gray-50'">
+                    Đăng nhập
+                </a>
+                <a th:href="@{/register}"
+                   class="text-sm font-semibold text-white bg-blue-600 hover:bg-blue-700 px-5 py-2.5 rounded-full shadow-md transition-all transform hover:-translate-y-0.5 active:translate-y-0">
+                    Đăng ký
+                </a>
+            </div>
+        </div>
+    </nav>
+</body>
+</html>

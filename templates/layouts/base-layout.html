@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout">
+<head th:replace="~{fragments/common/head :: head(${pageTitle ?: 'BookNow'})}"></head>
+
+<body th:class="${bodyClass ?: 'bg-gray-50 font-sans text-gray-800'}">
+
+    <!-- Logo Section (Can be overridden) -->
+    <th:block layout:fragment="logo">
+        <div th:replace="~{fragments/common/logo :: logo}"></div>
+    </th:block>
+
+    <!-- Header Section (Can be overridden by child layouts) -->
+    <th:block layout:fragment="header"></th:block>
+
+    <!-- Main Content Section (REQUIRED - must be provided by child layouts) -->
+    <th:block layout:fragment="content">
+        <!-- Page content will be inserted here -->
+    </th:block>
+
+    <!-- Footer Section (Can be overridden) -->
+    <th:block layout:fragment="footer"></th:block>
+
+    <!-- Scripts Section -->
+    <div th:replace="~{fragments/common/scripts :: scripts}"></div>
+
+</body>
+</html>

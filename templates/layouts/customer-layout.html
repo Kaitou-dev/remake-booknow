@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/base-layout}">
+<head>
+    <!-- Additional styles for customer pages -->
+    <th:block layout:fragment="page-styles">
+        <link rel="stylesheet" th:href="@{/css/customer.css}">
+    </th:block>
+</head>
+
+<body th:class="${bodyClass ?: 'bg-gray-50 font-sans text-gray-800 pb-24'}">
+
+    <!-- Override logo with clickable version for customer pages -->
+    <th:block layout:fragment="logo">
+        <div th:replace="~{fragments/common/logo :: logo-link}"></div>
+    </th:block>
+
+    <!-- Override header with customer navbar -->
+    <th:block layout:fragment="header">
+        <div th:replace="~{fragments/customer/navbar :: navbar(${navbarTransparent ?: false})}"></div>
+    </th:block>
+
+    <!-- Main Content Area -->
+    <th:block layout:fragment="content">
+        <!-- Page-specific content goes here -->
+        <th:block layout:fragment="page-content">
+            <!-- Child pages will inject their content here -->
+        </th:block>
+    </th:block>
+
+    <!-- Footer -->
+    <th:block layout:fragment="footer">
+        <div th:replace="~{fragments/customer/footer :: footer}"></div>
+    </th:block>
+
+    <!-- Additional Scripts for customer pages -->
+    <th:block layout:fragment="page-scripts">
+        <script th:src="@{/js/customer-navbar.js}"></script>
+    </th:block>
+</body>
+</html>

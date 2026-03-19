@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+    <!-- BookNow Logo Fragment -->
+    <div th:fragment="logo" class="logo-fixed flex items-center gap-3 select-none bg-white/90 backdrop-blur px-3 py-2 rounded-xl shadow-sm lg:shadow-none lg:bg-transparent lg:p-0">
+        <div class="w-10 h-10 bg-white rounded-lg shadow-md flex items-center justify-center border border-blue-100">
+            <i class="fa-solid fa-house-chimney gradient-icon text-xl"></i>
+        </div>
+        <div class="flex flex-col justify-center">
+            <span class="text-2xl font-extrabold tracking-tight gradient-text leading-none">BookNow</span>
+            <span class="text-[10px] text-gray-500 font-medium uppercase tracking-wider pl-0.5">Homestay System</span>
+        </div>
+    </div>
+
+    <!-- Logo with link (for customer pages) -->
+    <a th:fragment="logo-link" th:href="@{/}" class="logo-fixed flex items-center gap-3 select-none cursor-pointer">
+        <div class="w-10 h-10 bg-white rounded-lg shadow-md flex items-center justify-center border border-blue-100">
+            <i class="fa-solid fa-house-chimney gradient-icon text-xl text-blue-600"></i>
+        </div>
+        <div class="flex flex-col justify-center">
+            <span class="text-2xl font-extrabold tracking-tight text-white leading-none drop-shadow-md">BookNow</span>
+            <span class="text-[10px] text-gray-100 font-medium uppercase tracking-wider pl-0.5 drop-shadow-sm">Homestay System</span>
+        </div>
+    </a>
+</body>
+</html>
