@@ -76,6 +76,35 @@ BEGIN TRY
         ALTER TABLE dbo.Booking ADD booking_code NVARCHAR(50) NULL;
 
     /* ---------------------------------------------------------
+       2.1) CLOUDINARY MEDIA COLUMNS
+       Store URL + public_id for safe delete/update in Cloudinary
+       --------------------------------------------------------- */
+    IF COL_LENGTH('dbo.Customer', 'avatar_public_id') IS NULL
+        ALTER TABLE dbo.Customer ADD avatar_public_id NVARCHAR(255) NULL;
+
+    IF COL_LENGTH('dbo.Amenity', 'icon_public_id') IS NULL
+        ALTER TABLE dbo.Amenity ADD icon_public_id NVARCHAR(255) NULL;
+
+    IF OBJECT_ID('dbo.RoomImage', 'U') IS NOT NULL
+    BEGIN
+        IF COL_LENGTH('dbo.RoomImage', 'image_public_id') IS NULL
+            ALTER TABLE dbo.RoomImage ADD image_public_id NVARCHAR(255) NULL;
+    END
+    ELSE IF OBJECT_ID('dbo.Image', 'U') IS NOT NULL
+    BEGIN
+        IF COL_LENGTH('dbo.Image', 'image_public_id') IS NULL
+            ALTER TABLE dbo.Image ADD image_public_id NVARCHAR(255) NULL;
+
+        /* Backfill from legacy column public_id when available */
+        IF COL_LENGTH('dbo.Image', 'public_id') IS NOT NULL
+        BEGIN
+            UPDATE dbo.Image
+            SET image_public_id = COALESCE(image_public_id, public_id)
+            WHERE image_public_id IS NULL;
+        END
+    END
+
+    /* ---------------------------------------------------------
        3) STATUS VALUE STANDARDIZATION
        Booking status target:
        PENDING_PAYMENT -> PAID -> APPROVED -> CHECKED_IN -> CHECKED_OUT -> COMPLETED
@@ -213,6 +242,28 @@ BEGIN TRY
 
     ALTER TABLE dbo.Room WITH NOCHECK
     ADD CONSTRAINT CK_Room_Number_Format_Remake CHECK (room_number LIKE '[A-Z]-[A-Za-z]%-[0-9][0-9]');
+
+    /* Cloudinary pair constraints: url present => public_id present */
+    IF NOT EXISTS (SELECT 1 FROM sys.check_constraints WHERE parent_object_id = OBJECT_ID('dbo.Customer') AND name = 'CK_Customer_Avatar_Cloudinary_Pair_Remake')
+        ALTER TABLE dbo.Customer WITH NOCHECK
+        ADD CONSTRAINT CK_Customer_Avatar_Cloudinary_Pair_Remake CHECK (avatar_url IS NULL OR avatar_public_id IS NOT NULL);
+
+    IF NOT EXISTS (SELECT 1 FROM sys.check_constraints WHERE parent_object_id = OBJECT_ID('dbo.Amenity') AND name = 'CK_Amenity_Icon_Cloudinary_Pair_Remake')
+        ALTER TABLE dbo.Amenity WITH NOCHECK
+        ADD CONSTRAINT CK_Amenity_Icon_Cloudinary_Pair_Remake CHECK (icon_url IS NULL OR icon_public_id IS NOT NULL);
+
+    IF OBJECT_ID('dbo.RoomImage', 'U') IS NOT NULL
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM sys.check_constraints WHERE parent_object_id = OBJECT_ID('dbo.RoomImage') AND name = 'CK_RoomImage_Cloudinary_Pair_Remake')
+            ALTER TABLE dbo.RoomImage WITH NOCHECK
+            ADD CONSTRAINT CK_RoomImage_Cloudinary_Pair_Remake CHECK (image_url IS NULL OR image_public_id IS NOT NULL);
+    END
+    ELSE IF OBJECT_ID('dbo.Image', 'U') IS NOT NULL
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM sys.check_constraints WHERE parent_object_id = OBJECT_ID('dbo.Image') AND name = 'CK_Image_Cloudinary_Pair_Remake')
+            ALTER TABLE dbo.Image WITH NOCHECK
+            ADD CONSTRAINT CK_Image_Cloudinary_Pair_Remake CHECK (image_url IS NULL OR image_public_id IS NOT NULL);
+    END
 
     /* ---------------------------------------------------------
        6) FOREIGN KEY ADDITIONS
@@ -459,6 +510,23 @@ BEGIN TRY
     IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id = OBJECT_ID('dbo.Room') AND name = 'IX_Room_Status_Remake')
         CREATE INDEX IX_Room_Status_Remake ON dbo.Room(status) INCLUDE (room_type_id, room_number);
 
+    IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id = OBJECT_ID('dbo.Customer') AND name = 'IX_Customer_AvatarPublicId_Remake')
+        CREATE INDEX IX_Customer_AvatarPublicId_Remake ON dbo.Customer(avatar_public_id) WHERE avatar_public_id IS NOT NULL;
+
+    IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id = OBJECT_ID('dbo.Amenity') AND name = 'IX_Amenity_IconPublicId_Remake')
+        CREATE INDEX IX_Amenity_IconPublicId_Remake ON dbo.Amenity(icon_public_id) WHERE icon_public_id IS NOT NULL;
+
+    IF OBJECT_ID('dbo.RoomImage', 'U') IS NOT NULL
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id = OBJECT_ID('dbo.RoomImage') AND name = 'IX_RoomImage_PublicId_Remake')
+            CREATE INDEX IX_RoomImage_PublicId_Remake ON dbo.RoomImage(image_public_id) WHERE image_public_id IS NOT NULL;
+    END
+    ELSE IF OBJECT_ID('dbo.Image', 'U') IS NOT NULL
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id = OBJECT_ID('dbo.Image') AND name = 'IX_Image_PublicId_Remake')
+            CREATE INDEX IX_Image_PublicId_Remake ON dbo.Image(image_public_id) WHERE image_public_id IS NOT NULL;
+    END
+
     /* ---------------------------------------------------------
        11) VALIDATION CHECKPOINTS
        --------------------------------------------------------- */
@@ -479,6 +547,35 @@ BEGIN TRY
         FROM dbo.Payment
         WHERE payment_status NOT IN ('SUCCESS','FAILURE')
     ) THROW 50032, 'Invalid payment_status remains after migration.', 1;
+
+    IF EXISTS (
+        SELECT 1
+        FROM dbo.Customer
+        WHERE avatar_url IS NOT NULL AND avatar_public_id IS NULL
+    ) THROW 50033, 'Customer avatar_url exists but avatar_public_id is missing.', 1;
+
+    IF EXISTS (
+        SELECT 1
+        FROM dbo.Amenity
+        WHERE icon_url IS NOT NULL AND icon_public_id IS NULL
+    ) THROW 50034, 'Amenity icon_url exists but icon_public_id is missing.', 1;
+
+    IF OBJECT_ID('dbo.RoomImage', 'U') IS NOT NULL
+    BEGIN
+        IF EXISTS (
+            SELECT 1
+            FROM dbo.RoomImage
+            WHERE image_url IS NOT NULL AND image_public_id IS NULL
+        ) THROW 50035, 'RoomImage image_url exists but image_public_id is missing.', 1;
+    END
+    ELSE IF OBJECT_ID('dbo.Image', 'U') IS NOT NULL
+    BEGIN
+        IF EXISTS (
+            SELECT 1
+            FROM dbo.Image
+            WHERE image_url IS NOT NULL AND image_public_id IS NULL
+        ) THROW 50036, 'Image image_url exists but image_public_id is missing.', 1;
+    END
 
     COMMIT TRANSACTION;
 END TRY
@@ -503,3 +600,18 @@ UNION ALL
 SELECT 'Payment invalid status', COUNT(*)
 FROM dbo.Payment
 WHERE payment_status NOT IN ('SUCCESS','FAILURE');
+
+SELECT 'Customer missing avatar_public_id' AS check_name, COUNT(*) AS issue_count
+FROM dbo.Customer
+WHERE avatar_url IS NOT NULL AND avatar_public_id IS NULL
+UNION ALL
+SELECT 'Amenity missing icon_public_id', COUNT(*)
+FROM dbo.Amenity
+WHERE icon_url IS NOT NULL AND icon_public_id IS NULL
+UNION ALL
+SELECT 'RoomImage/Image missing image_public_id',
+       CASE
+           WHEN OBJECT_ID('dbo.RoomImage', 'U') IS NOT NULL THEN (SELECT COUNT(*) FROM dbo.RoomImage WHERE image_url IS NOT NULL AND image_public_id IS NULL)
+           WHEN OBJECT_ID('dbo.Image', 'U') IS NOT NULL THEN (SELECT COUNT(*) FROM dbo.Image WHERE image_url IS NOT NULL AND image_public_id IS NULL)
+           ELSE 0
+       END;

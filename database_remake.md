@@ -14,6 +14,7 @@ This schema is consolidated from all project Markdown and SQL sources and resolv
 - Missing status constraints in Booking and Payment
 - Weak overlap protection for room bookings
 - Redundant scheduling layer for booking time (Timetable/Scheduler not required for core booking integrity)
+- Missing Cloudinary public_id columns for image lifecycle management
 
 Mandatory tables preserved and optimized:
 
@@ -31,6 +32,7 @@ Design choices:
 - All core entities include audit fields (created_at, updated_at)
 - Booking lifecycle transitions enforced with transition table + trigger
 - Double booking blocked by trigger + supporting index
+- Media columns store both URL and Cloudinary public_id for safe update/delete operations
 
 ## 2) Final table set
 
@@ -111,11 +113,13 @@ CREATE TABLE dbo.Customer (
     full_name         NVARCHAR(100) NOT NULL,
     phone             NVARCHAR(20) NULL,
     avatar_url        NVARCHAR(500) NULL,
+    avatar_public_id  NVARCHAR(255) NULL,
     status            VARCHAR(20) NOT NULL CONSTRAINT CK_customer_status CHECK (status IN ('ACTIVE','INACTIVE')),
     is_deleted        BIT NOT NULL CONSTRAINT DF_customer_is_deleted DEFAULT (0),
     created_at        DATETIME2(7) NOT NULL CONSTRAINT DF_customer_created_at DEFAULT SYSUTCDATETIME(),
     updated_at        DATETIME2(7) NULL,
-    CONSTRAINT UQ_customer_email UNIQUE (email)
+    CONSTRAINT UQ_customer_email UNIQUE (email),
+    CONSTRAINT CK_customer_avatar_cloudinary_pair CHECK (avatar_url IS NULL OR avatar_public_id IS NOT NULL)
 );
 
 CREATE TABLE dbo.StaffAccount (
@@ -166,10 +170,12 @@ CREATE TABLE dbo.Amenity (
     amenity_id        BIGINT IDENTITY(1,1) PRIMARY KEY,
     name              NVARCHAR(100) NOT NULL,
     icon_url          NVARCHAR(500) NULL,
+    icon_public_id    NVARCHAR(255) NULL,
     is_deleted        BIT NOT NULL CONSTRAINT DF_amenity_is_deleted DEFAULT (0),
     created_at        DATETIME2(7) NOT NULL CONSTRAINT DF_amenity_created_at DEFAULT SYSUTCDATETIME(),
     updated_at        DATETIME2(7) NULL,
-    CONSTRAINT UQ_amenity_name UNIQUE (name)
+    CONSTRAINT UQ_amenity_name UNIQUE (name),
+    CONSTRAINT CK_amenity_icon_cloudinary_pair CHECK (icon_url IS NULL OR icon_public_id IS NOT NULL)
 );
 
 CREATE TABLE dbo.RoomAmenity (
@@ -186,9 +192,11 @@ CREATE TABLE dbo.RoomImage (
     room_image_id     BIGINT IDENTITY(1,1) PRIMARY KEY,
     room_id           BIGINT NOT NULL,
     image_url         NVARCHAR(500) NOT NULL,
+    image_public_id   NVARCHAR(255) NULL,
     is_cover          BIT NOT NULL CONSTRAINT DF_roomimage_is_cover DEFAULT (0),
     created_at        DATETIME2(7) NOT NULL CONSTRAINT DF_roomimage_created_at DEFAULT SYSUTCDATETIME(),
-    CONSTRAINT FK_roomimage_room FOREIGN KEY (room_id) REFERENCES dbo.Room(room_id)
+    CONSTRAINT FK_roomimage_room FOREIGN KEY (room_id) REFERENCES dbo.Room(room_id),
+    CONSTRAINT CK_roomimage_cloudinary_pair CHECK (image_url IS NULL OR image_public_id IS NOT NULL)
 );
 
 /* -------------------- BOOKING + PAYMENT -------------------- */
@@ -339,6 +347,9 @@ CREATE INDEX IX_payment_transaction_time ON dbo.Payment(transaction_time);
 CREATE INDEX IX_room_status ON dbo.Room(status) INCLUDE (room_type_id, room_number);
 CREATE INDEX IX_hktask_assigned_status ON dbo.HousekeepingTask(assigned_to_staff_id, task_status);
 CREATE INDEX IX_roomstatuslog_room_time ON dbo.RoomStatusLog(room_id, created_at DESC);
+CREATE INDEX IX_customer_avatar_public_id ON dbo.Customer(avatar_public_id) WHERE avatar_public_id IS NOT NULL;
+CREATE INDEX IX_amenity_icon_public_id ON dbo.Amenity(icon_public_id) WHERE icon_public_id IS NOT NULL;
+CREATE INDEX IX_roomimage_public_id ON dbo.RoomImage(image_public_id) WHERE image_public_id IS NOT NULL;
 
 /* -------------------- OVERLAP PREVENTION -------------------- */
 GO
@@ -398,6 +409,158 @@ BEGIN
 END;
 GO
 ```
+
+# Cloudinary Integration
+
+## 1) Detected image-related fields
+
+- Customer.avatar_url
+- Amenity.icon_url
+- RoomImage.image_url
+
+## 2) Updated tables (DDL)
+
+```sql
+/* Customer */
+ALTER TABLE dbo.Customer ADD avatar_public_id NVARCHAR(255) NULL;
+ALTER TABLE dbo.Customer WITH NOCHECK
+ADD CONSTRAINT CK_customer_avatar_cloudinary_pair
+CHECK (avatar_url IS NULL OR avatar_public_id IS NOT NULL);
+
+/* Amenity */
+ALTER TABLE dbo.Amenity ADD icon_public_id NVARCHAR(255) NULL;
+ALTER TABLE dbo.Amenity WITH NOCHECK
+ADD CONSTRAINT CK_amenity_icon_cloudinary_pair
+CHECK (icon_url IS NULL OR icon_public_id IS NOT NULL);
+
+/* RoomImage */
+ALTER TABLE dbo.RoomImage ADD image_public_id NVARCHAR(255) NULL;
+ALTER TABLE dbo.RoomImage WITH NOCHECK
+ADD CONSTRAINT CK_roomimage_cloudinary_pair
+CHECK (image_url IS NULL OR image_public_id IS NOT NULL);
+```
+
+## 3) Why public_id is required
+
+- image_url is the delivery URL used by frontend/UI to render an image.
+- public_id is the Cloudinary asset identity used by backend to delete, rename, overwrite, or transform resources safely.
+- Deleting by URL is not reliable; Cloudinary delete APIs require public_id.
+
+## 4) Cloudinary fields mapping
+
+| Table | URL Field | Public ID Field | Display Purpose | Management Purpose |
+|---|---|---|---|---|
+| Customer | avatar_url | avatar_public_id | Render user avatar | Delete/replace avatar in Cloudinary |
+| Amenity | icon_url | icon_public_id | Render amenity icon | Delete/replace icon asset |
+| RoomImage | image_url | image_public_id | Render room gallery/cover | Delete/replace room image |
+
+## 5) Migration SQL
+
+### Option A: Safe default
+
+```sql
+UPDATE dbo.Customer SET avatar_public_id = NULL WHERE avatar_public_id IS NULL;
+UPDATE dbo.Amenity SET icon_public_id = NULL WHERE icon_public_id IS NULL;
+UPDATE dbo.RoomImage SET image_public_id = NULL WHERE image_public_id IS NULL;
+```
+
+### Option B: Extract public_id from Cloudinary URL (best effort)
+
+Assumes pattern:
+https://res.cloudinary.com/<cloud>/image/upload/v123456/<public_id>.<ext>
+
+```sql
+/* Customer.avatar_url -> avatar_public_id */
+UPDATE c
+SET avatar_public_id =
+    CASE
+        WHEN c.avatar_url LIKE '%/upload/%' THEN
+            REPLACE(
+                LEFT(
+                    SUBSTRING(c.avatar_url, CHARINDEX('/upload/', c.avatar_url) + LEN('/upload/'), 1000),
+                    LEN(SUBSTRING(c.avatar_url, CHARINDEX('/upload/', c.avatar_url) + LEN('/upload/'), 1000))
+                    - CHARINDEX('.', REVERSE(SUBSTRING(c.avatar_url, CHARINDEX('/upload/', c.avatar_url) + LEN('/upload/'), 1000)))
+                ),
+                CASE
+                    WHEN SUBSTRING(c.avatar_url, CHARINDEX('/upload/', c.avatar_url) + LEN('/upload/'), 2) = 'v'
+                         THEN LEFT(
+                                  SUBSTRING(c.avatar_url, CHARINDEX('/upload/', c.avatar_url) + LEN('/upload/'), 50),
+                                  CHARINDEX('/', SUBSTRING(c.avatar_url, CHARINDEX('/upload/', c.avatar_url) + LEN('/upload/'), 50))
+                              )
+                    ELSE ''
+                END,
+                ''
+            )
+        ELSE NULL
+    END
+FROM dbo.Customer c
+WHERE c.avatar_url IS NOT NULL AND c.avatar_public_id IS NULL;
+
+/* Amenity.icon_url -> icon_public_id */
+UPDATE a
+SET icon_public_id = NULL
+FROM dbo.Amenity a
+WHERE a.icon_url IS NOT NULL AND a.icon_public_id IS NULL;
+
+/* RoomImage.image_url -> image_public_id */
+UPDATE ri
+SET image_public_id =
+    CASE
+        WHEN ri.image_url LIKE '%/upload/%' THEN
+            SUBSTRING(
+                ri.image_url,
+                CHARINDEX('/upload/', ri.image_url) + LEN('/upload/'),
+                LEN(ri.image_url)
+            )
+        ELSE NULL
+    END
+FROM dbo.RoomImage ri
+WHERE ri.image_url IS NOT NULL AND ri.image_public_id IS NULL;
+```
+
+### Post-migration verification
+
+```sql
+SELECT 'Customer missing public_id' AS check_name, COUNT(*) AS issue_count
+FROM dbo.Customer
+WHERE avatar_url IS NOT NULL AND avatar_public_id IS NULL
+UNION ALL
+SELECT 'Amenity missing public_id', COUNT(*)
+FROM dbo.Amenity
+WHERE icon_url IS NOT NULL AND icon_public_id IS NULL
+UNION ALL
+SELECT 'RoomImage missing public_id', COUNT(*)
+FROM dbo.RoomImage
+WHERE image_url IS NOT NULL AND image_public_id IS NULL;
+```
+
+## 6) Service-layer workflow (recommended)
+
+1. Upload flow:
+- Upload binary to Cloudinary
+- Receive secure_url + public_id
+- Persist both URL and public_id in the same transaction
+
+2. Update flow:
+- Upload new asset first
+- Update DB row with new URL + public_id
+- Delete old Cloudinary asset using old public_id only after DB update succeeds
+
+3. Delete flow:
+- Read public_id from DB
+- Call Cloudinary destroy API with public_id
+- Set URL/public_id to NULL or soft-delete record based on business rule
+
+4. Failure handling:
+- If Cloudinary delete fails, keep a retry job queue keyed by public_id
+
+## 7) Cloudinary operational best practices
+
+- Store both URL and public_id for every media field.
+- Never call Cloudinary delete without public_id.
+- Keep DB and Cloudinary in sync using transactional update + async cleanup retry.
+- Add filtered indexes on *_public_id for media maintenance jobs.
+- Log Cloudinary request id and response in backend logs for traceability.
 
 # Data Cleaning (Room Number Fix)
 
