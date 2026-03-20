@@ -75,6 +75,21 @@ BEGIN TRY
     IF COL_LENGTH('dbo.Booking', 'booking_code') IS NULL
         ALTER TABLE dbo.Booking ADD booking_code NVARCHAR(50) NULL;
 
+    IF OBJECT_ID('dbo.StaffAccounts', 'U') IS NOT NULL
+    BEGIN
+        IF COL_LENGTH('dbo.StaffAccounts', 'avatar_url') IS NULL
+            ALTER TABLE dbo.StaffAccounts ADD avatar_url NVARCHAR(500) NULL;
+        IF COL_LENGTH('dbo.StaffAccounts', 'avatar_public_id') IS NULL
+            ALTER TABLE dbo.StaffAccounts ADD avatar_public_id NVARCHAR(255) NULL;
+    END
+    ELSE IF OBJECT_ID('dbo.StaffAccount', 'U') IS NOT NULL
+    BEGIN
+        IF COL_LENGTH('dbo.StaffAccount', 'avatar_url') IS NULL
+            ALTER TABLE dbo.StaffAccount ADD avatar_url NVARCHAR(500) NULL;
+        IF COL_LENGTH('dbo.StaffAccount', 'avatar_public_id') IS NULL
+            ALTER TABLE dbo.StaffAccount ADD avatar_public_id NVARCHAR(255) NULL;
+    END
+
     /* ---------------------------------------------------------
        2.1) CLOUDINARY MEDIA COLUMNS
        Store URL + public_id for safe delete/update in Cloudinary
@@ -247,6 +262,19 @@ BEGIN TRY
     IF NOT EXISTS (SELECT 1 FROM sys.check_constraints WHERE parent_object_id = OBJECT_ID('dbo.Customer') AND name = 'CK_Customer_Avatar_Cloudinary_Pair_Remake')
         ALTER TABLE dbo.Customer WITH NOCHECK
         ADD CONSTRAINT CK_Customer_Avatar_Cloudinary_Pair_Remake CHECK (avatar_url IS NULL OR avatar_public_id IS NOT NULL);
+
+    IF OBJECT_ID('dbo.StaffAccounts', 'U') IS NOT NULL
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM sys.check_constraints WHERE parent_object_id = OBJECT_ID('dbo.StaffAccounts') AND name = 'CK_StaffAccounts_Avatar_Cloudinary_Pair_Remake')
+            ALTER TABLE dbo.StaffAccounts WITH NOCHECK
+            ADD CONSTRAINT CK_StaffAccounts_Avatar_Cloudinary_Pair_Remake CHECK (avatar_url IS NULL OR avatar_public_id IS NOT NULL);
+    END
+    ELSE IF OBJECT_ID('dbo.StaffAccount', 'U') IS NOT NULL
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM sys.check_constraints WHERE parent_object_id = OBJECT_ID('dbo.StaffAccount') AND name = 'CK_StaffAccount_Avatar_Cloudinary_Pair_Remake')
+            ALTER TABLE dbo.StaffAccount WITH NOCHECK
+            ADD CONSTRAINT CK_StaffAccount_Avatar_Cloudinary_Pair_Remake CHECK (avatar_url IS NULL OR avatar_public_id IS NOT NULL);
+    END
 
     IF NOT EXISTS (SELECT 1 FROM sys.check_constraints WHERE parent_object_id = OBJECT_ID('dbo.Amenity') AND name = 'CK_Amenity_Icon_Cloudinary_Pair_Remake')
         ALTER TABLE dbo.Amenity WITH NOCHECK
@@ -513,6 +541,17 @@ BEGIN TRY
     IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id = OBJECT_ID('dbo.Customer') AND name = 'IX_Customer_AvatarPublicId_Remake')
         CREATE INDEX IX_Customer_AvatarPublicId_Remake ON dbo.Customer(avatar_public_id) WHERE avatar_public_id IS NOT NULL;
 
+    IF OBJECT_ID('dbo.StaffAccounts', 'U') IS NOT NULL
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id = OBJECT_ID('dbo.StaffAccounts') AND name = 'IX_StaffAccounts_AvatarPublicId_Remake')
+            CREATE INDEX IX_StaffAccounts_AvatarPublicId_Remake ON dbo.StaffAccounts(avatar_public_id) WHERE avatar_public_id IS NOT NULL;
+    END
+    ELSE IF OBJECT_ID('dbo.StaffAccount', 'U') IS NOT NULL
+    BEGIN
+        IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id = OBJECT_ID('dbo.StaffAccount') AND name = 'IX_StaffAccount_AvatarPublicId_Remake')
+            CREATE INDEX IX_StaffAccount_AvatarPublicId_Remake ON dbo.StaffAccount(avatar_public_id) WHERE avatar_public_id IS NOT NULL;
+    END
+
     IF NOT EXISTS (SELECT 1 FROM sys.indexes WHERE object_id = OBJECT_ID('dbo.Amenity') AND name = 'IX_Amenity_IconPublicId_Remake')
         CREATE INDEX IX_Amenity_IconPublicId_Remake ON dbo.Amenity(icon_public_id) WHERE icon_public_id IS NOT NULL;
 
@@ -553,6 +592,23 @@ BEGIN TRY
         FROM dbo.Customer
         WHERE avatar_url IS NOT NULL AND avatar_public_id IS NULL
     ) THROW 50033, 'Customer avatar_url exists but avatar_public_id is missing.', 1;
+
+    IF OBJECT_ID('dbo.StaffAccounts', 'U') IS NOT NULL
+    BEGIN
+        IF EXISTS (
+            SELECT 1
+            FROM dbo.StaffAccounts
+            WHERE avatar_url IS NOT NULL AND avatar_public_id IS NULL
+        ) THROW 50037, 'StaffAccounts avatar_url exists but avatar_public_id is missing.', 1;
+    END
+    ELSE IF OBJECT_ID('dbo.StaffAccount', 'U') IS NOT NULL
+    BEGIN
+        IF EXISTS (
+            SELECT 1
+            FROM dbo.StaffAccount
+            WHERE avatar_url IS NOT NULL AND avatar_public_id IS NULL
+        ) THROW 50038, 'StaffAccount avatar_url exists but avatar_public_id is missing.', 1;
+    END
 
     IF EXISTS (
         SELECT 1
@@ -604,6 +660,13 @@ WHERE payment_status NOT IN ('SUCCESS','FAILURE');
 SELECT 'Customer missing avatar_public_id' AS check_name, COUNT(*) AS issue_count
 FROM dbo.Customer
 WHERE avatar_url IS NOT NULL AND avatar_public_id IS NULL
+UNION ALL
+SELECT 'Staff missing avatar_public_id',
+       CASE
+           WHEN OBJECT_ID('dbo.StaffAccounts', 'U') IS NOT NULL THEN (SELECT COUNT(*) FROM dbo.StaffAccounts WHERE avatar_url IS NOT NULL AND avatar_public_id IS NULL)
+           WHEN OBJECT_ID('dbo.StaffAccount', 'U') IS NOT NULL THEN (SELECT COUNT(*) FROM dbo.StaffAccount WHERE avatar_url IS NOT NULL AND avatar_public_id IS NULL)
+           ELSE 0
+       END
 UNION ALL
 SELECT 'Amenity missing icon_public_id', COUNT(*)
 FROM dbo.Amenity

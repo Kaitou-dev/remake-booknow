@@ -128,12 +128,15 @@ CREATE TABLE dbo.StaffAccount (
     password_hash     NVARCHAR(255) NOT NULL,
     full_name         NVARCHAR(100) NOT NULL,
     phone             NVARCHAR(20) NULL,
+    avatar_url        NVARCHAR(500) NULL,
+    avatar_public_id  NVARCHAR(255) NULL,
     role              VARCHAR(20) NOT NULL CONSTRAINT CK_staff_role CHECK (role IN ('ADMIN','STAFF','HOUSEKEEPING')),
     status            VARCHAR(20) NOT NULL CONSTRAINT CK_staff_status CHECK (status IN ('ACTIVE','INACTIVE')),
     is_deleted        BIT NOT NULL CONSTRAINT DF_staff_is_deleted DEFAULT (0),
     created_at        DATETIME2(7) NOT NULL CONSTRAINT DF_staff_created_at DEFAULT SYSUTCDATETIME(),
     updated_at        DATETIME2(7) NULL,
-    CONSTRAINT UQ_staff_email UNIQUE (email)
+    CONSTRAINT UQ_staff_email UNIQUE (email),
+    CONSTRAINT CK_staff_avatar_cloudinary_pair CHECK (avatar_url IS NULL OR avatar_public_id IS NOT NULL)
 );
 
 CREATE TABLE dbo.RoomType (
@@ -348,6 +351,7 @@ CREATE INDEX IX_room_status ON dbo.Room(status) INCLUDE (room_type_id, room_numb
 CREATE INDEX IX_hktask_assigned_status ON dbo.HousekeepingTask(assigned_to_staff_id, task_status);
 CREATE INDEX IX_roomstatuslog_room_time ON dbo.RoomStatusLog(room_id, created_at DESC);
 CREATE INDEX IX_customer_avatar_public_id ON dbo.Customer(avatar_public_id) WHERE avatar_public_id IS NOT NULL;
+CREATE INDEX IX_staff_avatar_public_id ON dbo.StaffAccount(avatar_public_id) WHERE avatar_public_id IS NOT NULL;
 CREATE INDEX IX_amenity_icon_public_id ON dbo.Amenity(icon_public_id) WHERE icon_public_id IS NOT NULL;
 CREATE INDEX IX_roomimage_public_id ON dbo.RoomImage(image_public_id) WHERE image_public_id IS NOT NULL;
 
@@ -415,6 +419,7 @@ GO
 ## 1) Detected image-related fields
 
 - Customer.avatar_url
+- StaffAccount.avatar_url
 - Amenity.icon_url
 - RoomImage.image_url
 
@@ -425,6 +430,12 @@ GO
 ALTER TABLE dbo.Customer ADD avatar_public_id NVARCHAR(255) NULL;
 ALTER TABLE dbo.Customer WITH NOCHECK
 ADD CONSTRAINT CK_customer_avatar_cloudinary_pair
+CHECK (avatar_url IS NULL OR avatar_public_id IS NOT NULL);
+
+/* StaffAccount */
+ALTER TABLE dbo.StaffAccount ADD avatar_public_id NVARCHAR(255) NULL;
+ALTER TABLE dbo.StaffAccount WITH NOCHECK
+ADD CONSTRAINT CK_staff_avatar_cloudinary_pair
 CHECK (avatar_url IS NULL OR avatar_public_id IS NOT NULL);
 
 /* Amenity */
@@ -451,6 +462,7 @@ CHECK (image_url IS NULL OR image_public_id IS NOT NULL);
 | Table | URL Field | Public ID Field | Display Purpose | Management Purpose |
 |---|---|---|---|---|
 | Customer | avatar_url | avatar_public_id | Render user avatar | Delete/replace avatar in Cloudinary |
+| StaffAccount | avatar_url | avatar_public_id | Render staff/admin avatar | Delete/replace avatar in Cloudinary |
 | Amenity | icon_url | icon_public_id | Render amenity icon | Delete/replace icon asset |
 | RoomImage | image_url | image_public_id | Render room gallery/cover | Delete/replace room image |
 
@@ -460,6 +472,7 @@ CHECK (image_url IS NULL OR image_public_id IS NOT NULL);
 
 ```sql
 UPDATE dbo.Customer SET avatar_public_id = NULL WHERE avatar_public_id IS NULL;
+UPDATE dbo.StaffAccount SET avatar_public_id = NULL WHERE avatar_public_id IS NULL;
 UPDATE dbo.Amenity SET icon_public_id = NULL WHERE icon_public_id IS NULL;
 UPDATE dbo.RoomImage SET image_public_id = NULL WHERE image_public_id IS NULL;
 ```
@@ -502,6 +515,21 @@ SET icon_public_id = NULL
 FROM dbo.Amenity a
 WHERE a.icon_url IS NOT NULL AND a.icon_public_id IS NULL;
 
+/* StaffAccount.avatar_url -> avatar_public_id */
+UPDATE s
+SET avatar_public_id =
+    CASE
+        WHEN s.avatar_url LIKE '%/upload/%' THEN
+            SUBSTRING(
+                s.avatar_url,
+                CHARINDEX('/upload/', s.avatar_url) + LEN('/upload/'),
+                LEN(s.avatar_url)
+            )
+        ELSE NULL
+    END
+FROM dbo.StaffAccount s
+WHERE s.avatar_url IS NOT NULL AND s.avatar_public_id IS NULL;
+
 /* RoomImage.image_url -> image_public_id */
 UPDATE ri
 SET image_public_id =
@@ -523,6 +551,10 @@ WHERE ri.image_url IS NOT NULL AND ri.image_public_id IS NULL;
 ```sql
 SELECT 'Customer missing public_id' AS check_name, COUNT(*) AS issue_count
 FROM dbo.Customer
+WHERE avatar_url IS NOT NULL AND avatar_public_id IS NULL
+UNION ALL
+SELECT 'StaffAccount missing public_id', COUNT(*)
+FROM dbo.StaffAccount
 WHERE avatar_url IS NOT NULL AND avatar_public_id IS NULL
 UNION ALL
 SELECT 'Amenity missing public_id', COUNT(*)
